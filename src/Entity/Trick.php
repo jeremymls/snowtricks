@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Model\Timestampable;
 use App\Repository\TrickRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -9,9 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=TrickRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Trick
 {
+    use Timestampable;
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -49,6 +52,11 @@ class Trick
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $miniature;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tricks")
+     */
+    private $user;
 
     public function __construct()
     {
@@ -170,6 +178,18 @@ class Trick
     public function setMiniature(?string $miniature): self
     {
         $this->miniature = $miniature;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

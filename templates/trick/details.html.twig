@@ -1,0 +1,404 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block _action %}
+    <section class="container p-0 border border-dark">
+        <div id="trick-header" class="position-relative">
+            {% if trick.miniature %}
+                <img src="{{ asset('uploads/images/tricks/' ~ trick.miniature) }}" alt="miniature {{ trick.name }}">
+                <div class="position-absolute top-0 end-0 m-3 p-1 border border-dark rounded">
+                    <a href="{{path('app_change_miniature', {'id': trick.id})}}" class="mx-2"><i class="fas fa-pencil-alt text-warning"></i></a>
+                    <a href="{{path('app_change_miniature', {'id': trick.id})}}" class="mx-2"><i class="fas fa-trash-alt text-danger"></i></a>
+                </div>
+            {% else %}
+                <img src="{{ asset('core/img/default_mini.png') }}" alt="miniature par défaut">
+            {% endif %}
+        </div>
+    </section>
+    {% endblock %}
+
+{% block body %}
+<div class="container border border-dark">
+    {% if form is defined %}
+    {% form_theme form 'bootstrap_5_layout.html.twig' %}
+    {{ form_start(form, {'attr': {'class': 'text-center'}}) }}
+    <label class="mb-3" for="trick_images">Ajouter des images: </label>
+    {{ form_widget(form.images, {'attr': {'class': 'form-control mb-3'}}) }}
+    <button type="button" class="btn btn-success btn-sm m-1" data-bs-toggle="modal" data-bs-target="#addVideoModal"><i class="fas fa-plus"></i> Ajouter des vidéos</button>
+    <!-- Modal -->
+    <div class="modal" id="addVideoModal" tabindex="-1" aria-labelledby="addVideoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addVideoModalLabel">Ajouter des vidéos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body z-index-1">
+                    <div id='videos' data-prototype="{{ form_row(form.videos.vars.prototype, {'row_attr': {'class': 'row mb-3'}})|e('html_attr')}}">
+                        <div class="videos row py-3">
+                            {% for video in form.videos %}
+                                <div class="col-md-6 mb-3">{{ form_row(video) }}</div>
+                                <div class="col-md-6 mb-3">
+                                    {% if video.vars.value.provider == 'youtube' %}{% set path = "https://www.youtube.com/embed/" %}{% endif %}
+                                    {% if video.vars.value.provider == 'dailymotion' %}{% set path = "https://www.dailymotion.com/embed/video/" %}{% endif %}
+                                    {% if video.vars.value.provider == 'vimeo' %}{% set path = "https://player.vimeo.com/video/" %}{% endif %}
+                                    <iframe width='100%' height='100%' src="{{ path }}{{ video.vars.value.videoId }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                                <hr class="my-2">
+                            {% endfor %}
+                        </div>
+                        <span id="video-add" class="row"></span>
+                        <button type="button" class="btn btn-secondary mt-3" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <section id="trick-media" class="m-5 p-3 overflow-auto">
+        <div id="media-display" class="row align-items-center flex-nowrap">
+            {% for image in trick.images %}
+                <div id="img[{{ image.id }}]" class="col-3 col-md-2">
+                    <div class="row">
+                        <div class="col-12">
+                            <img class="img-fluid" src="{{ asset('uploads/images/tricks/' ~ image.name) }}" alt="{{ image.name }}">
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% for video in trick.videos %}
+                <div class="col-3 col-md-2" id="media_trick_videos_{{ loop.index0 }}">
+                    {% if video.provider == 'youtube' %}
+                        <iframe src="https://www.youtube.com/embed/{{ video.videoId }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    {% elseif video.provider == 'dailymotion' %}
+                        <iframe src="https://www.dailymotion.com/embed/video/{{ video.videoId }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    {% elseif video.provider == 'vimeo' %}
+                        <iframe src="https://player.vimeo.com/video/{{ video.videoId }}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+                    {% elseif video.provider == 'facebook' %}
+                        <iframe src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F{{ video.videoId }}&show_text=0&width=560" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allowFullScreen="true"></iframe>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <div id="trick_images_preview" class="row align-items-center flex-nowrap"></div>
+        </div>
+        {% if app.request.get('_route') != 'app_show_trick' %}
+        <div id="media-btn" class="row align-items-center flex-nowrap">
+            {% for image in trick.images %}
+                <div class="col-3 col-md-2 text-center">
+                    <div class="mx-3 mt-3 p-1 border border-dark rounded">
+                        {# <a href="{{path('app_change_miniature', {'id': trick.id})}}" class="mx-2"><i class="fas fa-plus text-success"></i></a> #}
+                        <a href="{{ path('app_delete_trick_image', {'id': image.id}) }}" data-delete data-id="{{ image.id }}" data-token="{{ csrf_token('delete' ~ image.id) }}" class="mx-2"><i class="fas fa-trash-alt text-danger"></i></a>
+                    </div>
+                </div>
+            {% endfor %}
+            {% for video in trick.videos %}
+                <div class="col-3 col-md-2 text-center">
+                    <div class="mx-3 mt-3 p-1 border border-dark rounded">
+                        <a href="#" type="button" class="mx-2" data-bs-toggle="modal" data-bs-target="#addVideoModal"><i class="fas fa-pencil-alt text-warning"></i></a>
+                        <a href="{{ path('app_delete_trick_video', {'id': video.id}) }}" data-delete-video data-id="{{ video.id }}" data-loop="{{ loop.index0 }}" data-token="{{ csrf_token('delete' ~ video.id) }}" class="mx-2"><i class="fas fa-trash-alt text-danger"></i></a>
+                        {# <a href="#" class="mx-2"><i class="fas fa-trash-alt text-danger"></i></a> #}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </section>
+    <section id="description" class="my-5">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text">{{ trick.description | raw }}</p>
+                {% if form is defined %}
+                <div class="row justify-content-center mb-3">
+                    {{ form_row(form.name, {
+                        'row_attr': {'class': 'col-12 col-md'},
+                        'label': 'Nom de la figure',
+                    }) }}
+                    <div class="col-12 col-md-auto d-flex direction-row align-items-end">
+                        {{ form_row(form.category, {'row_attr': {'class': 'mb-0'}, 'label': 'Catégorie'}) }}
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-success btn-sm m-1" data-bs-toggle="modal" data-bs-target="#addGroupModal">
+                        <i class="fas fa-plus"></i> Ajouter un groupe
+                        </button>
+                    </div>
+                </div>
+                {{ form_row(form.description) }}
+                {{ form_row(form.save, {
+                    'label' : action == 'add' ? 'Créer' : 'Modifier',
+                    'row_attr': {'class': 'col-12 col-md-auto text-center mt-4'}
+                }) }}
+
+
+
+                {{ form_end(form) }}
+                {% else %}
+                <div class="row justify-content-center">
+                    <div class="col-auto"><span class="badge text-bg-primary">Groupe: {{ trick.category.name }}</div>
+                    <div class="col-auto"><span class="badge text-bg-primary">Auteur: {{ trick.user }}</div>
+                    <div class="col-auto"><span class="badge text-bg-primary">Créé le: {{ trick.createdAt | date('d/m/Y') }} à {{ trick.createdAt | date('H:i') }}</div>
+                    {% if trick.updatedAt %}
+                        <div class="col-auto"><span class="badge text-bg-primary">Mis à jour le: {{ trick.updatedAt | date('d/m/Y') }} à {{ trick.updatedAt | date('H:i') }}</div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    <section id="comment-form" class="my-3 mx-5 px-5">
+        <hr>
+        <h2 class="text-center">Formulaire</h2>
+        <hr>
+        <h2 class="text-center">Commentaires</h2>
+    </section>
+</div>
+
+<!-- Modal -->
+{% if groupForm is defined %}
+<div class="modal fade" id="addGroupModal" tabindex="-1" aria-labelledby="addGroupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addGroupModalLabel">Nouveau groupe</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {{ form_start(groupForm)}}
+                <div class="modal-body text-center">
+                    {{ form_row(groupForm.name, {
+                        'label': 'Nom',
+                        'required': false,
+                    }) }}
+                    {{ form_row(groupForm.description, {
+                        'label': 'Description',
+                    }) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    {{ form_row(groupForm.save, {
+                        'attr': {'class': 'btn btn-success', 'data-bs-dismiss': 'modal'},
+                        'label': 'Ajouter',
+                    }) }}
+                </div>
+            {{ form_end(groupForm)}}
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('build/js/images.js') }}" defer></script>
+    <script src="{{ asset('build/js/videos.js') }}" defer></script>
+    <script>
+        // Change title
+        $(document).ready(function () {
+            $('#trick_name').on('input', function () {
+                $('#title-header').text($(this).val());
+            });
+        });
+    </script>
+    <script>
+        let collection, buttonAdd, span, checkInput, checkDiv, mediaDisplay, mediaBtn, groupSave, preview;
+        window.onload = function () {
+            groupSave = document.querySelector('#group_save');
+            collection = document.querySelector('#videos');
+            span = collection.querySelector('span');
+            checkDiv = collection.querySelectorAll('.form-check');
+            mediaDisplay = document.querySelector('#media-display');
+            mediaBtn = document.querySelector('#media-btn');
+            preview = document.querySelector('#trick_images_preview');
+
+            groupSave.addEventListener('click', function (e) {
+                e.preventDefault();
+                let name = document.querySelector('#group_name').value;
+                let description = document.querySelector('#group_description').value;
+
+                let data = new FormData();
+                data.append('name', name);
+                data.append('description', description);
+
+                let request = new XMLHttpRequest();
+                request.open('POST', '{{ path("app_add_group") }}');
+                request.send(data);
+
+                request.onreadystatechange = function () {
+                    if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                        let response = JSON.parse(this.responseText);
+                        if (response.success) {
+                            const trick_category = document.querySelector('#trick_category');
+                            let option = document.createElement('option');
+                            option.value = response.id;
+                            option.innerHTML = response.group;
+                            trick_category.appendChild(option);
+                            trick_category.value = response.id;
+                        }
+                    }
+                }
+
+            });
+
+            checkDiv.forEach(function (checkForm) {
+                checkForm.className = 'form-check form-check-inline';
+                label= checkForm.querySelector('label');
+                label.innerHTML = '<i class="fa-brands fa-' + label.innerHTML + '"></i>';
+            });
+
+            buttonAdd = document.createElement('button');
+            buttonAdd.className = 'btn btn-success add-video';
+            buttonAdd.innerHTML = '<i class="fas fa-plus"></i> Ajouter une vidéo';
+
+            let newButton = span.appendChild(buttonAdd);
+
+            collection.dataset.index = collection.querySelectorAll('input').length;
+
+            buttonAdd.addEventListener('click', function (e) {
+                addButton(collection, newButton);
+            });
+
+            let providers = document.querySelectorAll('input[name*="[provider]"]');
+            providers.forEach(function (provider) {
+                providerLisenner(provider);
+            });
+
+            let videoId = document.querySelectorAll('input[name*="[video_id]"]');
+            videoId.forEach(function (input) {
+                inputLisenner(input);
+            });
+        }
+
+        function providerLisenner(provider, add = false) {
+            provider.addEventListener('change', function (e) {
+                const form = add ? e.target.parentElement.parentElement.parentElement.parentElement :this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
+                const video_id = form.querySelector('input[name*="[video_id]"]').value;
+                const url = transformURL(e.target.value);
+                form.nextElementSibling.querySelector('iframe').src = url + video_id;
+            });
+        }
+
+        function inputLisenner(input, add = false) {
+            input.addEventListener('input', function (e) {
+                console.log(this.parentElement.parentElement.id);
+                const form = add ? this.parentElement.parentElement : this.parentElement.parentElement.parentElement.parentElement;
+                provider = form.querySelector('input[name*="[provider]"]:checked');
+                const url = transformURL(provider?form.querySelector('input[name*="[provider]"]:checked').value:null);
+                form.nextElementSibling.querySelector('iframe').src = url + this.value;
+                console.log(this.parentElement.parentElement.id);
+                document.querySelector('#media_' + this.parentElement.parentElement.id + '>iframe').src = url + this.value;
+            });
+        }
+
+        function transformURL(provider) {
+            let url = '';
+            switch (provider) {
+                case 'youtube':
+                    url = 'https://www.youtube.com/embed/';
+                    break;
+                case 'dailymotion':
+                    url = 'https://www.dailymotion.com/embed/video/';
+                    break;
+                case 'vimeo':
+                    url = 'https://player.vimeo.com/video/';
+                    break;
+                case 'facebook':
+                    url = 'https://www.facebook.com/plugins/video.php?href=';
+                    break;
+                default:
+                    url = ' ';
+                    break;
+            }
+            return url;
+        }
+
+        function addButton(collection, newButton) {
+            let prototype = collection.dataset.prototype;
+
+            let index = collection.dataset.index;
+
+            prototype = prototype.replace(/__name__/g, index);
+
+            let content = document.createElement('html');
+            content.innerHTML = prototype;
+            let newForm = content.querySelector('div');
+            newForm.className = 'col-md-6 mb-3';
+            newForm.id = 'video_' + index;
+
+            let labels = newForm.querySelectorAll('fieldset fieldset label');
+            labels.forEach(function (label) {
+                label.innerHTML = '<i class="fa-brands fa-' + label.innerHTML + '"></i>';
+                label.parentElement.className = 'form-check-inline';
+            });
+
+            let deleteButton = document.createElement('button');
+            deleteButton.type = 'button';
+            deleteButton.className = 'btn btn-sm btn-danger';
+            deleteButton.id = 'delete-video' + index;
+            deleteButton.innerHTML = '<i class="fas fa-trash"></i> Supprimer';
+
+            let deleteModalButton = document.createElement('a');
+            deleteModalButton.href = '#';
+            deleteModalButton.className = 'mx-2';
+            deleteModalButton.id = 'delete-video' + index;
+            deleteModalButton.innerHTML = '<i class="fas fa-trash-alt text-danger"></i>';
+
+            newForm.appendChild(deleteButton);
+
+            html = "<iframe width='100%' height='100%' src='' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>";
+
+            let videoPreview = document.createElement('div');
+            videoPreview.className = 'col-md-6 mb-3';
+            videoPreview.innerHTML = html;
+
+            let videoDisplay = document.createElement('div');
+            videoDisplay.className = 'col-3 col-md-2';
+            videoDisplay.id = 'media_video_' + index;
+            videoDisplay.innerHTML = html;
+
+            let divider = document.createElement('hr');
+            divider.className = 'my-2';
+
+            let mediaBtnSlot = document.createElement('div');
+            mediaBtnSlot.className = 'col-3 col-md-2 text-center';
+
+            let mediaBtnDiv = document.createElement('div');
+            mediaBtnDiv.className = 'mx-3 mt-3 p-1 border border-dark rounded';
+
+            mediaBtnDiv.appendChild(deleteModalButton);
+            mediaBtnSlot.appendChild(mediaBtnDiv);
+
+            collection.dataset.index++;
+
+            let addButton = collection.querySelector('.add-video');
+
+            newForm.querySelectorAll('input[name*="[provider]"]').forEach(function (e) {
+                providerLisenner(this, true);
+            });
+
+
+            inputLisenner(newForm.querySelector('input[name*="[video_id]"]'), true);
+
+            span.insertBefore(newForm, addButton);
+            span.insertBefore(videoPreview, addButton);
+            span.insertBefore(divider, addButton);
+
+            mediaDisplay.insertBefore(videoDisplay, preview);
+            mediaBtn.appendChild(mediaBtnSlot);
+
+            deleteButton.addEventListener('click', function (e) {
+                deleteVideo();
+            });
+
+            deleteModalButton.addEventListener('click', function (e) {
+                deleteVideo();
+            });
+
+            function deleteVideo() {
+                mediaBtnDiv.remove();
+                videoDisplay.remove();
+                mediaBtnSlot.remove();
+                newForm.remove();
+                videoPreview.remove();
+                divider.remove();
+            }
+        }
+    </script>
+{% endblock %}
