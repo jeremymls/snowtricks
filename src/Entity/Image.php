@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=ImageRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Image
 {
@@ -26,6 +27,22 @@ class Image
      * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="images")
      */
     private $trick;
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePersist()
+    {
+        $this->trick->setUpdatedAt(new \DateTime());
+    }
+
+    /**
+     * @ORM\PreRemove
+     */
+    public function preRemove()
+    {
+        $this->trick->setUpdatedAt(new \DateTime());
+    }
 
     public function getId(): ?int
     {

@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=VideoRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Video
 {
@@ -37,6 +38,22 @@ class Video
      * @ORM\Column(type="string", length=255)
      */
     private $video_id;
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePersist()
+    {
+        $this->trick->setUpdatedAt(new \DateTime());
+    }
+
+    /**
+     * @ORM\PreRemove
+     */
+    public function preRemove()
+    {
+        $this->trick->setUpdatedAt(new \DateTime());
+    }
 
     public function getId(): ?int
     {

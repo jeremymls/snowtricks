@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <title>{% if block('title')%}{{ block('title') }} - {% endif %}Snow Tricks</title>
-        {% block title %}{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🏂</text></svg>">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
@@ -17,6 +17,14 @@
     </head>
     <body class="overflow-auto">
         {{ include('partials/_navbar.html.twig') }}
+        {% if block('title') or block('_action') %}
+            <div class="pt-5 bg-light rounded-3">
+                <div class="container-fluid pt-5 position-relative">
+                    <h1 id='title-header' class="display-5 fw-bold text-center position-absolute top-50 start-50 translate-middle">{{ block('title') }}</h1>
+                    {% block _action %}{% endblock %}
+                </div>
+            </div>
+        {% endif %}
         {% block body %}{% endblock %}
         {{ include('partials/_footer.html.twig') }}
     </body>
