@@ -188,6 +188,46 @@
     </div>
 </div>
 {% endif %}
+
+{% if trick.id %}
+
+    <!-- Delete Miniature Modal -->
+    <div class="modal" id="deleteMiniatureModal" tabindex="-1" aria-labelledby="deleteMiniatureModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-body z-index-1">
+                    Êtes-vous sûr de vouloir supprimer cette miniature ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                    <form action="{{ path('app_delete_miniature', {'id': trick.id}) }}" method="post">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ trick.id) }}">
+                        <button type="submit" class="btn btn-danger">Oui</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Trick Modal -->
+    <div class="modal" id="deleteTrickModal" tabindex="-1" aria-labelledby="deleteTrickModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-body z-index-1">
+                    Êtes-vous sûr de vouloir supprimer cette figure?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                    <form action="{{ path('app_delete_trick', {'id': trick.id}) }}" method="post">
+                        <input type="hidden" name="_token" value="{{ csrf_token('deleteTrick') }}">
+                        <input type="hidden" name="id" value="{{ trick.id }}">
+                        <button type="submit" class="btn btn-danger">Oui</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
 {% endblock %}
 
 {% block javascripts %}
