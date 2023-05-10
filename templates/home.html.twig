@@ -6,10 +6,10 @@
 <header class="position-relative overflow-hidden text-center bg-secondary d-flex justify-content-center align-items-center vh-100" style="background-image: url({{ asset('build/img/garde.jpg') }});">
     <div class="col-md-8 p-lg-5 my-auto">
         <p class="lead fw-normal text-white display-6">
-            Rejoignez une communauté passionnée de snowboarders et partagez vos tricks sur notre site dédié aux figures de snowboard !
+            Rejoignez une communauté passionnée de snowboarders et partagez vos tricks sur notre site dédié aux figures de snowboard!
         </p>
-        <a class="text-black position-absolute bottom-0 start-50 translate-middle-x mb-5 btn btn-outline-secondary border-0" href="#main">
-            <i class="fas fa-angle-double-down fa-3x"></i>
+        <a class="text-black position-absolute bottom-0 end-0 mb-3 btn btn-outline-secondary border-0" href="#main">
+            <i class="fas fa-arrow-down fa-3x"></i>
         </a>
     </div>
     <div class="product-device shadow-sm d-none d-md-block"></div>
@@ -19,18 +19,42 @@
     <div class="row justify-content-around">
         {% for trick in tricks %}
         <div class="col-lg-2 mb-3 mx-1 p-0 text-center shadow border">
-            <img src="{{ asset('uploads/images/tricks/' ~ trick.miniature) }}" class="mini" width="100%" alt="">
-            <div class="row p-2 d-flex flex-nowrap">
-                <div class="col-7 text-start text-truncate">
+            <img src="{% if trick.miniature %}{{ asset('uploads/images/tricks/' ~ trick.miniature) }}{% else %}{{ asset('core/img/default_mini.png') }}{% endif %}" class="mini" width="100%" alt="">
+            <div class="row p-2 d-flex flex-nowrap justify-content-between">
+                <div class="col text-start text-truncate">
                     <a href="{{ path('app_show_trick', {'id': trick.id}) }}" class="">{{ trick.name }}</a>
                 </div>
-                <div class="col-5 text-end d-flex flex-nowrap">
+                <div class="col-auto d-flex flex-nowrap">
                     <a class="me-3" href="{{ path('app_edit_trick', {'id': trick.id}) }}"><i class="fa-sharp fa-solid fa-pencil"></i></a>
-                    <a href="#"><i class="fas fa-trash-alt"></i></a>
+                    <button type="button" class="btn btn-outline border-0 me-3 p-0" data-bs-toggle="modal" data-id="{{ trick.id }}" data-bs-target="#deleteTrickModal"><i class="fas fa-trash-alt text-danger"></i></button>
+                    {# <a class="delete-trick" data-id="{{ trick.id }}" data-token="{{ csrf_token('delete' ~ trick.id) }}" href="{{ path('app_delete_trick', {'id': trick.id}) }}"><i class="fas fa-trash-alt"></i></a> #}
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
 </main>
+    <!-- Delete Trick Modal -->
+    <div class="modal" id="deleteTrickModal" tabindex="-1" aria-labelledby="deleteTrickModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-body z-index-1">
+                    Êtes-vous sûr de vouloir supprimer cette figure?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                    <form action="{{ path('app_delete_trick') }}" method="post">
+                        <input type="hidden" name="_token" value="{{ csrf_token('deleteTrick') }}">
+                        <input id="trickId" type="hidden" name="id">
+                        <button type="submit" class="btn btn-danger">Oui</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('build/js/delete_trick.js') }}"></script>
 {% endblock %}

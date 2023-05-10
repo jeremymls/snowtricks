@@ -146,6 +146,45 @@ class TrickController extends AbstractController
     }
 
     /**
+    * @Route("/delete", name="app_delete_trick", methods={"POST"})
+    */
+    public function delete(Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('deleteTrick', $request->request->get('_token'))) {
+            $trick = $this->em->getRepository(Trick::class)->find($request->request->get('id'));
+            if ($trick) {
+                $trick->setDeletedAt(new \DateTime());
+                $this->em->persist($trick);
+                $this->em->flush();
+
+                $this->addFlash('success', 'La figure a bien été supprimée');
+            } else {
+                $this->addFlash('danger', 'La figure n\'a pas été trouvée');
+            }
+        } else {
+            $this->addFlash('danger', 'Token invalide');
+
+            return $this->redirect($request->headers->get('referer'));
+        }
+        return $this->redirectToRoute('app_home');
+    }
+
+    /**
+    * @Route("/delete/miniature/{id}", name="app_delete_miniature", methods={"POST"})
+    */
+    public function deleteMiniature(Trick $trick, Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $trick->getId(), $request->request->get('_token'))) {
+            $trick->setMiniature(null);
+            $this->em->persist($trick);
+            $this->em->flush();
+        }
+        return $this->redirectToRoute('app_edit_trick', [
+            'id' => $trick->getId()
+        ]);
+    }
+
+    /**
      * @Route("/change/miniature/{id}", name="app_change_miniature")
      */
     public function changeMiniature(Trick $trick, Request $request): Response

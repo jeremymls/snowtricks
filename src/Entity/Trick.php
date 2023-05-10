@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Model\SoftDeleteable;
 use App\Entity\Model\Timestampable;
 use App\Repository\TrickRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,6 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
 class Trick
 {
     use Timestampable;
+    use SoftDeleteable;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
