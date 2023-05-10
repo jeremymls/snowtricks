@@ -5,7 +5,7 @@ trait Timestampable
 {
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $createdAt;
 
@@ -31,12 +31,12 @@ trait Timestampable
         $this->updatedAt = new \DateTime();
     }
 
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTime $createdAt): self
+    public function setCreatedAt(?\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
         return $this;
