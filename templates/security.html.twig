@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+<div class="container py-5 vh-100">
+    <div class="row justify-content-center text-center align-items-center h-100">
+        <div class="col-lg-4">
+            <h1 class="h3 mb-3 font-weight-normal">{% block securityTitle %}{% endblock %}</h1>
+            <div class="border border-black rounded p-4">
+                {# {% if app.user %}
+                    <div class="mb-3">
+                        You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+                    </div>
+                {% else %} #}
+                    {% block form %}{% endblock %}
+                {# {% endif %} #}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

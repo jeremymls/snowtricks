@@ -7,6 +7,7 @@
         "php": ">=7.2.5",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "amphp/http-client": "4.2.1",
         "doctrine/annotations": "^2.0",
         "doctrine/doctrine-bundle": "^2.8",
         "doctrine/doctrine-migrations-bundle": "^3.2",
@@ -43,6 +44,7 @@
         "symfony/web-link": "5.4.*",
         "symfony/webpack-encore-bundle": "^1.16",
         "symfony/yaml": "5.4.*",
+        "symfonycasts/verify-email-bundle": "^1.13",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0"
     },
