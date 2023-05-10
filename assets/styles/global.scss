@@ -6,14 +6,20 @@ $primary: darken(#428bca, 20%);
 h1 {
     z-index: 1;
 }
+.alert {
+    cursor: pointer;
+}
 body {
+    min-height: 100vh;
+    position: relative;
     header {
         background-size: cover;
         background-position: top center;
         background-repeat: no-repeat;
     }
-    background-color: skyblue;
     footer {
+        position: absolute;
+        bottom: 0;
         background-color: #f5f5f5;
     }
 }
@@ -58,4 +64,8 @@ iframe {
     img, iframe {
         box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.712);
     }
+}
+
+.preview-div {
+    height: 300px;
 }
