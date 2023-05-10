@@ -14,31 +14,36 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item {% if app.request.attributes.get('_route') == 'app_add_trick' %}active{% endif %}">
+                <li class="nav-item {% if app.request.get('_route') == 'app_home' %}active{% endif %}">
+                    <a class="nav-link" href="{{ path('app_home') }}">Home</a>
+                </li>
+                {% if is_granted('ROLE_USER') %}
+                <li class="nav-item {% if app.request.get('_route') == 'app_add_trick' %}active{% endif %}">
                     <a class="nav-link" href="{{ path('app_add_trick') }}">Ajouter une figure</a>
                 </li>
+                {% endif %}
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item {% if app.request.pathinfo == path('app_home') %}active{% endif %}"><a class="nav-link" href="#">Connexion</a></li>
-                <div class="vr"></div>
-                <li class="nav-item {% if app.request.pathinfo == path('app_home') %}active{% endif %}"><a class="nav-link" href="#">Inscription</a></li>
-            </ul>
-            <div class="dropdown text-end">
                 {% if is_granted('ROLE_USER') %}
-                <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="rounded-circle bg-primary text-light" style="width: 32px; height: 32px; display: inline-block; vertical-align: middle; line-height: 32px; text-align: center; font-size: 1rem; font-weight: 700; text-transform: uppercase;">
-                        <span class="text-light">T</span>
-                    </span>
-                </a>
+                    <li class="nav-item dropdown text-end">
+                        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="rounded-circle bg-primary text-light" style="width: 32px; height: 32px; display: inline-block; vertical-align: middle; line-height: 32px; text-align: center; font-size: 1rem; font-weight: 700; text-transform: uppercase;">
+                                <span class="text-light">JM</span>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu text-small" style="">
+                            <li><a class="dropdown-item" href="#">Mon compte</a></li>
+                            {# <li><a class="dropdown-item link-success" href="#">Ajouter une figure</a></li> #}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item link-danger" href="{{ path('app_logout') }}"><strong>Déconnexion</strong></a></li>
+                        </ul>
+                    </li>
                 {% else %}
-                <ul class="dropdown-menu text-small" style="">
-                    <li><a class="dropdown-item" href="#">Mon compte</a></li>
-                    <li><a class="dropdown-item link-success" href="#">Ajouter une figure</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item link-danger" href="#"><strong>Déconnexion</strong></a></li>
-                </ul>
+                    <li class="nav-item {% if app.request.pathinfo == path('app_login') %}active{% endif %}"><a class="nav-link" href="{{ path('app_login')}}">Connexion</a></li>
+                    <div class="vr"></div>
+                    <li class="nav-item {% if app.request.pathinfo == path('app_register') %}active{% endif %}"><a class="nav-link" href="{{ path('app_register')}}">Inscription</a></li>
                 {% endif %}
-            </div>
+            </ul>
         </div>
     </div>
 </nav>

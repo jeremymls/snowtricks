@@ -15,11 +15,27 @@
         {% endblock %}
         {{ include('partials/_meta.html.twig') }}
     </head>
-    <body class="overflow-auto">
+    <body class="overflow-auto pb-5">
         {{ include('partials/_navbar.html.twig') }}
+        <div id="flash-container" class="alert-container mt-5 p-3 position-fixed top-0 w-100" style="z-index: 1040">
+            {% if app.user and app.user.isVerified() == false %}
+                <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
+                    Votre compte n'est pas encore vérifié, veuillez cliquer sur le lien de vérification envoyé par mail.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                <div class="alert alert-{{ label }} alert-dismissible fade show text-center" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
         {% if block('title') or block('_action') %}
-            <div class="pt-5 bg-light rounded-3">
-                <div class="container-fluid pt-5 position-relative">
+            <div class="pt-5 mb-3 rounded-3">
+                <div class="container-fluid py-5 position-relative">
                     <h1 id='title-header' class="display-5 fw-bold text-center position-absolute top-50 start-50 translate-middle">{{ block('title') }}</h1>
                     {% block _action %}{% endblock %}
                 </div>
