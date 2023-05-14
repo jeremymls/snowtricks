@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @Route("/trick")
@@ -27,14 +28,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class TrickController extends AbstractController
 {
     private $em;
+    private $slugger;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, SluggerInterface $slugger)
     {
         $this->em = $em;
+        $this->slugger = $slugger;
     }
 
     /**
-     * @Route("/show/{id}", name="app_show_trick")
+     * @Route("/show/{slug}", name="app_show_trick")
      */
     public function show(Trick $trick): Response
     {
@@ -58,6 +61,8 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // set slug
+            $trick->setSlug($this->slugger->slug($trick->getName())->lower());
             // get images
             $images = $form->get('images')->getData();
 
@@ -81,7 +86,7 @@ class TrickController extends AbstractController
             $this->em->flush();
 
             return $this->redirectToRoute('app_show_trick', [
-                'id' => $trick->getId()
+                'slug' => $trick->getSlug()
             ]);
         }
 
@@ -95,7 +100,7 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/edit/{id}", name="app_edit_trick")
+     * @Route("/edit/{slug}", name="app_edit_trick")
      */
     public function edit(Trick $trick, Request $request, PictureService $pictureService): Response
     {
@@ -107,6 +112,8 @@ class TrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $trick = $form->getData();
+            // set slug
+            $trick->setSlug($this->slugger->slug($trick->getName())->lower());
             // get images
             $images = $form->get('images')->getData();
 
@@ -133,7 +140,7 @@ class TrickController extends AbstractController
             }
 
             return $this->redirectToRoute('app_show_trick', [
-                'id' => $trick->getId()
+                'slug' => $trick->getSlug()
             ]);
         }
         return $this->render('trick/details.html.twig', [
@@ -180,12 +187,12 @@ class TrickController extends AbstractController
             $this->em->flush();
         }
         return $this->redirectToRoute('app_edit_trick', [
-            'id' => $trick->getId()
+            'slug' => $trick->getSlug()
         ]);
     }
 
     /**
-     * @Route("/change/miniature/{id}", name="app_change_miniature")
+     * @Route("/change/miniature/{slug}", name="app_change_miniature")
      */
     public function changeMiniature(Trick $trick, Request $request): Response
     {
@@ -206,7 +213,7 @@ class TrickController extends AbstractController
             $this->em->flush();
 
             return $this->redirectToRoute('app_edit_trick', [
-                'id' => $trick->getId()
+                'slug' => $trick->getSlug()
             ]);
         }
 
