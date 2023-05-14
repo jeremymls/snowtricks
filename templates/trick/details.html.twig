@@ -10,13 +10,20 @@
             {% else %}
                 <img src="{{ asset('core/img/default_mini.png') }}" alt="miniature par défaut">
             {% endif %}
-            {% if trick  and trick.images | length > 0 and is_granted('ROLE_USER') %}
-            <div class="position-absolute top-0 end-0 m-3 p-1 border border-dark rounded">
-                <a href="{% if app.request.get('_route') == 'app_show_trick' %}{{ path('app_edit_trick', {'id': trick.id}) }}{% else %}{{ path('app_change_miniature', {'id': trick.id}) }}{% endif %}" class="btn btn-outline"><i class="fas fa-pencil-alt text-warning"></i></a>
-                {% if trick.miniature %}
-                    <button type="button" class="btn btn-outline" data-bs-toggle="modal" data-bs-target="{% if app.request.get('_route') == 'app_show_trick' %}#deleteTrickModal{% else %}#deleteMiniatureModal{% endif %}"><i class="fas fa-trash-alt text-danger"></i></button>
-                {% endif %}
-            </div>
+            {% if trick and is_granted('ROLE_USER') %}
+                <div class="position-absolute top-0 end-0 m-3 p-1 border border-dark rounded">
+                    {% if app.request.get('_route') == 'app_show_trick' %}
+                        <a href="{{ path('app_edit_trick', {'slug': trick.slug}) }}" class="btn btn-outline"><i class="fas fa-pencil-alt text-warning"></i></a>
+                        <button type="button" class="btn btn-outline" data-bs-toggle="modal" data-bs-target="#deleteTrickModal"><i class="fas fa-trash-alt text-danger"></i></button>
+                    {% else %}
+                        {% if trick.images | length > 0 %}
+                            <a href="{{ path('app_change_miniature', {'slug': trick.slug}) }}" class="btn btn-outline"><i class="fas fa-pencil-alt text-warning"></i></a>
+                        {% endif %}
+                        {% if trick.miniature %}
+                            <button type="button" class="btn btn-outline" data-bs-toggle="modal" data-bs-target="#deleteMiniatureModal"><i class="fas fa-trash-alt text-danger"></i></button>
+                        {% endif %}
+                    {% endif %}
+                </div>
             {% endif %}
         </div>
     </section>
