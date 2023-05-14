@@ -22,7 +22,7 @@ window.onload = function () {
         data.append('description', description);
 
         let request = new XMLHttpRequest();
-        request.open('POST', '{{ path("app_add_group") }}');
+        request.open('POST', this.dataset.action);
         request.send(data);
 
         request.onreadystatechange = function () {

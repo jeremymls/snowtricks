@@ -179,7 +179,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     {{ form_row(groupForm.save, {
-                        'attr': {'class': 'btn btn-success', 'data-bs-dismiss': 'modal'},
+                        'attr': {'class': 'btn btn-success', 'data-bs-dismiss': 'modal', 'data-action': path('app_add_group') },
                         'label': 'Ajouter',
                     }) }}
                 </div>
