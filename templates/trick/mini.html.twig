@@ -9,7 +9,7 @@
         <div class="row justify-content-center my-4">
             <div class="col-6 col-md-4 mb-3">
                 {{ form_start(form) }}
-                    {{ form_row(form.miniature) }}
+                    {{ form_row(form.miniature,{'attr': {'class': 'd-none'}}) }}
                 <div class="position-relative">
                     <img id="thumbnail_slot" src="{{ asset('uploads/images/tricks/' ~ trick.miniature) }}" class="mini overview ratio ratio-2x1 mb-2'" alt="miniature">
                 </div>
@@ -25,7 +25,6 @@
                 {% for image in trick.images %}
                     <div class="col-6 col-md-4 mb-3">
                         <img src="{{ asset('uploads/images/tricks/' ~ image.name) }}" class="mini overview hoverable ratio ratio-2x1 mb-2'" alt="{{ image.name }}">
-                        <p>{{ image.name }}</p>
                     </div>
                 {% endfor %}
             </div>

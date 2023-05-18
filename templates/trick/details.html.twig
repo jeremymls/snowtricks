@@ -10,17 +10,15 @@
             {% else %}
                 <img src="{{ asset('core/img/default_mini.png') }}" alt="miniature par défaut">
             {% endif %}
-            {% if trick and is_granted('ROLE_USER') %}
+            {% if trick and is_granted('ROLE_USER') and app.request.get('_route') != 'app_add_trick' %}
                 <div class="position-absolute top-0 end-0 m-3 p-1 border border-dark rounded">
                     {% if app.request.get('_route') == 'app_show_trick' %}
-                        <a href="{{ path('app_edit_trick', {'slug': trick.slug}) }}" class="btn btn-outline"><i class="fas fa-pencil-alt text-warning"></i></a>
-                        <button type="button" class="btn btn-outline" data-bs-toggle="modal" data-bs-target="#deleteTrickModal"><i class="fas fa-trash-alt text-danger"></i></button>
+                        <a href="{{ path('app_edit_trick', {'slug': trick.slug}) }}" class="btn btn-outline border-0"><i class="fas fa-pencil-alt text-warning"></i></a>
+                        <button type="button" class="btn btn-outline border-0" data-bs-toggle="modal" data-bs-target="#deleteTrickModal"><i class="fas fa-trash-alt text-danger"></i></button>
                     {% else %}
-                        {% if trick.images | length > 0 %}
-                            <a href="{{ path('app_change_miniature', {'slug': trick.slug}) }}" class="btn btn-outline"><i class="fas fa-pencil-alt text-warning"></i></a>
-                        {% endif %}
+                        <a href="{{ path('app_change_miniature', {'slug': trick.slug}) }}" class="btn btn-outline border-0 {% if trick.images | length == 0 %}disabled{% endif %}"><i class="fas fa-pen-to-square text-{% if trick.images | length == 0 %}secondary{% else %}warning{% endif %}"></i></a>
                         {% if trick.miniature %}
-                            <button type="button" class="btn btn-outline" data-bs-toggle="modal" data-bs-target="#deleteMiniatureModal"><i class="fas fa-trash-alt text-danger"></i></button>
+                            <button type="button" class="btn btn-outline border-0" data-bs-toggle="modal" data-bs-target="#deleteMiniatureModal"><i class="fas fa-trash-alt text-danger"></i></button>
                         {% endif %}
                     {% endif %}
                 </div>
