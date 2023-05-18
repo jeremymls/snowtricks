@@ -21,12 +21,12 @@
         <div class="col-lg-2 mb-3 mx-1 p-0 text-center shadow border">
             <img src="{% if trick.miniature %}{{ asset('uploads/images/tricks/' ~ trick.miniature) }}{% else %}{{ asset('core/img/default_mini.png') }}{% endif %}" class="mini" width="100%" alt="">
             <div class="row p-2 d-flex flex-nowrap justify-content-between">
-                <div class="col text-start text-truncate">
+                <div class="col text-start text-truncate pe-0">
                     <a href="{{ path('app_show_trick', {'slug': trick.slug}) }}" class="">{{ trick.name }}</a>
                 </div>
                 <div class="col-auto d-flex flex-nowrap">
                     <a class="me-3" href="{{ path('app_edit_trick', {'slug': trick.slug}) }}"><i class="fa-sharp fa-solid fa-pencil"></i></a>
-                    <button type="button" class="btn btn-outline border-0 me-3 p-0" data-bs-toggle="modal" data-id="{{ trick.id }}" data-bs-target="#deleteTrickModal"><i class="fas fa-trash-alt text-danger"></i></button>
+                    <button type="button" class="btn btn-outline border-0 p-0" data-bs-toggle="modal" data-id="{{ trick.id }}" data-bs-target="#deleteTrickModal"><i class="fas fa-trash-alt text-danger"></i></button>
                     {# <a class="delete-trick" data-id="{{ trick.id }}" data-token="{{ csrf_token('delete' ~ trick.id) }}" href="{{ path('app_delete_trick', {'id': trick.id}) }}"><i class="fas fa-trash-alt"></i></a> #}
                 </div>
             </div>
