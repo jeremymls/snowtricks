@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+{% set user = app.user %}
+{% block title %}Profil de {{ user.username }}{% endblock %}
+
+
+{% block body %}
+<div class="container mb-5 pb-3">
+    <section>
+        {{ form_start(form) }}
+        <div class="d-flex align-items-start py-5">
+            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <button class="nav-link active" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="true">Profil</button>
+                <button class="nav-link" id="v-pills-edit-tab" data-bs-toggle="pill" data-bs-target="#v-pills-edit" type="button" role="tab" aria-controls="v-pills-edit" aria-selected="false">Modifier</button>
+                <button class="nav-link" id="v-pills-tricks-tab" data-bs-toggle="pill" data-bs-target="#v-pills-tricks" type="button" role="tab" aria-controls="v-pills-tricks" aria-selected="false">Figures</button>
+            </div>
+            <div class="tab-content" id="v-pills-tabContent">
+                {# Profile #}
+                <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab" tabindex="0">
+                    <ul>
+                        <li>Username : {{ user.username }}</li>
+                        <li>Prénom : {{ user.first }}</li>
+                        <li>Nom : {{ user.last }}</li>
+                        <li>Email : {{ user.email }}</li>
+                        <li>Créé le : {% if user.createdAt is not null %}{{ user.createdAt|date('d/m/Y à H:i') }}{% endif %}</li>
+                        <li>Modifié le : {% if user.updatedAt is not null %}{{ user.updatedAt|date('d/m/Y à H:i') }}{% endif %}</li>
+                    </ul>
+                    <a href="{{ path('app_change_password') }}" type="button" class="btn btn-outline-warning mb-3"><i class="fas fa-key"></i> Modifier le mot de passe</a>
+                </div>
+                {# Edit #}
+                <div class="tab-pane fade" id="v-pills-edit" role="tabpanel" aria-labelledby="v-pills-edit-tab" tabindex="0">
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form_row(form.username) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(form.email) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form_row(form.first) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(form.last) }}
+                        </div>
+                    </div>
+                    {{ form_row(form.submit) }}
+                </div>
+                {# Tricks #}
+                <div class="tab-pane fade" id="v-pills-tricks" role="tabpanel" aria-labelledby="v-pills-tricks-tab" tabindex="0">
+
+                    {# TODO: macro #}
+                    <div class="row justify-content-around text-center">
+                        {% for trick in user.getTricks() %}
+                        <div class="col-lg-5 mb-4 px-1 text-center">
+                            <div class="p-0 text-center mb-2 shadow border">
+                                <img src="{% if trick.miniature %}{{ asset('uploads/images/tricks/' ~ trick.miniature) }}{% else %}{{ asset('core/img/default_mini.png') }}{% endif %}" class="mini" width="100%" alt="">
+                                <div class="row p-2 d-flex flex-nowrap justify-content-between">
+                                    <div class="col text-start text-truncate">
+                                        <a href="{{ path('app_show_trick', {'slug': trick.slug}) }}" class="">{{ trick.name }}</a>
+                                    </div>
+                                    <div class="col-auto d-flex flex-nowrap">
+                                        <a class="me-3" href="{{ path('app_edit_trick', {'slug': trick.slug}) }}"><i class="fa-sharp fa-solid fa-pencil"></i></a>
+                                        <button type="button" class="btn btn-outline border-0 me-3 p-0" data-bs-toggle="modal" data-id="{{ trick.id }}" data-bs-target="#deleteTrickModal"><i class="fas fa-trash-alt text-danger"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>Le {{ trick.createdAt|date('d/m/Y à H:i') }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </section>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
