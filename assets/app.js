@@ -29,6 +29,6 @@ $(document).ready(function(){
     // $("#flash-container").delay(15000).slideUp("slow");
     $(".alert").delay(10000).slideUp("slow");
     $(".alert").click(function(){
-        $("#flash-container").hide();
+        $(this).hide();
     });
 });

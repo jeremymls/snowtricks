@@ -17,21 +17,20 @@
     </head>
     <body class="overflow-auto pb-5">
         {{ include('partials/_navbar.html.twig') }}
-        <div id="flash-container" class="alert-container mt-5 p-3 position-fixed top-0 w-100" style="z-index: 1040">
-            {% if app.user and app.user.isVerified() == false %}
-                <div class="alert alert-warning alert-dismissible fade show text-center" role="alert">
-                    Votre compte n'est pas encore vérifié, veuillez cliquer sur le lien de vérification envoyé par mail.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endif %}
-            {% for label, messages in app.flashes %}
-                {% for message in messages %}
-                <div class="alert alert-{{ label }} alert-dismissible fade show text-center" role="alert">
+        {% if app.user and app.user.isVerified() == false %}
+            <div class="alert alert-warning alert-dismissible fade show text-center m-4" role="alert">
+                Votre compte n'est pas encore vérifié, veuillez cliquer sur le lien de vérification envoyé par mail.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endif %}
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }} alert-dismissible fade show text-center m-4" role="alert">
                     {{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                {% endfor %}
             {% endfor %}
+        {% endfor %}
         </div>
         {% if block('title') or block('_action') %}
             <div class="pt-5 mb-3 rounded-3">
