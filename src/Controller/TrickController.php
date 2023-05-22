@@ -2,17 +2,22 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Group;
 use App\Entity\Image;
 use App\Entity\Trick;
 use App\Entity\Video;
+use App\Form\CommentType;
 use App\Form\GroupType;
 use App\Form\TrickType;
+use App\Repository\CommentRepository;
 use App\Service\PictureService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Asset\Package;
+use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -39,11 +44,33 @@ class TrickController extends AbstractController
     /**
      * @Route("/show/{slug}", name="app_show_trick")
      */
-    public function show(Trick $trick): Response
+    public function show(Trick $trick, Request $request, CommentRepository $commentRepository): Response
     {
+        $paginator = $commentRepository->getCommentPaginator($trick, 0);
+
+        $comment = new Comment();
+        $comment->setTrick($trick);
+        $comment->setUser($this->getUser());
+        $commentForm = $this->createForm(CommentType::class, $comment);
+
+        $commentForm->handleRequest($request);
+
+        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            $this->em->persist($comment);
+            $this->em->flush();
+
+            return $this->redirectToRoute('app_show_trick', [
+                'slug' => $trick->getSlug(),
+                '_fragment' => 'comments'
+            ]);
+        }
+
         return $this->render('trick/details.html.twig', [
             'trick' => $trick,
-            'title' => $trick->getName()
+            'title' => $trick->getName(),
+            'comments' => $paginator,
+            'next' => min(count($paginator), CommentRepository::PAGINATOR_PER_PAGE),
+            'commentForm' => $commentForm->createView()
         ]);
     }
 
@@ -258,4 +285,40 @@ class TrickController extends AbstractController
         }
         return new JsonResponse(['error' => 'Token Invalide'], 400);
     }
+
+    /**
+     * @Route("/get/comments/{offset}/{slug}", name="app_get_comments", methods={"GET"})
+     */
+    public function getComments(int $offset, Trick $trick, CommentRepository $commentRepository): JsonResponse
+    {
+        $paginator = $commentRepository->getCommentPaginator($trick, $offset);
+        $package = new Package(new EmptyVersionStrategy());
+        $comments = [];
+        foreach ($paginator as $comment) {
+            $src = $comment->getUser()->getImage() ?
+            '/uploads/images/users/' . $comment->getUser()->getImage() :
+            '/core/img/default-user.png';
+            $comments[] = [
+                'id' => $comment->getId(),
+                'text' => $comment->getText(),
+                'createdAt' => $comment->getCreatedAt()->format('d/m/Y à H:i'),
+                'user' => $comment->getUser()->getUsername(),
+                'src' => $src
+            ];
+        }
+
+        $url = $this->generateUrl('app_get_comments', [
+            'offset' => $offset + CommentRepository::PAGINATOR_PER_PAGE,
+            'slug' => $trick->getSlug()
+        ]);
+        $next = min(count($paginator), $offset + CommentRepository::PAGINATOR_PER_PAGE);
+        $action = $next < count($paginator) ? $url : null;
+
+        return new JsonResponse([
+            'comments' => $comments,
+            'action' => $action
+
+        ]);
+    }
+
 }

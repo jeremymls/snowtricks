@@ -18,35 +18,56 @@
             <div class="tab-content" id="v-pills-tabContent">
                 {# Profile #}
                 <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab" tabindex="0">
-                    <ul>
-                        <li>Username : {{ user.username }}</li>
-                        <li>Prénom : {{ user.first }}</li>
-                        <li>Nom : {{ user.last }}</li>
-                        <li>Email : {{ user.email }}</li>
-                        <li>Créé le : {% if user.createdAt is not null %}{{ user.createdAt|date('d/m/Y à H:i') }}{% endif %}</li>
-                        <li>Modifié le : {% if user.updatedAt is not null %}{{ user.updatedAt|date('d/m/Y à H:i') }}{% endif %}</li>
-                    </ul>
-                    <a href="{{ path('app_change_password') }}" type="button" class="btn btn-outline-warning mb-3"><i class="fas fa-key"></i> Modifier le mot de passe</a>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <ul>
+                                <li>Username : {{ user.username }}</li>
+                                <li>Prénom : {{ user.first }}</li>
+                                <li>Nom : {{ user.last }}</li>
+                                <li>Email : {{ user.email }}</li>
+                                <li>Créé le : {% if user.createdAt is not null %}{{ user.createdAt|date('d/m/Y à H:i') }}{% endif %}</li>
+                                <li>Modifié le : {% if user.updatedAt is not null %}{{ user.updatedAt|date('d/m/Y à H:i') }}{% endif %}</li>
+                            </ul>
+                        </div>
+                        <div class="col text-center">
+                            <img src="{% if user.image %}{{ asset('uploads/images/users/' ~ user.image) }}{% else %}{{ asset('core/img/default-user.png') }}{% endif %}" class="img-fluid rounded-circle w-50 user_image" alt="">
+                        </div>
+                    </div>
                 </div>
                 {# Edit #}
                 <div class="tab-pane fade" id="v-pills-edit" role="tabpanel" aria-labelledby="v-pills-edit-tab" tabindex="0">
-                    <div class="row">
-                        <div class="col-md-6">
-                            {{ form_row(form.username) }}
+                    <div class="row mb-3">
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form_row(form.username) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(form.email) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form_row(form.first) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(form.last) }}
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            {{ form_row(form.email) }}
+                        <div class="col text-center">
+                            {{ form_row(form.image) }}
+                            <img id="img-preview" src="{% if user.image %}{{ asset('uploads/images/users/' ~ user.image) }}{% else %}{{ asset('core/img/default-user.png') }}{% endif %}" class="img-fluid rounded-circle w-50 user_image" alt="">
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            {{ form_row(form.first) }}
+                    <div class="row justify-content-center">
+                        <div class="col-auto">
+                            {{ form_row(form.submit) }}
                         </div>
-                        <div class="col-md-6">
-                            {{ form_row(form.last) }}
+                        <div class="col-auto">
+                            <a href="{{ path('app_change_password') }}" type="button" class="btn btn-outline-warning mb-3"><i class="fas fa-key"></i> Modifier le mot de passe</a>
                         </div>
                     </div>
-                    {{ form_row(form.submit) }}
                 </div>
                 {# Tricks #}
                 <div class="tab-pane fade" id="v-pills-tricks" role="tabpanel" aria-labelledby="v-pills-tricks-tab" tabindex="0">
@@ -81,5 +102,19 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
+{{ parent() }}
+<script>
+    $(document).ready(function() {
+        $("#user_image").change(function() {
+            let file = this.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function(event) {
+                    $("#img-preview").attr("src", event.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    })
+</script>
 {% endblock %}

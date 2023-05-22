@@ -75,7 +75,9 @@ function providerListener(provider, add = false) {
         const form = add ? e.target.parentElement.parentElement.parentElement.parentElement :this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
         const video_id = form.querySelector('input[name*="[video_id]"]').value;
         const url = transformURL(e.target.value);
-        form.nextElementSibling.querySelector('iframe').src = url + video_id;
+        if (form.nextElementSibling != null) {
+            form.nextElementSibling.querySelector('iframe').src = url + video_id;
+        }
     });
 }
 

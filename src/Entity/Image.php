@@ -33,7 +33,9 @@ class Image
      */
     public function prePersist()
     {
-        $this->trick->setUpdatedAt(new \DateTime());
+        if (isset($this->trick)) {
+            $this->trick->setUpdatedAt(new \DateTime());
+        }
     }
 
     /**
