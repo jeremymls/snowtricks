@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Image;
 use App\Form\PasswordFormType;
 use App\Form\UserType;
+use App\Service\PictureService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,7 +46,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/profile", name="app_profile")
      */
-    public function profile(Request $request, EntityManagerInterface $em): Response {
+    public function profile(Request $request, EntityManagerInterface $em, PictureService $pictureService): Response {
         $user = $this->getUser();
         if (!$user) {
             $this->addFlash('warning', 'Vous devez être connecté·e pour accéder à votre profil.');
@@ -57,6 +59,16 @@ class SecurityController extends AbstractController
 
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
+
+                $image = $form->get('image')->getData();
+                if ($image) {
+                    $folder = 'users';
+                    $file = $pictureService->add($image, $folder);
+                    $img = new Image();
+                    $img->setName($file);
+                    $user->setImage($img);
+                }
+
                 $em->flush();
                 $this->addFlash('success', 'Votre profil a bien été mis à jour.');
                 return $this->redirectToRoute('app_profile');
