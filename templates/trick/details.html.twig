@@ -91,7 +91,7 @@
                 </div>
             {% endfor %}
             <span id="media-separator" hidden></span>
-            {% for video in trick.videos %}
+            {% for video in trick.getVideos() %}
                 <div class="col-3 col-md-2">
                     <div class="row preview-div align-items-center">
                         <div class="col-12" id="media_trick_videos_{{ loop.index0 }}">
@@ -107,9 +107,9 @@
                         </div>
                     </div>
                     {% if app.request.get('_route') != 'app_show_trick' %}
-                    <div class="mx-3 mt-3 p-1 border border-dark rounded">
-                        <a href="#" type="button" class="mx-2" data-bs-toggle="modal" data-bs-target="#addVideoModal"><i class="fas fa-pencil-alt text-warning"></i></a>
-                        <a href="{{ path('app_delete_trick_video', {'id': video.id}) }}" data-delete-video data-id="{{ video.id }}" data-loop="{{ loop.index0 }}" data-token="{{ csrf_token('delete' ~ video.id) }}" class="mx-2"><i class="fas fa-trash-alt text-danger"></i></a>
+                    <div class="mx-3 mt-3 p-1 border border-dark rounded d-flex justify-content-center">
+                        <a href="#" type="button" class="mx-3" data-bs-toggle="modal" data-bs-target="#addVideoModal"><i class="fas fa-pencil-alt text-warning"></i></a>
+                        <button data-bs-toggle="modal" data-bs-target="#deleteVideoModal" data-id="{{ video.videoId }}" data-trick="{{ video.trick.getId() }}" data-loop="{{ loop.index0 }}" class="mx-3 btn btn-outline border-0 p-0 deleteBtn"><i class="fas fa-trash-alt text-danger"></i></button>
                     </div>
                     {% endif %}
                 </div>
@@ -283,6 +283,21 @@
             </div>
         </div>
     </div>
+
+    <!-- Delete Video Modal -->
+    <div class="modal" id="deleteVideoModal" tabindex="-1" aria-labelledby="deleteVideoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body z-index-1">
+                    Êtes-vous sûr de vouloir supprimer cette vidéo?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                    <button type="button" class="btn btn-danger" id="deleteVideoConfirm">Oui</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endif %}
 {% endblock %}
 
@@ -324,6 +339,58 @@
                     $('#comments').append(html);
                 }
             });
+        });
+    });
+    </script>
+    <script>
+    $(document).ready(function() {
+        $('.deleteBtn').click(function(e) {
+            e.preventDefault();
+        });
+        $('#deleteVideoModal').on('show.bs.modal', function (event) {
+            button = $(event.relatedTarget);
+            id = button.data('id');
+            trick = button.data('trick');
+            loop = button.data('loop');
+            inDb = button.data('inDb');
+            $('#deleteVideoConfirm')
+                .attr('data-id', id)
+                .attr('data-loop', loop)
+                .attr('data-trick', trick)
+                .attr('data-inDb', inDb)
+            ;
+        });
+        $('#deleteVideoConfirm').click(function(e) {
+            id = e.target.dataset.id;
+            trick = e.target.dataset.trick;
+            loop = e.target.dataset.loop;
+            $.ajax({
+                url: "{{ path('app_delete_trick_video') }}",
+                type: 'DELETE',
+                data: {
+                    id: id,
+                    trick: trick,
+                    _token: "{{ csrf_token('deleteVideo' ~ trick.id) }}"
+                },
+                success: function(data) {
+                    $('#media_trick_videos_' + loop).parent().parent().remove();
+                    $('#trick_videos_' + loop).parent().parent().prev().remove();
+                    $('#trick_videos_' + loop).parent().parent().next().remove();
+                    $('#trick_videos_' + loop).parent().parent().remove();
+                    $('#deleteVideoModal').modal('hide');
+                }
+            });
+        });
+        $('#cancelVideoAdd').click(function(e) {
+            id = e.target.dataset.id;
+            trick = e.target.dataset.trick;
+            loop = e.target.dataset.loop;
+            inDb = e.target.dataset.indb;
+            $('#media_video_' + loop).remove();
+            $('#video_' + loop).next().next().remove();
+            $('#video_' + loop).next().remove();
+            $('#video_' + loop).remove();
+            $('#deleteVideoModal').modal('hide');
         });
     });
     </script>

@@ -273,17 +273,23 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/delete/video/{id}", name="app_delete_trick_video", methods={"DELETE"})
+     * @Route("/delete/video", name="app_delete_trick_video", methods={"DELETE"})
      */
-    public function deleteVideo(Video $video, Request $request): JsonResponse
+    public function deleteVideo(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-        if ($this->isCsrfTokenValid('delete' . $video->getId(), $data['_token'])) {
-            $this->em->remove($video);
-            // $this->em->flush();
+        $video = $this->em->getRepository(Video::class)->findOneBy([
+            'video_id' => $request->get('id'),
+            'trick' => $request->get('trick')
+        ]);
+        if (!$video) {
+            return new JsonResponse(['error' => 'Video non trouvée'], 400);
+        }
+        if ($this->isCsrfTokenValid('deleteVideo' . $video->getTrick()->getId(), $request->get('_token'))) {
+            $video->getTrick()->removeVideo($video);
+            $this->em->flush();
             return new JsonResponse(['success' => true], 200);
         }
-        return new JsonResponse(['error' => 'Token Invalide'], 400);
+        return new JsonResponse(['error' => 'Token Invalide'], 403);
     }
 
     /**
