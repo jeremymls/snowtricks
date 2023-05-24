@@ -47,14 +47,6 @@ class Video
         $this->trick->setUpdatedAt(new \DateTime());
     }
 
-    /**
-     * @ORM\PreRemove
-     */
-    public function preRemove()
-    {
-        $this->trick->setUpdatedAt(new \DateTime());
-    }
-
     public function getId(): ?int
     {
         return $this->id;

@@ -24,12 +24,8 @@ class VideoType extends AbstractType
             'expanded' => true,
             'multiple' => false,
         ])
-            ->add('name', null, [
-                'label' => 'Nom',
-                'row_attr' => ['class' => 'form-floating mb-3'],
-            ])
             ->add('video_id', null, [
-                'label' => 'Identifiant',
+                'label' => 'Url ou identifiant',
                 'row_attr' => ['class' => 'form-floating mb-3'],
             ])
         ;

@@ -139,18 +139,17 @@ function addButton(collection, newButton) {
     deleteButton.innerHTML = '<i class="fas fa-trash"></i> Supprimer';
 
     let deleteModalButton = document.createElement('a');
-    deleteModalButton.href = '#';
     deleteModalButton.className = 'mx-2';
     deleteModalButton.id = 'delete-video' + index;
     deleteModalButton.innerHTML = '<i class="fas fa-trash-alt text-danger"></i>';
 
     newForm.appendChild(deleteButton);
 
-    html = "<iframe width='100%' height='100%' src='' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>";
+    iframeHTML = "<iframe width='100%' height='100%' src='' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>";
 
     let videoPreview = document.createElement('div');
     videoPreview.className = 'col-md-6 mb-3';
-    videoPreview.innerHTML = html;
+    videoPreview.innerHTML = iframeHTML;
 
     let videoDisplay = document.createElement('div');
     videoDisplay.className = 'col-3 col-md-2';
@@ -168,7 +167,7 @@ function addButton(collection, newButton) {
     let mediaBtnDiv = document.createElement('div');
     mediaBtnDiv.className = 'mx-3 mt-3 p-1 border border-dark rounded';
 
-    mediaBtnSlotCol.innerHTML = html;
+    mediaBtnSlotCol.innerHTML = iframeHTML;
     mediaBtnSlotRow.appendChild(mediaBtnSlotCol);
     videoDisplay.appendChild(mediaBtnSlotRow);
     mediaBtnDiv.appendChild(deleteModalButton);
@@ -203,12 +202,10 @@ function addButton(collection, newButton) {
     });
 
     function deleteVideo() {
-        if (confirm('Etes-vous sûr de vouloir supprimer cette vidéo ?')) {
             mediaBtnDiv.remove();
             videoDisplay.remove();
             newForm.remove();
             videoPreview.remove();
             divider.remove();
-        }
     }
 }
