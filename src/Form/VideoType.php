@@ -20,7 +20,7 @@ class VideoType extends AbstractType
                 'dailymotion' => 'dailymotion',
                 'vimeo' => 'vimeo',
             ],
-            // 'data' => 'youtube',
+            'data' => 'youtube',
             'expanded' => true,
             'multiple' => false,
         ])

@@ -11,7 +11,7 @@
                 {{ form_start(form) }}
                     {{ form_row(form.miniature,{'attr': {'class': 'd-none'}}) }}
                 <div class="position-relative">
-                    <img id="thumbnail_slot" src="{{ asset('uploads/images/tricks/' ~ trick.miniature) }}" class="mini overview ratio ratio-2x1 mb-2'" alt="miniature">
+                    <img id="thumbnail_slot" src="{% if trick.miniature %}{{ asset('uploads/images/tricks/' ~ trick.miniature) }}{% else %}{{ asset('core/img/default_mini.png') }}{% endif %}" class="mini overview ratio ratio-2x1 mb-2'" alt="miniature">
                 </div>
                 <div class="row justify-content-center my-4">
                     <div class="col-6 col-md-4 mb-3">
@@ -22,6 +22,9 @@
             </div>
             <div id='select-mini' class="row justify-content-center my-5">
                 <p>Sélectionnez une image</p>
+                <div class="col-6 col-md-4 mb-3">
+                    <img src="{{ asset('core/img/default_mini.png') }}" class="mini overview hoverable ratio ratio-2x1 mb-2'" alt="">
+                </div>
                 {% for image in trick.images %}
                     <div class="col-6 col-md-4 mb-3">
                         <img src="{{ asset('uploads/images/tricks/' ~ image.name) }}" class="mini overview hoverable ratio ratio-2x1 mb-2'" alt="{{ image.name }}">
