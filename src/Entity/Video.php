@@ -19,7 +19,7 @@ class Video
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, options={"default" : "video"}, nullable=true)
      */
     private $name;
 
@@ -45,6 +45,15 @@ class Video
     public function prePersist()
     {
         $this->trick->setUpdatedAt(new \DateTime());
+        $this->checkVideoId();
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function preUpdate()
+    {
+        $this->checkVideoId();
     }
 
     public function getId(): ?int
@@ -57,7 +66,7 @@ class Video
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
@@ -98,5 +107,48 @@ class Video
         $this->video_id = $video_id;
 
         return $this;
+    }
+
+    public function checkVideoId(): self
+    {
+        if ($this->provider === 'youtube') {
+            parse_str( parse_url( $this->video_id, PHP_URL_QUERY ), $vars );
+            if (isset($vars['v'])) {
+                $this->setVideoId($vars['v']);
+            } elseif (isset(explode('youtu.be/', $this->video_id)[1])) {
+                $this->setVideoId(explode('youtu.be/', $this->video_id)[1]);
+            } elseif (isset(explode('embed/', $this->video_id)[1])) {
+                $this->setVideoId(explode('embed/', $this->video_id)[1]);
+            } 
+        } elseif ($this->provider === 'dailymotion') {
+            if (isset(explode('video/', $this->video_id)[1])) {
+                $this->setVideoId(explode('video/', $this->video_id)[1]);
+            } elseif (isset(explode('embed/video/', $this->video_id)[1])) {
+                $this->setVideoId(explode('embed/video/', $this->video_id)[1]);
+            } elseif (isset(explode('dai.ly/', $this->video_id)[1])) {
+                $this->setVideoId(explode('dai.ly/', $this->video_id)[1]);
+            }
+        } elseif ($this->provider === 'vimeo') {
+            if (isset(explode('vimeo.com/', $this->video_id)[1])) {
+                $this->setVideoId(explode('vimeo.com/', $this->video_id)[1]);
+            } elseif (isset(explode('player.vimeo.com/video/', $this->video_id)[1])) {
+                $this->setVideoId(explode('player.vimeo.com/video/', $this->video_id)[1]);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getEmbedUrl(): string
+    {
+        if ($this->provider === 'youtube') {
+            return 'https://www.youtube.com/embed/' . $this->video_id;
+        } elseif ($this->provider === 'dailymotion') {
+            return 'https://www.dailymotion.com/embed/video/' . $this->video_id;
+        } elseif ($this->provider === 'vimeo') {
+            return 'https://player.vimeo.com/video/' . $this->video_id;
+        } else {
+            return '';
+        }
     }
 }

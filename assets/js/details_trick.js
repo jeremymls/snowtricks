@@ -85,9 +85,46 @@ function inputListener(input, add = false) {
     input.addEventListener('input', function (e) {
         const form = add ? this.parentElement.parentElement : this.parentElement.parentElement.parentElement.parentElement;
         provider = form.querySelector('input[name*="[provider]"]:checked');
+        if (provider == null) {
+            return;
+        }
+
+        var video_id;
+
+        if (provider.value == 'youtube') {
+            if (this.value.split('v=')[1]) {
+                video_id = this.value.split('v=')[1]
+            } else if (this.value.split('youtu.be/')[1]) {
+                video_id = this.value.split('youtu.be/')[1];
+            } else if (this.value.split('embed/')[1]) {
+                video_id = this.value.split('embed/')[1];
+            }
+        } else if (provider.value == 'dailymotion') {
+            if (this.value.split('video/')[1]) {
+                video_id = this.value.split('video/')[1];
+            } else if (this.value.split('dai.ly/')[1]) {
+                video_id = this.value.split('dai.ly/')[1];
+            }
+        } else if (provider.value == 'vimeo') {
+            if (this.value.split('vimeo.com/')[1]) {
+                video_id = this.value.split('vimeo.com/')[1];
+            }
+        }
+
+
+
+        if (video_id) {
+            var ampersandPosition = video_id.indexOf('&');
+            if(ampersandPosition != -1) {
+                video_id = video_id.substring(0, ampersandPosition);
+            }
+        } else {
+            video_id = this.value;
+        }
+
         const url = transformURL(provider?form.querySelector('input[name*="[provider]"]:checked').value:null);
-        form.nextElementSibling.querySelector('iframe').src = url + this.value;
-        document.querySelector('#media_' + this.parentElement.parentElement.id + ' iframe').src = url + this.value;
+        form.nextElementSibling.querySelector('iframe').src = url + video_id;
+        document.querySelector('#media_' + this.parentElement.parentElement.id + ' iframe').src = url + video_id;
     });
 }
 
@@ -102,9 +139,6 @@ function transformURL(provider) {
             break;
         case 'vimeo':
             url = 'https://player.vimeo.com/video/';
-            break;
-        case 'facebook':
-            url = 'https://www.facebook.com/plugins/video.php?href=';
             break;
         default:
             url = ' ';
@@ -132,6 +166,13 @@ function addButton(collection, newButton) {
         label.parentElement.className = 'form-check-inline';
     });
 
+    let editButton = document.createElement('a');
+    editButton.type = 'button';
+    editButton.className = 'mx-3';
+    editButton.dataset.bsToggle = 'modal';
+    editButton.dataset.bsTarget = '#addVideoModal';
+    editButton.innerHTML = '<i class="fas fa-pencil-alt text-warning"></i>';
+
     let deleteButton = document.createElement('button');
     deleteButton.type = 'button';
     deleteButton.className = 'btn btn-sm btn-danger';
@@ -145,7 +186,7 @@ function addButton(collection, newButton) {
 
     newForm.appendChild(deleteButton);
 
-    iframeHTML = "<iframe width='100%' height='100%' src='' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>";
+    iframeHTML = "<iframe width='100%' height='100%' src='https://www.youtube.com/embed/' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>";
 
     let videoPreview = document.createElement('div');
     videoPreview.className = 'col-md-6 mb-3';
@@ -165,11 +206,12 @@ function addButton(collection, newButton) {
     divider.className = 'my-2';
 
     let mediaBtnDiv = document.createElement('div');
-    mediaBtnDiv.className = 'mx-3 mt-3 p-1 border border-dark rounded';
+    mediaBtnDiv.className = 'mx-3 mt-3 p-1 border border-dark rounded d-flex justify-content-center';
 
     mediaBtnSlotCol.innerHTML = iframeHTML;
     mediaBtnSlotRow.appendChild(mediaBtnSlotCol);
     videoDisplay.appendChild(mediaBtnSlotRow);
+    mediaBtnDiv.appendChild(editButton);
     mediaBtnDiv.appendChild(deleteModalButton);
     videoDisplay.appendChild(mediaBtnDiv);
 

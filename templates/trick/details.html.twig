@@ -95,15 +95,7 @@
                 <div class="col-3 col-md-2">
                     <div class="row preview-div align-items-center">
                         <div class="col-12" id="media_trick_videos_{{ loop.index0 }}">
-                            {% if video.provider == 'youtube' %}
-                                <iframe src="https://www.youtube.com/embed/{{ video.videoId }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            {% elseif video.provider == 'dailymotion' %}
-                                <iframe src="https://www.dailymotion.com/embed/video/{{ video.videoId }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            {% elseif video.provider == 'vimeo' %}
-                                <iframe src="https://player.vimeo.com/video/{{ video.videoId }}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-                            {% elseif video.provider == 'facebook' %}
-                                <iframe src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F{{ video.videoId }}&show_text=0&width=560" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allowFullScreen="true"></iframe>
-                            {% endif %}
+                            <iframe src="{{ video.getEmbedUrl() }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
                     </div>
                     {% if app.request.get('_route') != 'app_show_trick' %}
