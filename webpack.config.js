@@ -30,6 +30,14 @@ Encore
         from: './assets/js',
         to: 'js/[name].[ext]',
     })
+    .copyFiles({
+        from: './assets/uploads/images/tricks',
+        to: '../uploads/images/tricks/[name].[ext]',
+    })
+    .copyFiles({
+        from: './assets/uploads/images/users',
+        to: '../uploads/images/users/[name].[ext]',
+    })
 
     // ckeditor
     .copyFiles([
