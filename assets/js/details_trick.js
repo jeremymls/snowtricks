@@ -35,6 +35,7 @@ window.onload = function () {
                     option.innerHTML = response.group;
                     trick_category.appendChild(option);
                     trick_category.value = response.id;
+                    $('#addGroupModal').modal('hide');
                 }
             } else if (this.readyState === XMLHttpRequest.DONE && this.status === 400) {
                 let response = JSON.parse(this.responseText);

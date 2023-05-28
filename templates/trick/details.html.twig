@@ -183,7 +183,7 @@
                     <div class="col border border-dark rounded p-1 m-0 shadow-sm">
                         <div class="row justify-content-between">
                             <div class="col-auto">
-                                <em>{{ comment.user.username }} </em>
+                                <em>{{ comment.user.getFullName() }}</em>
                             </div>
                             <div class="col-auto">
                                 <em>{{ comment.createdAt | date('d/m/Y à H:i') }}</em>

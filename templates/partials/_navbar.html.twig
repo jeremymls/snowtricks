@@ -1,7 +1,7 @@
 <nav class="navbar fixed-top navbar-expand-lg bg-light">
     <div class="container">
         <a class="navbar-brand" href="{{ path('app_home') }}">
-            <img src="{{ asset('logo.png') }}" alt="Bootstrap" width="30" height="24">
+            <img src="{{ asset('logo.png') }}" alt="Logo" width="30" height="24">
         </a>
         <button class="navbar-toggler"
         type="button"
@@ -28,7 +28,13 @@
                     <li class="nav-item dropdown text-end">
                         <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             <span class="rounded-circle bg-primary text-light" style="width: 32px; height: 32px; display: inline-block; vertical-align: middle; line-height: 32px; text-align: center; font-size: 1rem; font-weight: 700; text-transform: uppercase;">
-                                <span class="text-light">JM</span>
+                                {% if app.user.getImage().getName() is defined %}
+                                    <img src="{{ asset('uploads/images/users/' ~ app.user.getImage().getName()) }}" alt="Avatar" width="32" height="32" class="rounded-circle">
+                                {% else %}
+                                    <span class="text-light">
+                                        {{ app.user.getInitials() }}
+                                    </span>
+                                {% endif %} 
                             </span>
                         </a>
                         <ul class="dropdown-menu text-small" style="">

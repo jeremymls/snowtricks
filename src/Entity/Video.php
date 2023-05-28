@@ -44,7 +44,9 @@ class Video
      */
     public function prePersist()
     {
-        $this->trick->setUpdatedAt(new \DateTime());
+        if ($this->trick) {
+            $this->trick->setUpdatedAt(new \DateTime());
+        }
         $this->checkVideoId();
     }
 

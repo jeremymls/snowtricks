@@ -296,4 +296,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getInitials(): string
+    {
+        $initials = '';
+        if ($this->first && $this->last) {
+            $initials = $this->first[0] . $this->last[0];
+        } else {
+            $initials = $this->username[0];
+        }
+        return strtoupper($initials);
+    }
+
+    public function getFullName(): string
+    {
+        if ($this->first && $this->last) {
+            return $this->first . ' ' . $this->last;
+        } else {
+            return $this->username;
+        }
+    }
 }
