@@ -7,13 +7,13 @@ use App\Entity\Trick;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class TrickType extends AbstractType
 {
@@ -39,9 +39,14 @@ class TrickType extends AbstractType
             ])
             ->add('category', EntityType::class, [
                 'class' => Group::class,
-                // 'choice_label' => '',
+                'placeholder' => '------',
                 'multiple' => false,
                 'expanded' => false,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez choisir un groupe',
+                    ]),
+                ],
             ])
             ->add('images', FileType::class, [
                 'label' => 'Ajouter des images',
@@ -49,11 +54,7 @@ class TrickType extends AbstractType
                 'mapped' => false,
                 'required' => false,
             ])
-            ->add('miniature', HiddenType::class, [
-                // 'attr' => [
-                //     'value' => '',
-                // ],
-            ])
+            ->add('miniature', HiddenType::class, [])
             ->add('save', SubmitType::class)
         ;
     }

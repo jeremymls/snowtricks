@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route("/trick")
@@ -77,7 +78,7 @@ class TrickController extends AbstractController
     /**
      * @Route("/add", name="app_add_trick")
      */
-    public function add(Request $request, PictureService $pictureService): Response
+    public function add(Request $request, PictureService $pictureService, ValidatorInterface $validator): Response
     {
         $trick = new Trick();
         $trick->setName('Nouvelle figure');
@@ -86,6 +87,19 @@ class TrickController extends AbstractController
         $groupForm = $this->createForm(GroupType::class, $group);
 
         $form->handleRequest($request);
+
+        // validation des vidéos
+        $videoError = false;
+        foreach ($form->get('videos') as $video) {
+            if (count($validator->validate($video)) > 0) {
+                $this->addFlash('danger', 'Vérifiez les vidéos');
+                $videoError = true;
+            }
+        }
+
+        foreach ($validator->validate($trick) as $error) {
+            $this->addFlash('danger', $error->getMessage());
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             // set slug
@@ -122,20 +136,30 @@ class TrickController extends AbstractController
             'trick' => $trick,
             'title' => 'Nouvelle figure',
             'action' => 'add',
-            'groupForm' => $groupForm->createView()
+            'groupForm' => $groupForm->createView(),
+            'videoError' => $videoError
         ]);
     }
 
     /**
      * @Route("/edit/{slug}", name="app_edit_trick")
      */
-    public function edit(Trick $trick, Request $request, PictureService $pictureService): Response
+    public function edit(Trick $trick, Request $request, PictureService $pictureService, ValidatorInterface $validator): Response
     {
         $form = $this->createForm(TrickType::class, $trick);
         $group = new Group();
         $groupForm = $this->createForm(GroupType::class, $group);
 
         $form->handleRequest($request);
+
+        // validation des vidéos
+        $videoError = false;
+        foreach ($form->get('videos') as $video) {
+            if (count($validator->validate($video)) > 0) {
+                $this->addFlash('danger', 'Vérifiez les vidéos');
+                $videoError = true;
+            }
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $trick = $form->getData();
@@ -175,7 +199,8 @@ class TrickController extends AbstractController
             'trick' => $trick,
             'title' => $trick->getName(),
             'action' => 'edit',
-            'groupForm' => $groupForm->createView()
+            'groupForm' => $groupForm->createView(),
+            'videoError' => $videoError
         ]);
     }
 

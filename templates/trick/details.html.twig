@@ -40,7 +40,7 @@
                 {{ form_widget(form.images, {'attr': {'class': 'form-control'}}) }}
             </div>
             <div class="col-auto mb-3">
-                <button type="button" class="btn btn-success btn" data-bs-toggle="modal" data-bs-target="#addVideoModal"><i class="fas fa-plus"></i> Ajouter des vidéos</button>
+                <button type="button" class="btn btn-success {% if videoError != false %}border border-3 border-danger{% endif %} btn" data-bs-toggle="modal" data-bs-target="#addVideoModal"><i class="fas fa-plus"></i> Ajouter des vidéos</button>
             </div>
         </div>
 
@@ -227,7 +227,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     {{ form_row(groupForm.save, {
-                        'attr': {'class': 'btn btn-success', 'data-bs-dismiss': 'modal', 'data-action': path('app_add_group') },
+                        'attr': {'class': 'btn btn-success', 'data-action': path('app_add_group') },
                         'label': 'Ajouter',
                     }) }}
                 </div>
