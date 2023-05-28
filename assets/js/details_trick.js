@@ -36,6 +36,26 @@ window.onload = function () {
                     trick_category.appendChild(option);
                     trick_category.value = response.id;
                 }
+            } else if (this.readyState === XMLHttpRequest.DONE && this.status === 400) {
+                let response = JSON.parse(this.responseText);
+                if (response.success === false) {
+                    let fieldName = document.querySelector('#group_name');
+                    fieldName.classList.add('is-invalid');
+
+                    $parent = fieldName.parentElement;
+                    if ($parent.querySelectorAll('.invalid-feedback').length > 0) {
+                        $parent.querySelectorAll('.invalid-feedback').forEach(function (feedback) {
+                            feedback.remove();
+                        });
+                    }
+
+                    response.errors.forEach(function (error) {
+                        let div = document.createElement('div');
+                        div.className = 'invalid-feedback';
+                        div.innerHTML = error;
+                        fieldName.parentElement.appendChild(div);
+                    }                    );
+                }
             }
         }
 
@@ -49,6 +69,7 @@ window.onload = function () {
 
     buttonAdd = document.createElement('button');
     buttonAdd.className = 'btn btn-success add-video';
+    buttonAdd.type = 'button';
     buttonAdd.innerHTML = '<i class="fas fa-plus"></i> Ajouter une vidéo';
 
     let newButton = span.appendChild(buttonAdd);
