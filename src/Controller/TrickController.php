@@ -85,50 +85,51 @@ class TrickController extends AbstractController
         $form = $this->createForm(TrickType::class, $trick);
         $group = new Group();
         $groupForm = $this->createForm(GroupType::class, $group);
+        $videoError = false;
 
         $form->handleRequest($request);
 
-        // validation des vidéos
-        $videoError = false;
-        foreach ($form->get('videos') as $video) {
-            if (count($validator->validate($video)) > 0) {
-                $this->addFlash('danger', 'Vérifiez les vidéos');
-                $videoError = true;
-            }
-        }
-
-        foreach ($validator->validate($trick) as $error) {
-            $this->addFlash('danger', $error->getMessage());
-        }
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // set slug
-            $trick->setSlug($this->slugger->slug($trick->getName())->lower());
-            // get images
-            $images = $form->get('images')->getData();
-
-            foreach ($images as $key => $image) {
-                $folder = 'tricks';
-
-                $file = $pictureService->add($image, $folder);
-
-                $img = new Image();
-                $img->setName($file);
-                if ($key === 0) {
-                    $trick->setMiniature($file);
+        if ($form->isSubmitted()) {
+            // validation des vidéos
+            foreach ($form->get('videos') as $video) {
+                if (count($validator->validate($video)) > 0) {
+                    $this->addFlash('danger', 'Vérifiez les vidéos');
+                    $videoError = true;
                 }
-                $trick->addImage($img);
+            }
+            foreach ($validator->validate($trick) as $error) {
+                $this->addFlash('danger', $error->getMessage());
             }
 
-            // set user
-            $trick->setUser($this->getUser());
+            if ($form->isValid()) {
+                // set slug
+                $trick->setSlug($this->slugger->slug($trick->getName())->lower());
+                // get images
+                $images = $form->get('images')->getData();
 
-            $this->em->persist($trick);
-            $this->em->flush();
+                foreach ($images as $key => $image) {
+                    $folder = 'tricks';
 
-            return $this->redirectToRoute('app_show_trick', [
-                'slug' => $trick->getSlug()
-            ]);
+                    $file = $pictureService->add($image, $folder);
+
+                    $img = new Image();
+                    $img->setName($file);
+                    if ($key === 0) {
+                        $trick->setMiniature($file);
+                    }
+                    $trick->addImage($img);
+                }
+
+                // set user
+                $trick->setUser($this->getUser());
+
+                $this->em->persist($trick);
+                $this->em->flush();
+
+                return $this->redirectToRoute('app_show_trick', [
+                    'slug' => $trick->getSlug()
+                ]);
+            }
         }
 
         return $this->render('trick/details.html.twig', [
