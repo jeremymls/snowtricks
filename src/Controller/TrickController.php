@@ -11,6 +11,7 @@ use App\Form\CommentType;
 use App\Form\GroupType;
 use App\Form\TrickType;
 use App\Repository\CommentRepository;
+use App\Repository\TrickRepository;
 use App\Service\PictureService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -324,7 +325,6 @@ class TrickController extends AbstractController
     public function getComments(int $offset, Trick $trick, CommentRepository $commentRepository): JsonResponse
     {
         $paginator = $commentRepository->getCommentPaginator($trick, $offset);
-        $package = new Package(new EmptyVersionStrategy());
         $comments = [];
         foreach ($paginator as $comment) {
             $src = $comment->getUser()->getImage() ?
@@ -348,6 +348,40 @@ class TrickController extends AbstractController
 
         return new JsonResponse([
             'comments' => $comments,
+            'action' => $action
+
+        ]);
+    }
+
+    /**
+     * @Route("/get/tricks/{offset}", name="app_get_tricks", methods={"GET"})
+     */
+    public function getTricks(int $offset, TrickRepository $trickRepository): JsonResponse
+    {
+        $paginator = $trickRepository->getTrickPaginator($offset);
+        $tricks = [];
+        foreach ($paginator as $trick) {
+            $tricks[] = [
+                'id' => $trick->getId(),
+                'name' => $trick->getName(),
+                'slug' => $trick->getSlug(),
+                'url' => $this->generateUrl('app_show_trick', [
+                    'slug' => $trick->getSlug()
+                ]),
+                'urlEdit' => $this->generateUrl('app_edit_trick', [
+                    'slug' => $trick->getSlug()
+                ]),
+            ];
+        }
+
+        $url = $this->generateUrl('app_get_tricks', [
+            'offset' => $offset + TrickRepository::PAGINATOR_PER_PAGE
+        ]);
+        $next = min(count($paginator), $offset + TrickRepository::PAGINATOR_PER_PAGE);
+        $action = $next < count($paginator) ? $url : null;
+
+        return new JsonResponse([
+            'tricks' => $tricks,
             'action' => $action
 
         ]);
