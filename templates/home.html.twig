@@ -16,7 +16,7 @@
     <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
 </header>
 <main id="main" class="container py-5">
-    <div class="row justify-content-around">
+    <div class="row justify-content-around" id="tricksDiv">
         {% for trick in tricks %}
         <div class="col-lg-2 mb-3 mx-1 p-0 text-center shadow border">
             <img src="{% if trick.miniature %}{{ asset('uploads/images/tricks/' ~ trick.miniature) }}{% else %}{{ asset('core/img/default_mini.png') }}{% endif %}" class="mini" width="100%" alt="">
@@ -33,6 +33,13 @@
         </div>
         {% endfor %}
     </div>
+    {% if next < tricks | length %}
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <button type="button" id="btnNext" class="btn btn-outline-primary" data-action="{{ path('app_get_tricks', {'offset': next}) }}">Load more</button>
+            </div>
+        </div>
+    {% endif %}
 </main>
     <!-- Delete Trick Modal -->
     <div class="modal" id="deleteTrickModal" tabindex="-1" aria-labelledby="deleteTrickModalLabel" aria-hidden="true">
@@ -57,4 +64,33 @@
 {% block javascripts %}
 {{ parent() }}
 <script src="{{ asset('build/js/delete_trick.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        $('#btnNext').click(function() {
+            $.ajax({
+                url: $(this).data('action'),
+                type: 'GET',
+                success: function(data) {
+                    data.action ? $('#btnNext').data('action', data.action) : $('#btnNext').hide();
+                    html = "";
+                    data.tricks.forEach(trick => {
+                        html += `<div class="col-lg-2 mb-3 mx-1 p-0 text-center shadow border">
+                            <img src="${trick.miniature ? ('uploads/images/tricks/' + trick.miniature) : ('core/img/default_mini.png')}" class="mini" width="100%" alt="">
+                            <div class="row p-2 d-flex flex-nowrap justify-content-between">
+                                <div class="col text-start text-truncate pe-0">
+                                    <a href="${trick.url}" class="">${ trick.name }</a>
+                                </div>
+                                <div class="col-auto d-flex flex-nowrap">
+                                    <a class="me-3" href="${trick.urlEdit}"><i class="fa-sharp fa-solid fa-pencil"></i></a>
+                                    <button type="button" class="btn btn-outline border-0 p-0" data-bs-toggle="modal" data-id="${ trick.id }" data-bs-target="#deleteTrickModal"><i class="fas fa-trash-alt text-danger"></i></button>
+                                </div>
+                            </div>
+                        </div>`;
+                    });
+                    $('#tricksDiv').append(html);
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}
