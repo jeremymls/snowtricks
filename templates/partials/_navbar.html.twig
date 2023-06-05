@@ -15,18 +15,24 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item {% if app.request.get('_route') == 'app_home' %}active{% endif %}">
-                    <a class="nav-link" href="{{ path('app_home') }}">Home</a>
+                    <a class="nav-link" href="{{ path('app_home') }}">{{ 'Home' |trans }}</a>
                 </li>
                 {% if is_granted('ROLE_USER') %}
                 <li class="nav-item {% if app.request.get('_route') == 'app_add_trick' %}active{% endif %}">
-                    <a class="nav-link" href="{{ path('app_add_trick') }}">Ajouter une figure</a>
+                    <a class="nav-link" href="{{ path('app_add_trick') }}">
+                        {{ 'Add trick' |trans }}
+                        <span class="fa-stack" style="font-size: 0.7rem; vertical-align: top;">
+                            <i class="fa-solid fa-circle fa-stack-2x text-success"></i>
+                            <i class="fa-solid fa-plus fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
                 </li>
                 {% endif %}
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0  me-3">
                 {% for locale in locales | filter (l => l != app.request.locale) %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('change_locale', {'locale': locale}) }}" data-bs-toggle="tooltip" data-bs-title="Default tooltip">
+                        <a class="nav-link" href="{{ path('change_locale', {'locale': locale}) }}">
                             <img src="{{ asset("core/img/locales/" ~ locale ~ ".png") }}" height="15px" alt="{{ locale }}">
                         </a>
                     </li>
@@ -47,15 +53,15 @@
                             </span>
                         </a>
                         <ul class="dropdown-menu text-small" style="">
-                            <li><a class="dropdown-item" href="{{ path('app_profile') }}">Mon compte</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_profile') }}">{{ 'My account' |trans }}</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item link-danger" href="{{ path('app_logout') }}"><strong>Déconnexion</strong></a></li>
+                            <li><a class="dropdown-item link-danger" href="{{ path('app_logout') }}"><strong>{{ 'Logout' |trans }}</strong></a></li>
                         </ul>
                     </li>
                 {% else %}
-                    <li class="nav-item {% if app.request.pathinfo == path('app_login') %}active{% endif %}"><a class="nav-link" href="{{ path('app_login')}}">Connexion</a></li>
+                    <li class="nav-item {% if app.request.pathinfo == path('app_login') %}active{% endif %}"><a class="nav-link" href="{{ path('app_login')}}">{{ 'Login' |trans }}</a></li>
                     <div class="vr"></div>
-                    <li class="nav-item {% if app.request.pathinfo == path('app_register') %}active{% endif %}"><a class="nav-link" href="{{ path('app_register')}}">Inscription</a></li>
+                    <li class="nav-item {% if app.request.pathinfo == path('app_register') %}active{% endif %}"><a class="nav-link" href="{{ path('app_register')}}">{{ 'Registration' |trans }}</a></li>
                 {% endif %}
             </ul>
         </div>

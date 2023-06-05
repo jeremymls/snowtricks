@@ -8,14 +8,21 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class VideoType extends AbstractType
 {
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator) {
+        $this->translator = $translator;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('provider', ChoiceType::class, [
-                'label' => 'Source',
+                'label' => $this->translator->trans('Provider'),
                 'choices' => [
                     'youtube' => 'youtube',
                     'dailymotion' => 'dailymotion',
@@ -26,12 +33,12 @@ class VideoType extends AbstractType
                 'multiple' => false,
             ])
             ->add('video_id', null, [
-                'label' => 'Url ou identifiant',
+                'label' => $this->translator->trans('Url or identifier'),
                 'row_attr' => ['class' => 'form-floating mb-3'],
                 'required' => false,
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Veuillez saisir une url ou un identifiant',
+                        'message' => $this->translator->trans('Please enter an url or an identifier', [], 'validators'),
                     ]),
                 ],
             ]);

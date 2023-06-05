@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="fr" target-language="fr" datatype="plaintext" original="file.ext">
+    <header>
+      <tool tool-id="symfony" tool-name="Symfony"/>
+    </header>
+    <body>
+      <trans-unit id="Q5Qj2wc" resname="Join a passionate community of snowboarders and share your tricks!">
+        <source>Join a passionate community of snowboarders and share your tricks!</source>
+        <target>Rejoins une communauté de snowboarders passionnés et partage tes tricks !</target>
+      </trans-unit>
+      <trans-unit id="rImR7wE" resname="Load more">
+        <source>Load more</source>
+        <target>Charger plus</target>
+      </trans-unit>
+      <trans-unit id="9TBfJQf" resname="Are you sure you want to delete this trick?">
+        <source>Are you sure you want to delete this trick?</source>
+        <target>Voulez-vous vraiment supprimer cette figure?</target>
+      </trans-unit>
+      <trans-unit id="HqRCoTS" resname="No">
+        <source>No</source>
+        <target>Non</target>
+      </trans-unit>
+      <trans-unit id="haOas0X" resname="Yes">
+        <source>Yes</source>
+        <target>Oui</target>
+      </trans-unit>
+      <trans-unit id="OnhpU4i" resname="Home">
+        <source>Home</source>
+        <target>Accueil</target>
+      </trans-unit>
+      <trans-unit id="BAEqhY6" resname="Add trick">
+        <source>Add trick</source>
+        <target>Ajouter une figure</target>
+      </trans-unit>
+      <trans-unit id="tTGBpNh" resname="My account">
+        <source>My account</source>
+        <target>Mon compte</target>
+      </trans-unit>
+      <trans-unit id="0FJ_Sz1" resname="Logout">
+        <source>Logout</source>
+        <target>Se déconnecter</target>
+      </trans-unit>
+      <trans-unit id="nWMiwfT" resname="Login">
+        <source>Login</source>
+        <target>Connexion</target>
+      </trans-unit>
+      <trans-unit id="x5Pg2aH" resname="Registration">
+        <source>Registration</source>
+        <target>Inscription</target>
+      </trans-unit>
+      <trans-unit id="vSTb9IR" resname="Hi! Please confirm your email!">
+        <source>Hi! Please confirm your email!</source>
+        <target>Veuillez confirmer votre email!</target>
+      </trans-unit>
+      <trans-unit id="Ry3Xo6w" resname="Please confirm your email address by clicking the following link:">
+        <source>Please confirm your email address by clicking the following link:</source>
+        <target>Veuillez confirmer votre adresse e-mail en cliquant sur le lien suivant:</target>
+      </trans-unit>
+      <trans-unit id="ITaQX9q" resname="Confirm my Email">
+        <source>Confirm my Email</source>
+        <target>Confirmer mon e-mail</target>
+      </trans-unit>
+      <trans-unit id="87wG9uu" resname="This link will expire in">
+        <source>This link will expire in</source>
+        <target>Ce lien expirera dans</target>
+      </trans-unit>
+      <trans-unit id="F7WctIl" resname="Cheers!">
+        <source>Cheers!</source>
+        <target>Bien à vous!</target>
+      </trans-unit>
+      <trans-unit id="u3I07BJ" resname="Register">
+        <source>Register</source>
+        <target>Enregistrer</target>
+      </trans-unit>
+      <trans-unit id="FmrMHS6" resname="If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password.">
+        <source>If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password.</source>
+        <target>Si un compte correspondant à votre adresse e-mail existe, un e-mail vient d'être envoyé contenant un lien que vous pouvez utiliser pour réinitialiser votre mot de passe.</target>
+      </trans-unit>
+      <trans-unit id="bs9avOq" resname="If you don't receive an email please check your spam folder or">
+        <source>If you don't receive an email please check your spam folder or</source>
+        <target>Si vous ne recevez pas d'e-mail, veuillez vérifier votre dossier spam ou</target>
+      </trans-unit>
+      <trans-unit id="W13t7jL" resname="try again">
+        <source>try again</source>
+        <target>essayer à nouveau</target>
+      </trans-unit>
+      <trans-unit id="ylHOH7F" resname="Hi!">
+        <source>Hi!</source>
+        <target>Salut!</target>
+      </trans-unit>
+      <trans-unit id="vQH5j0c" resname="To reset your password, please visit the following link">
+        <source>To reset your password, please visit the following link</source>
+        <target>Pour réinitialiser votre mot de passe, veuillez visiter le lien suivant</target>
+      </trans-unit>
+      <trans-unit id="WfpDeb4" resname="Reset your password">
+        <source>Reset your password</source>
+        <target>Réinitialisez votre mot de passe</target>
+      </trans-unit>
+      <trans-unit id="INrYpr8" resname="Enter your email address and we will send you a link to reset your password.">
+        <source>Enter your email address and we will send you a link to reset your password.</source>
+        <target>Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.</target>
+      </trans-unit>
+      <trans-unit id="y2XxXvP" resname="Send password reset email">
+        <source>Send password reset email</source>
+        <target>Envoyer un e-mail de réinitialisation du mot de passe</target>
+      </trans-unit>
+      <trans-unit id="4O3_s6c" resname="Reset password">
+        <source>Reset password</source>
+        <target>Réinitialiser le mot de passe</target>
+      </trans-unit>
+      <trans-unit id="PcD8cUX" resname="Edit Password">
+        <source>Edit Password</source>
+        <target>Modifier le mot de passe</target>
+      </trans-unit>
+      <trans-unit id="acVpEs4" resname="You are logged in as">
+        <source>You are logged in as</source>
+        <target>Vous êtes connecté en tant que</target>
+      </trans-unit>
+      <trans-unit id="47ienTP" resname="Username">
+        <source>Username</source>
+        <target>Nom d'utilisateur</target>
+      </trans-unit>
+      <trans-unit id="588_9PF" resname="Password">
+        <source>Password</source>
+        <target>Mot de passe</target>
+      </trans-unit>
+      <trans-unit id="MMHY0_k" resname="Forgot password?">
+        <source>Forgot password?</source>
+        <target>Mot de passe oublié?</target>
+      </trans-unit>
+      <trans-unit id="v9QCsvb" resname="Sign in">
+        <source>Sign in</source>
+        <target>S'identifier</target>
+      </trans-unit>
+      <trans-unit id="Jxxi_i3" resname="My profile">
+        <source>My profile</source>
+        <target>Mon profil</target>
+      </trans-unit>
+      <trans-unit id="1pajW90" resname="Profile">
+        <source>Profile</source>
+        <target>Profil</target>
+      </trans-unit>
+      <trans-unit id="RkxP.QG" resname="Edit">
+        <source>Edit</source>
+        <target>Modifier</target>
+      </trans-unit>
+      <trans-unit id="0z6XGgF" resname="Tricks">
+        <source>Tricks</source>
+        <target>Figures</target>
+      </trans-unit>
+      <trans-unit id="OAbWHDQ" resname="Username:">
+        <source>Username:</source>
+        <target>Nom d'utilisateur:</target>
+      </trans-unit>
+      <trans-unit id="Dp4rkoF" resname="First name:">
+        <source>First name:</source>
+        <target>Prénom:</target>
+      </trans-unit>
+      <trans-unit id="JoPK1Io" resname="Name:">
+        <source>Name:</source>
+        <target>Nom:</target>
+      </trans-unit>
+      <trans-unit id="Y9sQ2KC" resname="E-mail:">
+        <source>E-mail:</source>
+        <target>E-mail:</target>
+      </trans-unit>
+      <trans-unit id="sda5G2f" resname="at">
+        <source>at</source>
+        <target>à</target>
+      </trans-unit>
+      <trans-unit id="P5yZH2O" resname="Change password">
+        <source>Change password</source>
+        <target>Changer le mot de passe</target>
+      </trans-unit>
+      <trans-unit id="HnEC6n0" resname="Add pictures">
+        <source>Add pictures</source>
+        <target>Ajouter des images</target>
+      </trans-unit>
+      <trans-unit id="5BBGIIV" resname="Add videos">
+        <source>Add videos</source>
+        <target>Ajouter des vidéos</target>
+      </trans-unit>
+      <trans-unit id="01cXXP6" resname="Media">
+        <source>Media</source>
+        <target>_Médias</target>
+      </trans-unit>
+      <trans-unit id="fZ63rLE" resname="Close">
+        <source>Close</source>
+        <target>Fermer</target>
+      </trans-unit>
+      <trans-unit id="r.g0luc" resname="Group:">
+        <source>Group:</source>
+        <target>Groupe:</target>
+      </trans-unit>
+      <trans-unit id="laP8ZYf" resname="Author:">
+        <source>Author:</source>
+        <target>Auteur:</target>
+      </trans-unit>
+      <trans-unit id="t8upV23" resname="No comments yet.">
+        <source>No comments yet.</source>
+        <target>Aucun commentaire pour l'instant.</target>
+      </trans-unit>
+      <trans-unit id="P9LCDly" resname="1 comment">
+        <source>1 comment</source>
+        <target>1 commentaire</target>
+      </trans-unit>
+      <trans-unit id="K0JE_yZ" resname="comments">
+        <source>comments</source>
+        <target>commentaires</target>
+      </trans-unit>
+      <trans-unit id="33lsZV9" resname="New group">
+        <source>New group</source>
+        <target>Nouveau groupe</target>
+      </trans-unit>
+      <trans-unit id="YUT0gTi" resname="Are you sure you want to delete this thumbnail?">
+        <source>Are you sure you want to delete this thumbnail?</source>
+        <target>Voulez-vous vraiment supprimer cette vignette?</target>
+      </trans-unit>
+      <trans-unit id="Cgtd6dX" resname="Are you sure you want to delete this video?">
+        <source>Are you sure you want to delete this video?</source>
+        <target>Êtes-vous sûr de vouloir supprimer cette vidéo?</target>
+      </trans-unit>
+      <trans-unit id="U28cTzJ" resname="Password Reset Email Sent">
+        <source>Password Reset Email Sent</source>
+        <target>E-mail de réinitialisation du mot de passe envoyé</target>
+      </trans-unit>
+      <trans-unit id="d1tb_WR" resname="Created at">
+        <source>Created at</source>
+        <target>Créé le</target>
+      </trans-unit>
+      <trans-unit id="PCEFPeg" resname="Updated at">
+        <source>Updated at</source>
+        <target>Mis à jour le</target>
+      </trans-unit>
+      <trans-unit id="EY8SAHL" resname="You are already logged in as {{ user }}. If you want to create a new account, please log out.">
+        <source>You are already logged in as {{ user }}. If you want to create a new account, please log out.</source>
+        <target>Vous êtes déjà connecté en tant que {{ user }}. Si vous souhaitez créer un nouveau compte, veuillez vous déconnecter.</target>
+      </trans-unit>
+      <trans-unit id="xDjyaNh" resname="Your email address has been verified. You can now add figures and comments.">
+        <source>Your email address has been verified. You can now add figures and comments.</source>
+        <target>Votre adresse e-mail a été vérifiée. Vous pouvez maintenant ajouter des figures et des commentaires.</target>
+      </trans-unit>
+      <trans-unit id="hR4VrkD" resname="You are already logged in as {{ user }}. If you want too change your account, please log out.">
+        <source>You are already logged in as {{ user }}. If you want too change your account, please log out.</source>
+        <target>Vous êtes déjà connecté en tant que {{ user }}. Si vous souhaitez également modifier votre compte, veuillez vous déconnecter.</target>
+      </trans-unit>
+      <trans-unit id="1YVbg5k" resname="You are not logged in. Please log in to access your profile.">
+        <source>You are not logged in. Please log in to access your profile.</source>
+        <target>Vous n'êtes pas connecté. Veuillez vous connecter pour accéder à votre profil.</target>
+      </trans-unit>
+      <trans-unit id="iirXPs4" resname="Your profile has been updated.">
+        <source>Your profile has been updated.</source>
+        <target>Votre profil a été mis à jour.</target>
+      </trans-unit>
+      <trans-unit id="DmWl2VR" resname="Your profile could not be updated.">
+        <source>Your profile could not be updated.</source>
+        <target>Votre profil n'a pas pu être mis à jour.</target>
+      </trans-unit>
+      <trans-unit id="aJGL1Cd" resname="You must be logged in to change your password.">
+        <source>You must be logged in to change your password.</source>
+        <target>Vous devez être connecté pour changer votre mot de passe.</target>
+      </trans-unit>
+      <trans-unit id="DHc7zgP" resname="This password does not match your current password.">
+        <source>This password does not match your current password.</source>
+        <target>Ce mot de passe ne correspond pas à votre mot de passe actuel.</target>
+      </trans-unit>
+      <trans-unit id="zCRKkGL" resname="Your password has been updated.">
+        <source>Your password has been updated.</source>
+        <target>Votre mot de passe a été mis à jour.</target>
+      </trans-unit>
+      <trans-unit id="SpolVdl" resname="Your password could not be updated.">
+        <source>Your password could not be updated.</source>
+        <target>Votre mot de passe n'a pas pu être mis à jour.</target>
+      </trans-unit>
+      <trans-unit id="tHR5Gsr" resname="Comment added">
+        <source>Comment added</source>
+        <target>Commentaire ajouté</target>
+      </trans-unit>
+      <trans-unit id="C_HJdJm" resname="New trick">
+        <source>New trick</source>
+        <target>Nouvelle figure</target>
+      </trans-unit>
+      <trans-unit id="xPrTAyB" resname="Check videos">
+        <source>Check videos</source>
+        <target>Vérifier les vidéos</target>
+      </trans-unit>
+      <trans-unit id="BYf4gDg" resname="{{ trick }} has been added">
+        <source>{{ trick }} has been added</source>
+        <target>{{ trick }} a été ajouté</target>
+      </trans-unit>
+      <trans-unit id="QVeP19J" resname="{{ trick }} has been edited">
+        <source>{{ trick }} has been edited</source>
+        <target>{{ trick }} a été édité</target>
+      </trans-unit>
+      <trans-unit id="PCF9IFw" resname="The trick {{ trick }} has been deleted">
+        <source>The trick {{ trick }} has been deleted</source>
+        <target>La figure {{ trick }} a été supprimé</target>
+      </trans-unit>
+      <trans-unit id="Kt9Ip72" resname="The trick {{ trick }} has not been found">
+        <source>The trick {{ trick }} has not been found</source>
+        <target>La figure {{ trick }} n'a pas été trouvée</target>
+      </trans-unit>
+      <trans-unit id="CG7_p2Q" resname="Invalid token">
+        <source>Invalid token</source>
+        <target>Jeton invalide</target>
+      </trans-unit>
+      <trans-unit id="sWNcWGb" resname="The miniature of {{ trick }} has been deleted">
+        <source>The miniature of {{ trick }} has been deleted</source>
+        <target>La miniature de {{ trick }} a été supprimée</target>
+      </trans-unit>
+      <trans-unit id="BhwfBHD" resname="The miniature of {{ trick }} has been changed">
+        <source>The miniature of {{ trick }} has been changed</source>
+        <target>La miniature de {{ trick }} a été modifiée</target>
+      </trans-unit>
+      <trans-unit id="PdnfREH" resname="New password">
+        <source>New password</source>
+        <target>Nouveau mot de passe</target>
+      </trans-unit>
+      <trans-unit id="di67cO8" resname="Group name">
+        <source>Group name</source>
+        <target>Nom de groupe</target>
+      </trans-unit>
+      <trans-unit id="gzlyJvA" resname="Group description (optional)">
+        <source>Group description (optional)</source>
+        <target>Description du groupe (facultatif)</target>
+      </trans-unit>
+      <trans-unit id="EhM5RoK" resname="Create Group">
+        <source>Create Group</source>
+        <target>Créer un groupe</target>
+      </trans-unit>
+      <trans-unit id="GP3VSbL" resname="New">
+        <source>New</source>
+        <target>Nouveau</target>
+      </trans-unit>
+      <trans-unit id="7r3SSnf" resname="Confirm">
+        <source>Confirm</source>
+        <target>Confirmer</target>
+      </trans-unit>
+      <trans-unit id="R70pB1_" resname="Content">
+        <source>Content</source>
+        <target>Contenu</target>
+      </trans-unit>
+      <trans-unit id="iaisK.z" resname="Add images">
+        <source>Add images</source>
+        <target>Ajouter des images</target>
+      </trans-unit>
+      <trans-unit id="wQxbuWC" resname="Profile image">
+        <source>Profile image</source>
+        <target>Image de profil</target>
+      </trans-unit>
+      <trans-unit id="FQn1YfJ" resname="Save">
+        <source>Save</source>
+        <target>Sauvegarder</target>
+      </trans-unit>
+      <trans-unit id="RyWQrpd" resname="Provider">
+        <source>Provider</source>
+        <target>Source</target>
+      </trans-unit>
+      <trans-unit id="gPGVJZR" resname="Url or identifier">
+        <source>Url or identifier</source>
+        <target>Url ou identifiant</target>
+      </trans-unit>
+      <trans-unit id="h16XilN" resname="Leave a comment">
+        <source>Leave a comment</source>
+        <target>Laissez un commentaire</target>
+      </trans-unit>
+      <trans-unit id="uvoHuBS" resname="Language changed successfully">
+        <source>Language changed successfully</source>
+        <target>La langue a été modifiée avec succès</target>
+      </trans-unit>
+      <trans-unit id="xAZCHCs" resname="Actual">
+        <source>Actual</source>
+        <target>Actuel</target>
+      </trans-unit>
+      <trans-unit id="3NHVIj9" resname="Name">
+        <source>Name</source>
+        <target>Nom</target>
+      </trans-unit>
+      <trans-unit id="NMoOdmC" resname="Group">
+        <source>Group</source>
+        <target>Groupe</target>
+      </trans-unit>
+      <trans-unit id="n9coxmy" resname="Add">
+        <source>Add</source>
+        <target>Créer</target>
+      </trans-unit>
+      <trans-unit id="Um4Ah8w" resname="Description">
+        <source>Description</source>
+        <target>Description</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

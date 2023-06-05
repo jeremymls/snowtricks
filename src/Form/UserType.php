@@ -8,9 +8,16 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserType extends AbstractType
 {
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator) {
+        $this->translator = $translator;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -19,13 +26,13 @@ class UserType extends AbstractType
             ->add('first')
             ->add('last')
             ->add('image', FileType::class, [
-                'label' => 'Image de profil',
+                'label' => $this->translator->trans('Profile image'),
                 'multiple' => false,
                 'mapped' => false,
                 'required' => false,
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Enregistrer',
+                'label' => $this->translator->trans('Save'),
                 'attr' => ['class' => 'btn btn-primary'],
             ])
         ;

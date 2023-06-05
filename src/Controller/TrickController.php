@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/trick")
@@ -36,11 +37,13 @@ class TrickController extends AbstractController
 {
     private $em;
     private $slugger;
+    private $translator;
 
-    public function __construct(EntityManagerInterface $em, SluggerInterface $slugger)
+    public function __construct(EntityManagerInterface $em, SluggerInterface $slugger, TranslatorInterface $translator)
     {
         $this->em = $em;
         $this->slugger = $slugger;
+        $this->translator = $translator;
     }
 
     /**
@@ -60,6 +63,8 @@ class TrickController extends AbstractController
         if ($commentForm->isSubmitted() && $commentForm->isValid()) {
             $this->em->persist($comment);
             $this->em->flush();
+
+            $this->addFlash('success', $this->translator->trans('Comment added'));
 
             return $this->redirectToRoute('app_show_trick', [
                 'slug' => $trick->getSlug(),
@@ -82,7 +87,7 @@ class TrickController extends AbstractController
     public function add(Request $request, PictureService $pictureService, ValidatorInterface $validator): Response
     {
         $trick = new Trick();
-        $trick->setName('Nouvelle figure');
+        $trick->setName($this->translator->trans('New trick'));
         $form = $this->createForm(TrickType::class, $trick);
         $group = new Group();
         $groupForm = $this->createForm(GroupType::class, $group);
@@ -94,7 +99,7 @@ class TrickController extends AbstractController
             // validation des vidéos
             foreach ($form->get('videos') as $video) {
                 if (count($validator->validate($video)) > 0) {
-                    $this->addFlash('danger', 'Vérifiez les vidéos');
+                    $this->addFlash('danger', $this->translator->trans('Check videos'));
                     $videoError = true;
                 }
             }
@@ -127,6 +132,8 @@ class TrickController extends AbstractController
                 $this->em->persist($trick);
                 $this->em->flush();
 
+                $this->addFlash('success', $this->translator->trans('%trick% has been added', ['%trick%' => $trick->getName()]));
+
                 return $this->redirectToRoute('app_show_trick', [
                     'slug' => $trick->getSlug()
                 ]);
@@ -136,7 +143,7 @@ class TrickController extends AbstractController
         return $this->render('trick/details.html.twig', [
             'form' => $form->createView(),
             'trick' => $trick,
-            'title' => 'Nouvelle figure',
+            'title' => $this->translator->trans('New trick'),
             'action' => 'add',
             'groupForm' => $groupForm->createView(),
             'videoError' => $videoError
@@ -158,7 +165,7 @@ class TrickController extends AbstractController
         $videoError = false;
         foreach ($form->get('videos') as $video) {
             if (count($validator->validate($video)) > 0) {
-                $this->addFlash('danger', 'Vérifiez les vidéos');
+                $this->addFlash('danger', $this->translator->trans('Check videos'));
                 $videoError = true;
             }
         }
@@ -185,6 +192,8 @@ class TrickController extends AbstractController
 
             $this->em->persist($trick);
             $this->em->flush();
+
+            $this->addFlash('success', $this->translator->trans('%trick% has been edited', ['%trick%' => $trick->getName()]));
 
             if ($request->request->get('_action') === 'change_mini') {
                 return $this->redirectToRoute('app_change_miniature', [
@@ -218,12 +227,18 @@ class TrickController extends AbstractController
                 $this->em->persist($trick);
                 $this->em->flush();
 
-                $this->addFlash('success', 'La figure a bien été supprimée');
+                $this->addFlash('success', $this->translator->trans(
+                    'The trick %trick% has been deleted',
+                    ['%trick%' => $trick->getName()]
+                ));
             } else {
-                $this->addFlash('danger', 'La figure n\'a pas été trouvée');
+                $this->addFlash('danger', $this->translator->trans(
+                    'The trick %trick% has not been found',
+                    ['%trick%' => $trick->getName()]
+                ));
             }
         } else {
-            $this->addFlash('danger', 'Token invalide');
+            $this->addFlash('danger', $this->translator->trans('Invalid token'));
 
             return $this->redirect($request->headers->get('referer'));
         }
@@ -239,6 +254,10 @@ class TrickController extends AbstractController
             $trick->setMiniature(null);
             $this->em->persist($trick);
             $this->em->flush();
+            $this->addFlash('success', $this->translator->trans(
+                'The miniature of %trick% has been deleted',
+                ['%trick%' => $trick->getName()]
+            ));
         }
         return $this->redirectToRoute('app_edit_trick', [
             'slug' => $trick->getSlug()
@@ -265,6 +284,11 @@ class TrickController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($trick);
             $this->em->flush();
+
+            $this->addFlash('success', $this->translator->trans(
+                'The miniature of %trick% has been changed',
+                ['%trick%' => $trick->getName()]
+            ));
 
             return $this->redirectToRoute('app_edit_trick', [
                 'slug' => $trick->getSlug()
@@ -365,6 +389,7 @@ class TrickController extends AbstractController
                 'id' => $trick->getId(),
                 'name' => $trick->getName(),
                 'slug' => $trick->getSlug(),
+                'miniature' => $trick->getMiniature(),
                 'url' => $this->generateUrl('app_show_trick', [
                     'slug' => $trick->getSlug()
                 ]),

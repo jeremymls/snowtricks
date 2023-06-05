@@ -1,11 +1,11 @@
 {% extends 'security.html.twig' %}
 {% form_theme resetForm 'bootstrap_5_layout.html.twig' %}
 
-{% block securityTitle %}Reset your password{% endblock %}
+{% block securityTitle %}{{ 'Reset your password' |trans }}{% endblock %}
 
 {% block form %}
     {{ form_start(resetForm) }}
         {{ form_row(resetForm.plainPassword) }}
-        <button class="btn btn-primary">Reset password</button>
+        <button class="btn btn-primary">{{ 'Reset password' |trans }}</button>
     {{ form_end(resetForm) }}
 {% endblock %}

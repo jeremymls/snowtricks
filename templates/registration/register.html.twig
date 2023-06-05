@@ -1,7 +1,7 @@
 {% extends 'security.html.twig' %}
 {% form_theme registrationForm 'bootstrap_5_layout.html.twig' %}
 
-{% block securityTitle %}Registration{% endblock %}
+{% block securityTitle %}{{ 'Registration' |trans }}{% endblock %}
 
 {% block form %}
     {% for flash_error in app.flashes('verify_email_error') %}
@@ -16,6 +16,6 @@
         }) }}
         {# {{ form_row(registrationForm.agreeTerms) }} #}
 
-        <button type="submit" class="btn">Register</button>
+        <button type="submit" class="btn">{{ 'Register' |trans }}</button>
     {{ form_end(registrationForm) }}
 {% endblock %}

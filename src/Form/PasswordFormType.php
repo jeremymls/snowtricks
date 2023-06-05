@@ -11,22 +11,29 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PasswordFormType extends AbstractType
 {
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator) {
+        $this->translator = $translator;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('actualPassword', PasswordType::class, [
-                'label' => 'Actuel',
+                'label' => $this->translator->trans('Actual'),
                 'mapped' => false,
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Veuillez entrer votre mot de passe actuel.',
+                        'message' => $this->translator->trans('Please enter your password', [], 'validators'),
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères.',
+                        'minMessage' => $this->translator->trans('The password must contain at least {{ min }} characters', ['{{ min }}' => 6], 'validators'),
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
@@ -34,25 +41,25 @@ class PasswordFormType extends AbstractType
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'Les mots de passe doivent correspondre.',
+                'invalid_message' => $this->translator->trans('Passwords do not match', [], 'validators'),
                 'required' => true,
-                'first_options' => ['label' => 'Nouveau'],
-                'second_options' => ['label' => 'Confirmez'],
+                'first_options' => ['label' => $this->translator->trans('New')],
+                'second_options' => ['label' => $this->translator->trans('Confirm')],
                 'mapped' => false,
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Veuillez entrer un mot de passe.',
+                        'message' => $this->translator->trans('Please enter a password', [], 'validators'),
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères.',
+                        'minMessage' => $this->translator->trans('The password must contain at least {{ min }} characters', ['{{ min }}' => 6], 'validators'),
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
                 ],
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Changer le mot de passe',
+                'label' => $this->translator->trans('Change password'),
                 'attr' => ['class' => 'btn btn-primary'],
             ])
 

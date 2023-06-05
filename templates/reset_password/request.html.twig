@@ -1,7 +1,7 @@
 {% extends 'security.html.twig' %}
 {% form_theme requestForm 'bootstrap_5_layout.html.twig' %}
 
-{% block securityTitle %}Reset your password{% endblock %}
+{% block securityTitle %}{{ 'Reset your password' |trans }}{% endblock %}
 
 {% block form %}
     {% for flash_error in app.flashes('reset_password_error') %}
@@ -11,11 +11,10 @@
         {{ form_row(requestForm.email) }}
         <div>
             <small>
-                Enter your email address and we will send you a
-                link to reset your password.
+                {{ 'Enter your email address and we will send you a link to reset your password.' |trans }}
             </small>
         </div>
 
-        <button class="btn btn-primary mt-3">Send password reset email</button>
+        <button class="btn btn-primary mt-3">{{ 'Send password reset email' |trans }}</button>
     {{ form_end(requestForm) }}
 {% endblock %}

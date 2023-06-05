@@ -14,15 +14,22 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TrickType extends AbstractType
 {
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator) {
+        $this->translator = $translator;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('name')
             ->add('description', CKEditorType::class, [
-                'label' => 'Contenu',
+                'label' => $this->translator->trans('Content'),
                 'config' => [
                     'uiColor' => '#ffffff',
                     'toolbarGroups' => $this->getToolbar(),
@@ -44,12 +51,13 @@ class TrickType extends AbstractType
                 'expanded' => false,
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Veuillez choisir un groupe',
+                        'message' => $this->translator->trans('Please choose a group', [], 'validators'),
                     ]),
                 ],
             ])
             ->add('images', FileType::class, [
-                'label' => 'Ajouter des images',
+                'label' => $this->translator->trans('Add images'),
+                'help' => 'JPG, PNG or GIF',
                 'multiple' => true,
                 'mapped' => false,
                 'required' => false,
