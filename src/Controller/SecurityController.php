@@ -13,17 +13,23 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SecurityController extends AbstractController
 {
     /**
      * @Route("/login", name="app_login")
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(AuthenticationUtils $authenticationUtils, TranslatorInterface $translator): Response
     {
         if ($this->getUser()) {
-            $this->addFlash('warning', 'Vous êtes déjà connecté·e, en tant que ' . $this->getUser() . '.
-            Si vous souhaitez changer de compte, veuillez vous déconnecter.');
+            $this->addFlash(
+                'warning',
+                $translator->trans(
+                    'You are already logged in as %user%. If you want too change your account, please log out.',
+                    ['%user%' => $this->getUser()]
+                )
+            );
             return $this->redirectToRoute('app_home');
         }
 
@@ -46,10 +52,10 @@ class SecurityController extends AbstractController
     /**
      * @Route("/profile", name="app_profile")
      */
-    public function profile(Request $request, EntityManagerInterface $em, PictureService $pictureService): Response {
+    public function profile(Request $request, EntityManagerInterface $em, PictureService $pictureService, TranslatorInterface $translator): Response {
         $user = $this->getUser();
         if (!$user) {
-            $this->addFlash('warning', 'Vous devez être connecté·e pour accéder à votre profil.');
+            $this->addFlash('warning', $translator->trans('You are not logged in. Please log in to access your profile.'));
             return $this->redirectToRoute('app_login');
         }
 
@@ -70,10 +76,10 @@ class SecurityController extends AbstractController
                 }
 
                 $em->flush();
-                $this->addFlash('success', 'Votre profil a bien été mis à jour.');
+                $this->addFlash('success', $translator->trans('Your profile has been updated.'));
                 return $this->redirectToRoute('app_profile');
             }
-            $this->addFlash('danger', 'Votre profil n\'a pas pu être mis à jour.');
+            $this->addFlash('danger', $translator->trans('Your profile could not be updated.'));
         }
 
         return $this->render('security/profile.html.twig', [
@@ -84,10 +90,10 @@ class SecurityController extends AbstractController
     /**
      * @Route("/change-password", name="app_change_password")
      */
-    public function changePassword(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $userPasswordHasher): Response {
+    public function changePassword(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $userPasswordHasher, TranslatorInterface $translator): Response {
         $user = $this->getUser();
         if (!$user) {
-            $this->addFlash('warning', 'Vous devez être connecté·e pour modifier votre mot de passe.');
+            $this->addFlash('warning', $translator->trans('You must be logged in to change your password.'));
             return $this->redirectToRoute('app_login');
         }
 
@@ -98,7 +104,7 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 if (!$userPasswordHasher->isPasswordValid($user, $form->get('actualPassword')->getData())) {
-                    $this->addFlash('danger', 'Ce mot de passe ne correspond pas à votre mot de passe actuel.');
+                    $this->addFlash('danger', $translator->trans('This password does not match your current password.'));
                     return $this->redirectToRoute('app_change_password');
                 }
                 $user->setPassword(
@@ -109,10 +115,10 @@ class SecurityController extends AbstractController
                 );
 
                 $em->flush();
-                $this->addFlash('success', 'Votre mot de passe a bien été mis à jour.');
+                $this->addFlash('success', $translator->trans('Your password has been updated.'));
                 return $this->redirectToRoute('app_profile');
             }
-            $this->addFlash('danger', 'Votre mot de passe n\'a pas pu être mis à jour.');
+            $this->addFlash('danger', $translator->trans('Your password could not be updated.'));
         }
 
         return $this->render('security/edit_pass.html.twig', [

@@ -1,6 +1,6 @@
 {% extends 'security.html.twig' %}
 
-{% block securityTitle %}Login{% endblock %}
+{% block securityTitle %}{{ 'Login' |trans }}{% endblock %}
 
 {% block form %}
     <form method="post">
@@ -10,13 +10,13 @@
 
         {% if app.user %}
             <div class="mb-3">
-                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+                {{ 'You are logged in as' |trans }} {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">{{ 'Logout' |trans }}</a>
             </div>
         {% endif %}
 
-        <label for="inputUsername">Username</label>
+        <label for="inputUsername">{{ 'Username' |trans }}</label>
         <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" autocomplete="username" required autofocus>
-        <label for="inputPassword">Password</label>
+        <label for="inputPassword">{{ 'Password' |trans }}</label>
         <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
 
         <input type="hidden" name="_csrf_token"
@@ -34,8 +34,8 @@
             </div>
         #}
         <div class="row mt-3 text-end">
-            <a href="{{ path('app_forgot_password_request') }}" class="col-12">Mot de passe oublié</a>
+            <a href="{{ path('app_forgot_password_request') }}" class="col-12">{{ 'Forgot password?' |trans }}</a>
         </div>
-        <button class="btn btn-lg btn-primary mt-3" type="submit">Sign in</button>
+        <button class="btn btn-lg btn-primary mt-3" type="submit">{{ 'Sign in' |trans }}</button>
     </form>
 {% endblock %}

@@ -31,13 +31,26 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, SnowtricksAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        UserAuthenticatorInterface $userAuthenticator,
+        SnowtricksAuthenticator $authenticator,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
+        ): Response
     {
         if ($this->getUser()) {
-            $this->addFlash('warning', 'Vous êtes déjà connecté·e, en tant que ' . $this->getUser() . '.
-            Si vous souhaitez créer un nouveau compte, veuillez vous déconnecter.');
+            $this->addFlash(
+                'warning',
+                $translator->trans(
+                    'You are already logged in as %user%. If you want to create a new account, please log out.',
+                    ['%user%' => $this->getUser()]
+                )
+            );
             return $this->redirectToRoute('app_home');
         }
+
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -102,7 +115,10 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
 
-        $this->addFlash('success', 'Votre adresse email a été vérifiée. Vous pouvez maintenant ajouter des figures et des commentaires.');
+        $this->addFlash(
+            'success',
+            $translator->trans('Your email address has been verified. You can now add figures and comments.')
+        );
 
         // @TODO Change the redirect on success to profile page
         return $this->redirectToRoute('app_home');
