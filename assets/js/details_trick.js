@@ -68,28 +68,15 @@ window.onload = function () {
         label.innerHTML = '<i class="fa-brands fa-' + label.innerHTML + '"></i>';
     });
 
-    buttonAdd = document.createElement('button');
-    buttonAdd.className = 'btn btn-success add-video';
-    buttonAdd.type = 'button';
-    buttonAdd.innerHTML = '<i class="fas fa-plus"></i> Ajouter une vidéo';
-
-    let newButton = span.appendChild(buttonAdd);
-
     collection.dataset.index = collection.querySelectorAll('input').length;
 
-    buttonAdd.addEventListener('click', function (e) {
-        addButton(collection, newButton);
-    });
+    span.querySelector('button').addEventListener('click', () => addButton(collection));
 
     let providers = document.querySelectorAll('input[name*="[provider]"]');
-    providers.forEach(function (provider) {
-        providerListener(provider);
-    });
+    providers.forEach((provider) => providerListener(provider));
 
     let videoId = document.querySelectorAll('input[name*="[video_id]"]');
-    videoId.forEach(function (input) {
-        inputListener(input);
-    });
+    videoId.forEach((input) => inputListener(input));
 }
 
 function providerListener(provider, add = false) {
@@ -169,7 +156,7 @@ function transformURL(provider) {
     return url;
 }
 
-function addButton(collection, newButton) {
+function addButton(collection) {
     let prototype = collection.dataset.prototype;
 
     let index = collection.dataset.index;
