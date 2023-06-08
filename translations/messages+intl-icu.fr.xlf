@@ -183,7 +183,7 @@
       </trans-unit>
       <trans-unit id="01cXXP6" resname="Media">
         <source>Media</source>
-        <target>_Médias</target>
+        <target>Médias</target>
       </trans-unit>
       <trans-unit id="fZ63rLE" resname="Close">
         <source>Close</source>
@@ -388,6 +388,10 @@
       <trans-unit id="Um4Ah8w" resname="Description">
         <source>Description</source>
         <target>Description</target>
+      </trans-unit>
+      <trans-unit id="Nq6u.lb" resname="Add video">
+        <source>Add video</source>
+        <target>Ajouter une vidéo</target>
       </trans-unit>
     </body>
   </file>
