@@ -86,6 +86,8 @@ class TrickController extends AbstractController
      */
     public function add(Request $request, PictureService $pictureService, ValidatorInterface $validator): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         $trick = new Trick();
         $trick->setName($this->translator->trans('New trick'));
         $form = $this->createForm(TrickType::class, $trick);
@@ -155,6 +157,8 @@ class TrickController extends AbstractController
      */
     public function edit(Trick $trick, Request $request, PictureService $pictureService, ValidatorInterface $validator): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         $form = $this->createForm(TrickType::class, $trick);
         $group = new Group();
         $groupForm = $this->createForm(GroupType::class, $group);
@@ -269,6 +273,8 @@ class TrickController extends AbstractController
      */
     public function changeMiniature(Trick $trick, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         $form = $this->createFormBuilder($trick)
             ->add('miniature', TextType::class, [
                 'label' => 'Miniature',

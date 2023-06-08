@@ -393,6 +393,14 @@
         <source>Add video</source>
         <target>Ajouter une vidéo</target>
       </trans-unit>
+      <trans-unit id="7EyioYR" resname="You must be logged in to access this page.">
+        <source>You must be logged in to access this page.</source>
+        <target>Vous devez être connecté pour accéder à cette page.</target>
+      </trans-unit>
+      <trans-unit id="7gyioYR" resname="You are connected.">
+        <source>You are connected.</source>
+        <target>Vous êtes connecté·e.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
