@@ -20,7 +20,9 @@ trait Timestampable
      */
     public function prePersist()
     {
-        $this->createdAt = new \DateTime();
+        if (null === $this->createdAt) {
+            $this->createdAt = new \DateTime();
+        }
     }
 
     /**

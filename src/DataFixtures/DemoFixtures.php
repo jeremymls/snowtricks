@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Comment;
 use App\Entity\Group;
 use App\Entity\Image;
 use App\Entity\Trick;
@@ -57,8 +58,24 @@ class DemoFixtures extends Fixture
                 ->setDescription($faker->paragraphs(3, true))
                 ->setCategory($categories[rand(0, 6)])
                 ->setMiniature($images[rand(1, 20)]->getName())
+                ->setCreatedAt($faker->dateTimeBetween('-12 months', '-6 months'))
             ;
             $manager->persist($newTrick);
+        }
+        $manager->flush();
+
+        // Comments
+        $tricks = $manager->getRepository(Trick::class)->findAll();
+        for ($i = 0; $i < 2000; $i++) {
+            $trick = $tricks[rand(0, 99)];
+            $comment = new Comment();
+            $comment
+                ->setUser($users[rand(0, 9)])
+                ->setTrick($trick)
+                ->setText($faker->sentences(1, true))
+                ->setCreatedAt($faker->dateTimeBetween('-7 months', '-1 months'))
+            ;
+            $manager->persist($comment);
         }
 
         $manager->flush();
