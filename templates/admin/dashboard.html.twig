@@ -1,0 +1,31 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}{{ "Dashboard" |trans }}{% endblock %}
+{# {% block page_actions %}
+    <a class="btn btn-primary" href="...">Some Action</a>
+{% endblock %} #}
+
+{% block main %}
+    <div class="row">
+        <div class="col-auto">
+            <ol class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="fw-bold ms-2 me-auto">{{ "Users" |trans }}</div>
+                    <span class="badge bg-primary rounded-pill ms-3">{{ users }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="fw-bold ms-2 me-auto">{{ "Tricks" |trans }}</div>
+                    <span class="badge bg-primary rounded-pill ms-3">{{ tricks }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="fw-bold ms-2 me-auto">{{ "Groups" |trans }}</div>
+                    <span class="badge bg-primary rounded-pill ms-3">{{ groups }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="fw-bold ms-2 me-auto">{{ "Comments" |trans }}</div>
+                    <span class="badge bg-primary rounded-pill ms-3">{{ comments }}</span>
+                </li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}

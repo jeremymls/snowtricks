@@ -363,8 +363,8 @@ class TrickController extends AbstractController
             $comments[] = [
                 'id' => $comment->getId(),
                 'text' => $comment->getText(),
-                'createdAt' => $comment->getCreatedAt()->format('d/m/Y à H:i'),
-                'user' => $comment->getUser()->getUsername(),
+                'createdAt' => $comment->getCreatedAt()->format('d/m/Y') . ' ' . $this->translator->trans('at') . ' ' . $comment->getCreatedAt()->format('H:i'),
+                'user' => $comment->getUser()->getFullName(),
                 'src' => $src
             ];
         }
@@ -418,4 +418,43 @@ class TrickController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/delete/comment", name="app_delete_comment", methods={"DELETE"})
+     */
+    public function deleteComment(Request $request): JsonResponse
+    {
+        $comment = $this->em->getRepository(Comment::class)->find($request->get('id'));
+
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        if ($this->isCsrfTokenValid('deleteComment' . $comment->getTrick()->getId(), $request->get('_token'))) {
+            $comment->setDeletedAt(new \DateTime());
+            $this->em->persist($comment);
+            $this->em->flush();
+
+            return new JsonResponse(['success' => true], 200);
+        } else {
+            return new JsonResponse(['error' => 'Token Invalide'], 403);
+        }
+    }
+
+    /**
+     * @Route("/restore/comment", name="app_restore_comment", methods={"POST"})
+     */
+    public function restoreComment(Request $request): JsonResponse
+    {
+        $comment = $this->em->getRepository(Comment::class)->find($request->request->get('id'));
+
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        if ($this->isCsrfTokenValid('restoreComment' . $comment->getTrick()->getId(), $request->request->get('_token'))) {
+            $comment->setDeletedAt(null);
+            $this->em->persist($comment);
+            $this->em->flush();
+
+            return new JsonResponse(['success' => true], 200);
+        } else {
+            return new JsonResponse(['error' => 'Token Invalide'], 403);
+        }
+    }
 }
