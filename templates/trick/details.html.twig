@@ -56,7 +56,12 @@
                         <div id='videos' data-prototype="{{ form_row(form.videos.vars.prototype, {'row_attr': {'class': 'row mb-3'}})|e('html_attr')}}">
                             <div class="videos row py-3">
                                 {% for video in form.videos %}
-                                    <div class="col-md-6 mb-3">{{ form_row(video) }}</div>
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_row(video) }}
+                                        <button type="button" data-bs-toggle="modal" data-bs-target="#deleteVideoModal" data-id="{{ video.vars.value.videoId }}" data-trick="{{ trick.id }}" data-loop="{{ loop.index0 }}" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash" aria-hidden="true"></i> Supprimer
+                                        </button>
+                                    </div>
                                     <div class="col-md-6 mb-3">
                                         {% if video.vars.value.provider == 'youtube' %}{% set path = "https://www.youtube.com/embed/" %}{% endif %}
                                         {% if video.vars.value.provider == 'dailymotion' %}{% set path = "https://www.dailymotion.com/embed/video/" %}{% endif %}
@@ -103,7 +108,7 @@
                     {% if app.request.get('_route') != 'app_show_trick' %}
                     <div class="mx-3 mt-3 p-1 border border-dark rounded d-flex justify-content-center">
                         <a href="#" type="button" class="mx-3" data-bs-toggle="modal" data-bs-target="#addVideoModal"><i class="fas fa-pencil-alt text-warning"></i></a>
-                        <button data-bs-toggle="modal" data-bs-target="#deleteVideoModal" data-id="{{ video.videoId }}" data-trick="{{ video.trick.getId() }}" data-loop="{{ loop.index0 }}" class="mx-3 btn btn-outline border-0 p-0 deleteBtn"><i class="fas fa-trash-alt text-danger"></i></button>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#deleteVideoModal" data-id="{{ video.videoId }}" data-trick="{{ video.trick.getId() }}" data-loop="{{ loop.index0 }}" class="mx-3 btn btn-outline border-0 p-0"><i class="fas fa-trash-alt text-danger"></i></button>
                     </div>
                     {% endif %}
                 </div>

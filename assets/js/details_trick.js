@@ -83,10 +83,7 @@ function providerListener(provider, add = false) {
     provider.addEventListener('change', function (e) {
         const form = add ? e.target.parentElement.parentElement.parentElement.parentElement :this.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
         const video_id = form.querySelector('input[name*="[video_id]"]').value;
-        const url = transformURL(e.target.value);
-        if (form.nextElementSibling != null) {
-            form.nextElementSibling.querySelector('iframe').src = url + video_id;
-        }
+        setIframes(form, e.target.value, video_id);
     });
 }
 
@@ -130,11 +127,16 @@ function inputListener(input, add = false) {
         } else {
             video_id = this.value;
         }
-
-        const url = transformURL(provider?form.querySelector('input[name*="[provider]"]:checked').value:null);
-        form.nextElementSibling.querySelector('iframe').src = url + video_id;
-        document.querySelector('#media_' + this.parentElement.parentElement.id + ' iframe').src = url + video_id;
+        setIframes(form, provider.value, video_id);
     });
+}
+
+function setIframes(form, provider = null, video_id = null) {
+    const url = transformURL(provider?form.querySelector('input[name*="[provider]"]:checked').value:null);
+    if (form.nextElementSibling != null) {
+        form.nextElementSibling.querySelector('iframe').src = url + video_id;
+    }
+    document.querySelector('#media_' + form.querySelector('fieldset>div').id + ' iframe').src = url + video_id;
 }
 
 function transformURL(provider) {
