@@ -73,11 +73,19 @@
         <source>Invalid or expired login link.</source>
         <target>Invalid or expired login link.</target>
       </trans-unit>
-      <trans-unit id="9qGC3hG" resname="Too many failed login attempts, please try again in {{ minutes }} minute.">
+      <trans-unit id="9qGC3hG" resname="Too many failed login attempts, please try again in %minutes% minute.">
+        <source>Too many failed login attempts, please try again in %minutes% minute.</source>
+        <target>Too many failed login attempts, please try again in %minutes% minute.</target>
+      </trans-unit>
+      <trans-unit id="AJR3lMs" resname="Too many failed login attempts, please try again in %minutes% minutes.">
+        <source>Too many failed login attempts, please try again in %minutes% minutes.</source>
+        <target>Too many failed login attempts, please try again in %minutes% minutes.</target>
+      </trans-unit>
+      <trans-unit id="ZRy4uKw" resname="Too many failed login attempts, please try again in {{ minutes }} minute.">
         <source>Too many failed login attempts, please try again in {{ minutes }} minute.</source>
         <target>Too many failed login attempts, please try again in {{ minutes }} minute.</target>
       </trans-unit>
-      <trans-unit id="AJR3lMs" resname="Too many failed login attempts, please try again in {{ minutes }} minutes.">
+      <trans-unit id="7cm_p3H" resname="Too many failed login attempts, please try again in {{ minutes }} minutes.">
         <source>Too many failed login attempts, please try again in {{ minutes }} minutes.</source>
         <target>Too many failed login attempts, please try again in {{ minutes }} minutes.</target>
       </trans-unit>

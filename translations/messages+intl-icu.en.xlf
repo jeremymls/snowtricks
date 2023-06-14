@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file source-language="fr" target-language="en" datatype="plaintext" original="file.ext">
+  <file source-language="en" target-language="en" datatype="plaintext" original="file.ext">
     <header>
       <tool tool-id="symfony" tool-name="Symfony"/>
     </header>
@@ -9,17 +9,9 @@
         <source>Language changed successfully</source>
         <target>Language changed successfully</target>
       </trans-unit>
-      <trans-unit id="EY8SAHL" resname="You are already logged in as {{ user }}. If you want to create a new account, please log out.">
-        <source>You are already logged in as {{ user }}. If you want to create a new account, please log out.</source>
-        <target>You are already logged in as {{ user }}. If you want to create a new account, please log out.</target>
-      </trans-unit>
       <trans-unit id="xDjyaNh" resname="Your email address has been verified. You can now add figures and comments.">
         <source>Your email address has been verified. You can now add figures and comments.</source>
         <target>Your email address has been verified. You can now add figures and comments.</target>
-      </trans-unit>
-      <trans-unit id="hR4VrkD" resname="You are already logged in as {{ user }}. If you want too change your account, please log out.">
-        <source>You are already logged in as {{ user }}. If you want too change your account, please log out.</source>
-        <target>You are already logged in as {{ user }}. If you want too change your account, please log out.</target>
       </trans-unit>
       <trans-unit id="1YVbg5k" resname="You are not logged in. Please log in to access your profile.">
         <source>You are not logged in. Please log in to access your profile.</source>
@@ -61,33 +53,9 @@
         <source>Check videos</source>
         <target>Check videos</target>
       </trans-unit>
-      <trans-unit id="BYf4gDg" resname="{{ trick }} has been added">
-        <source>{{ trick }} has been added</source>
-        <target>{{ trick }} has been added</target>
-      </trans-unit>
-      <trans-unit id="QVeP19J" resname="{{ trick }} has been edited">
-        <source>{{ trick }} has been edited</source>
-        <target>{{ trick }} has been edited</target>
-      </trans-unit>
-      <trans-unit id="PCF9IFw" resname="The trick {{ trick }} has been deleted">
-        <source>The trick {{ trick }} has been deleted</source>
-        <target>The trick {{ trick }} has been deleted</target>
-      </trans-unit>
-      <trans-unit id="Kt9Ip72" resname="The trick {{ trick }} has not been found">
-        <source>The trick {{ trick }} has not been found</source>
-        <target>The trick {{ trick }} has not been found</target>
-      </trans-unit>
       <trans-unit id="CG7_p2Q" resname="Invalid token">
         <source>Invalid token</source>
         <target>Invalid token</target>
-      </trans-unit>
-      <trans-unit id="sWNcWGb" resname="The miniature of {{ trick }} has been deleted">
-        <source>The miniature of {{ trick }} has been deleted</source>
-        <target>The miniature of {{ trick }} has been deleted</target>
-      </trans-unit>
-      <trans-unit id="BhwfBHD" resname="The miniature of {{ trick }} has been changed">
-        <source>The miniature of {{ trick }} has been changed</source>
-        <target>The miniature of {{ trick }} has been changed</target>
       </trans-unit>
       <trans-unit id="PdnfREH" resname="New password">
         <source>New password</source>
@@ -384,6 +352,58 @@
       <trans-unit id="Cgtd6dX" resname="Are you sure you want to delete this video?">
         <source>Are you sure you want to delete this video?</source>
         <target>Are you sure you want to delete this video?</target>
+      </trans-unit>
+      <trans-unit id="CrBgxJD" resname="You are already logged in. If you want to create a new account, please log out.">
+        <source>You are already logged in. If you want to create a new account, please log out.</source>
+        <target>You are already logged in. If you want to create a new account, please log out.</target>
+      </trans-unit>
+      <trans-unit id="jsT5xKJ" resname="You are already logged in. If you want too change your account, please log out.">
+        <source>You are already logged in. If you want too change your account, please log out.</source>
+        <target>You are already logged in. If you want too change your account, please log out.</target>
+      </trans-unit>
+      <trans-unit id="vCc0jbe" resname="Trick added">
+        <source>Trick added</source>
+        <target>Trick added</target>
+      </trans-unit>
+      <trans-unit id="t_Z0tZ2" resname="Trick edited">
+        <source>Trick edited</source>
+        <target>Trick edited</target>
+      </trans-unit>
+      <trans-unit id="nA3y60b" resname="Trick deleted">
+        <source>Trick deleted</source>
+        <target>Trick deleted</target>
+      </trans-unit>
+      <trans-unit id="sMalM_J" resname="Trick not found">
+        <source>Trick not found</source>
+        <target>Trick not found</target>
+      </trans-unit>
+      <trans-unit id="3yq5ysX" resname="Miniature deleted">
+        <source>Miniature deleted</source>
+        <target>Miniature deleted</target>
+      </trans-unit>
+      <trans-unit id="bf2vZuC" resname="Miniature changed">
+        <source>Miniature changed</source>
+        <target>Miniature changed</target>
+      </trans-unit>
+      <trans-unit id="Um4Ah8w" resname="Description">
+        <source>Description</source>
+        <target>Description</target>
+      </trans-unit>
+      <trans-unit id="Tszx0cZ" resname="You are connected.">
+        <source>You are connected.</source>
+        <target>You are connected.</target>
+      </trans-unit>
+      <trans-unit id="7EyioYR" resname="You must be logged in to access this page.">
+        <source>You must be logged in to access this page.</source>
+        <target>You must be logged in to access this page.</target>
+      </trans-unit>
+      <trans-unit id="wcIksDz" resname="Back-office">
+        <source>Back-office</source>
+        <target>Back-office</target>
+      </trans-unit>
+      <trans-unit id="Nq6u.lb" resname="Add video">
+        <source>Add video</source>
+        <target>Add video</target>
       </trans-unit>
     </body>
   </file>

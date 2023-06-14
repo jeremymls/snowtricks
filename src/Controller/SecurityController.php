@@ -25,10 +25,7 @@ class SecurityController extends AbstractController
         if ($this->getUser()) {
             $this->addFlash(
                 'warning',
-                $translator->trans(
-                    'You are already logged in as %user%. If you want too change your account, please log out.',
-                    ['%user%' => $this->getUser()]
-                )
+                $translator->trans('You are already logged in. If you want too change your account, please log out.')
             );
             return $this->redirectToRoute('app_home');
         }

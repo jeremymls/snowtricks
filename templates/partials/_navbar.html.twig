@@ -16,10 +16,10 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item {% if app.request.get('_route') == 'app_home' %}active{% endif %}">
                     <a class="nav-link" href="{{ path('app_home') }}">
-                        <span class="fa-stack" style="font-size: 0.7rem; vertical-align: top;">
+                        {# <span class="fa-stack" style="font-size: 0.7rem; vertical-align: top;">
                             <i class="fa-solid fa-circle fa-stack-2x text-primary"></i>
                             <i class="fa-solid fa-home fa-stack-1x fa-inverse"></i>
-                        </span>
+                        </span> #}
                         {{ 'Home' |trans }}
                     </a>
                 </li>
@@ -27,10 +27,10 @@
                 <div class="vr"></div>
                 <li class="nav-item {% if app.request.get('_route') == 'app_add_trick' %}active{% endif %}">
                     <a class="nav-link" href="{{ path('app_add_trick') }}">
-                        <span class="fa-stack" style="font-size: 0.7rem; vertical-align: top;">
+                        {# <span class="fa-stack" style="font-size: 0.7rem; vertical-align: top;">
                             <i class="fa-solid fa-circle fa-stack-2x text-success"></i>
                             <i class="fa-solid fa-plus fa-stack-1x fa-inverse"></i>
-                        </span>
+                        </span> #}
                         {{ 'Add trick' |trans }}
                     </a>
                 </li>
@@ -39,11 +39,11 @@
                 <div class="vr"></div>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('admin') }}">
-                        <span class="fa-stack" style="font-size: 0.7rem; vertical-align: top;">
+                        {# <span class="fa-stack" style="font-size: 0.7rem; vertical-align: top;">
                             <i class="fa-solid fa-circle fa-stack-2x text-secondary"></i>
                             <i class="fa-solid fa-cog fa-stack-1x fa-inverse"></i>
-                        </span>
-                        {{ 'Admin' |trans }}
+                        </span> #}
+                        {{ 'Back-office' |trans }}
                     </a>
                 </li>
                 {% endif %}

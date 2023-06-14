@@ -134,7 +134,7 @@ class TrickController extends AbstractController
                 $this->em->persist($trick);
                 $this->em->flush();
 
-                $this->addFlash('success', $this->translator->trans('%trick% has been added', ['%trick%' => $trick->getName()]));
+                $this->addFlash('success', $this->translator->trans('Trick added'));
 
                 return $this->redirectToRoute('app_show_trick', [
                     'slug' => $trick->getSlug()
@@ -197,7 +197,7 @@ class TrickController extends AbstractController
             $this->em->persist($trick);
             $this->em->flush();
 
-            $this->addFlash('success', $this->translator->trans('%trick% has been edited', ['%trick%' => $trick->getName()]));
+            $this->addFlash('success', $this->translator->trans('Trick edited'));
 
             if ($request->request->get('_action') === 'change_mini') {
                 return $this->redirectToRoute('app_change_miniature', [
@@ -231,15 +231,9 @@ class TrickController extends AbstractController
                 $this->em->persist($trick);
                 $this->em->flush();
 
-                $this->addFlash('success', $this->translator->trans(
-                    'The trick %trick% has been deleted',
-                    ['%trick%' => $trick->getName()]
-                ));
+                $this->addFlash('success', $this->translator->trans('Trick deleted'));
             } else {
-                $this->addFlash('danger', $this->translator->trans(
-                    'The trick %trick% has not been found',
-                    ['%trick%' => $trick->getName()]
-                ));
+                $this->addFlash('danger', $this->translator->trans('Trick not found'));
             }
         } else {
             $this->addFlash('danger', $this->translator->trans('Invalid token'));
@@ -258,10 +252,7 @@ class TrickController extends AbstractController
             $trick->setMiniature(null);
             $this->em->persist($trick);
             $this->em->flush();
-            $this->addFlash('success', $this->translator->trans(
-                'The miniature of %trick% has been deleted',
-                ['%trick%' => $trick->getName()]
-            ));
+            $this->addFlash('success', $this->translator->trans('Miniature deleted'));
         }
         return $this->redirectToRoute('app_edit_trick', [
             'slug' => $trick->getSlug()
@@ -291,10 +282,7 @@ class TrickController extends AbstractController
             $this->em->persist($trick);
             $this->em->flush();
 
-            $this->addFlash('success', $this->translator->trans(
-                'The miniature of %trick% has been changed',
-                ['%trick%' => $trick->getName()]
-            ));
+            $this->addFlash('success', $this->translator->trans('Miniature changed'));
 
             return $this->redirectToRoute('app_edit_trick', [
                 'slug' => $trick->getSlug()
