@@ -61,6 +61,13 @@ trickImages.addEventListener('change', function (e) {
             div_preview_row.appendChild(div_preview_col);
             div_preview.appendChild(div_preview_row);
             preview.insertBefore(div_preview, separator);
+
+            if (i==0) {
+                const imgHeader = document.querySelector('#trick-header>img');
+                if (imgHeader.getAttribute('alt') === 'miniature par défaut') {
+                    imgHeader.src = e.target.result;
+                }
+            }
         });
 
         reader.readAsDataURL(file);
