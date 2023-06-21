@@ -23,5 +23,11 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    App\EventListener\LogoutListener:
+        tags:
+            - name: 'kernel.event_listener'
+              event: 'Symfony\Component\Security\Http\Event\LogoutEvent'
+
+    # - { name: kernel.event_listener, event: security.logout, method: onLogout }
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

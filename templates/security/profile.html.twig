@@ -75,6 +75,9 @@
                         <div class="col-auto">
                             <a href="{{ path('app_change_password') }}" type="button" class="btn btn-outline-warning mb-3"><i class="fas fa-key"></i> {{ 'Change password' |trans }}</a>
                         </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-outline-danger mb-3" data-bs-toggle="modal" data-bs-target="#deleteAccountModal"><i class="fas fa-trash-alt"></i> {{ 'Delete account' |trans }}</button>
+                        </div>
                     </div>
                 </div>
                 {# Tricks #}
@@ -118,8 +121,27 @@
                 {{ 'Are you sure you want to delete your profile image?' |trans }}
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'Close' |trans }}</button>
 				<a type="button" class="btn btn-primary" href="{{ path('app_delete_profile_image') }}">{{ 'Delete' |trans }}</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+{# Delete account modal #}
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="deleteAccountModalLabel">{{ 'Delete image' |trans }}</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+                {{ 'Are you sure you want to delete your account?' |trans }}
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'Close' |trans }}</button>
+				<a type="button" class="btn btn-primary" href="{{ path('app_delete_account') }}">{{ 'Delete' |trans }}</a>
 			</div>
 		</div>
 	</div>
