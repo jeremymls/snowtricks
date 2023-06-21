@@ -134,6 +134,26 @@ class SecurityController extends AbstractController
     }
 
     /**
+     * @Route("delete/account", name="app_delete_account")
+     */
+    public function deleteAccount(EntityManagerInterface $em, PictureService $pictureService, TranslatorInterface $translator): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $user = $this->getUser();
+        $image = $user->getImage();
+        if ($image) {
+            $pictureService->delete($image->getName(), 'users');
+        }
+        $user->setDeletedAt(new \DateTime());
+        $em->flush();
+
+        $this->addFlash('danger', $translator->trans('Your account has been deleted.'));
+
+        return $this->redirectToRoute('app_logout');
+    }
+
+    /**
      * @Route("delete/profile-image", name="app_delete_profile_image")
      */
     public function deleteProfileImage(

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Model\SoftDeleteable;
 use App\Entity\Model\Timestampable;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -20,6 +21,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use Timestampable;
+    use SoftDeleteable;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
