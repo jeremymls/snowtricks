@@ -31,7 +31,10 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @Route("/trick")
+ * @Route({
+ *     "fr": "/figure",
+ *     "en": "/trick"
+ * })
  */
 class TrickController extends AbstractController
 {
@@ -47,7 +50,7 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/show/{slug}", name="app_show_trick")
+     * @Route("/page/{slug}", name="app_show_trick")
      */
     public function show(Trick $trick, Request $request, CommentRepository $commentRepository): Response
     {
@@ -82,7 +85,10 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/add", name="app_add_trick")
+     * @Route({
+     *     "fr": "/ajouter",
+     *     "en": "/add"
+     * }, name="app_add_trick")
      */
     public function add(Request $request, PictureService $pictureService, ValidatorInterface $validator): Response
     {
@@ -153,7 +159,10 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/edit/{slug}", name="app_edit_trick")
+     * @Route({
+     *     "fr": "/modifier/{slug}",
+     *     "en": "/edit/{slug}"
+     * }, name="app_edit_trick")
      */
     public function edit(Trick $trick, Request $request, PictureService $pictureService, ValidatorInterface $validator): Response
     {
@@ -260,7 +269,10 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/change/miniature/{slug}", name="app_change_miniature")
+     * @Route({
+     *     "fr": "/changer/miniature/{slug}",
+     *     "en": "/change/miniature/{slug}"
+     * }, name="app_change_miniature")
      */
     public function changeMiniature(Trick $trick, Request $request): Response
     {

@@ -18,7 +18,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/login", name="app_login")
+     * @Route({
+     *   "fr": "/connexion",
+     *   "en": "/login"
+     * }, name="app_login")
      */
     public function login(AuthenticationUtils $authenticationUtils, TranslatorInterface $translator): Response
     {
@@ -47,7 +50,10 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/profile", name="app_profile")
+     * @Route({
+     *  "fr": "/mon-profil",
+     *  "en": "/my-profile"
+     * }, name="app_profile")
      */
     public function profile(Request $request, EntityManagerInterface $em, PictureService $pictureService, TranslatorInterface $translator): Response {
         $user = $this->getUser();
@@ -85,9 +91,13 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/change-password", name="app_change_password")
+     * @Route({
+     * "fr": "/changer/mot-de-passe",
+     * "en": "/change/password"
+     * }, name="app_change_password")
      */
-    public function changePassword(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $userPasswordHasher, TranslatorInterface $translator): Response {
+    public function changePassword(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $userPasswordHasher, TranslatorInterface $translator): Response
+    {
         $user = $this->getUser();
         if (!$user) {
             $this->addFlash('warning', $translator->trans('You must be logged in to change your password.'));
