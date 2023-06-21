@@ -10,7 +10,7 @@
             {% else %}
                 <img src="{{ asset('core/img/default_mini.png') }}" alt="miniature par défaut">
             {% endif %}
-            {% if trick and is_granted('ROLE_USER') and app.request.get('_route') != 'app_add_trick' %}
+            {% if trick and is_granted('ROLE_USER') and app.user.isVerified() and app.request.get('_route') != 'app_add_trick' %}
                 <div class="position-absolute top-0 end-0 m-3 p-1 border border-dark rounded">
                     {% if app.request.get('_route') == 'app_show_trick' %}
                         <a href="{{ path('app_edit_trick', {'slug': trick.slug}) }}" class="btn btn-outline border-0"><i class="fas fa-pencil-alt text-warning"></i></a>
@@ -157,7 +157,7 @@
     {% if app.request.get('_route') == 'app_show_trick' %}
     <section id="comment-form" class="my-3 mx-5 px-5">
         <hr>
-        {% if is_granted('ROLE_USER') %}
+        {% if is_granted('ROLE_USER') and app.user.isVerified() %}
             {% form_theme commentForm 'bootstrap_5_layout.html.twig' %}
             {{ form_start(commentForm) }}
                 <div class="row align-items-center">
@@ -197,6 +197,7 @@
                             </div>
                         </div>
                         <p>{{ comment.text }}</p>
+                        {% if is_granted('ROLE_ADMIN') %}
                         <button 
                             data-bs-toggle="modal"
                             data-bs-target="#deleteCommentModal"
@@ -209,6 +210,7 @@
                                 <i class="fa-solid fa-times fa-stack-1x text-white"></i>
                             </span>
                         </button>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

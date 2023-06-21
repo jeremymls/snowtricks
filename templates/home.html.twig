@@ -24,7 +24,7 @@
                 <div class="col text-start text-truncate pe-0">
                     <a href="{{ path('app_show_trick', {'slug': trick.slug}) }}" class="">{{ trick.name }}</a>
                 </div>
-                {% if is_granted('ROLE_USER') %}
+                {% if is_granted('ROLE_USER') and app.user.isVerified() %}
                     <div class="col-auto d-flex flex-nowrap">
                         <a class="me-3" href="{{ path('app_edit_trick', {'slug': trick.slug}) }}"><i class="fa-sharp fa-solid fa-pencil"></i></a>
                         <button type="button" class="btn btn-outline border-0 p-0" data-bs-toggle="modal" data-id="{{ trick.id }}" data-bs-target="#deleteTrickModal"><i class="fas fa-trash-alt text-danger"></i></button>
@@ -81,7 +81,7 @@
                                 <div class="col text-start text-truncate pe-0">
                                     <a href="${trick.url}" class="">${ trick.name }</a>
                                 </div>`;
-                                {% if is_granted('ROLE_USER') %}
+                                {% if is_granted('ROLE_USER') and app.user.isVerified() == true %}
                                 html += `<div class="col-auto d-flex flex-nowrap">
                                     <a class="me-3" href="${trick.urlEdit}"><i class="fa-sharp fa-solid fa-pencil"></i></a>
                                     <button type="button" class="btn btn-outline border-0 p-0" data-bs-toggle="modal" data-id="${ trick.id }" data-bs-target="#deleteTrickModal"><i class="fas fa-trash-alt text-danger"></i></button>
