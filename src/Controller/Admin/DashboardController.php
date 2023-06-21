@@ -48,7 +48,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToRoute('Retour au site', 'fa fa-rotate-left', 'app_home');
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Commentaires', 'fas fa-comments', Comment::class);
-        // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
+        yield MenuItem::linkToCrud('Group', 'fas fa-list', Group::class);
     }
 
     public function configureUserMenu(UserInterface $user): UserMenu
