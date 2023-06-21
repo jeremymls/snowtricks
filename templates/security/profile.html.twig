@@ -59,7 +59,13 @@
                         </div>
                         <div class="col text-center">
                             {{ form_row(form.image) }}
-                            <img id="img-preview" src="{% if user.image %}{{ asset('uploads/images/users/' ~ user.image) }}{% else %}{{ asset('core/img/default-user.png') }}{% endif %}" class="img-fluid rounded-circle w-50 user_image" alt="">
+                            <div class="position-relative">
+                                <img id="img-preview" src="{% if user.image %}{{ asset('uploads/images/users/' ~ user.image) }}{% else %}{{ asset('core/img/default-user.png') }}{% endif %}" class="img-fluid rounded-circle w-50 user_image" alt="">
+                                <div class="position-absolute top-0 end-0">
+                                    <button type="button" class="btn btn-outline-danger btn-sm pe-2" data-bs-toggle="modal" data-bs-target="#deleteImageModal">
+                                    {{ 'Delete' |trans }} <i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row justify-content-center">
@@ -99,6 +105,27 @@
         {{ form_end(form) }}
     </section>
 </div>
+
+{# Delete image modal #}
+<div class="modal fade" id="deleteImageModal" tabindex="-1" aria-labelledby="deleteImageModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="deleteImageModalLabel">{{ 'Delete image' |trans }}</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+                {{ 'Are you sure you want to delete your profile image?' |trans }}
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<a type="button" class="btn btn-primary" href="{{ path('app_delete_profile_image') }}">{{ 'Delete' |trans }}</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 {% endblock %}
 
 {% block javascripts %}

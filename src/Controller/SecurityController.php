@@ -132,4 +132,25 @@ class SecurityController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    /**
+     * @Route("delete/profile-image", name="app_delete_profile_image")
+     */
+    public function deleteProfileImage(
+        EntityManagerInterface $em,
+        PictureService $pictureService
+    ): Response {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $user = $this->getUser();
+        $image = $user->getImage();
+        if ($image) {
+            $pictureService->delete($image->getName(), 'users');
+            $user->setImage(null);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('app_profile');
+    }
+
 }
