@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+<header class="position-relative overflow-hidden text-center bg-secondary d-flex justify-content-center align-items-center vh-100" style="background-image: url({{ asset('build/img/garde.jpg') }});">
+    <div class="col-md-8 p-lg-5 my-auto">
+        <p class="lead fw-normal text-white display-6">
+            {{ 'Join a passionate community of snowboarders and share your tricks!' | trans }}
+        </p>
+        <a class="text-black position-absolute bottom-0 end-0 mb-3 btn btn-outline-secondary border-0" href="#main">
+            <i class="fas fa-arrow-down fa-3x"></i>
+        </a>
+    </div>
+    <div class="product-device shadow-sm d-none d-md-block"></div>
+    <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
+</header>
+<main id="main" class="container py-5">
+    <div class="row justify-content-around" id="tricksDiv">
+        {% for trick in tricks %}
+        <div class="col-lg-2 mb-5 mx-1 p-0 text-center shadow border">
+            <img src="{% if trick.miniature %}{{ asset('uploads/images/tricks/' ~ trick.miniature) }}{% else %}{{ asset('core/img/default_mini.png') }}{% endif %}" class="mini" width="100%" alt="">
+            <div class="row p-2 d-flex flex-nowrap justify-content-between">
+                <div class="col text-start text-truncate pe-0">
+                    <a href="{{ path('app_show_trick', {'slug': trick.slug}) }}" class="">{{ trick.name }}</a>
+                </div>
+                {% if is_granted('ROLE_USER') and app.user.isVerified() %}
+                    <div class="col-auto d-flex flex-nowrap">
+                        <a class="me-3" href="{{ path('app_edit_trick', {'slug': trick.slug}) }}"><i class="fa-sharp fa-solid fa-pencil"></i></a>
+                        <button type="button" class="btn btn-outline border-0 p-0" data-bs-toggle="modal" data-id="{{ trick.id }}" data-bs-target="#deleteTrickModal"><i class="fas fa-trash-alt text-danger"></i></button>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% if next < tricks | length %}
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <button type="button" id="btnNext" class="btn btn-outline-primary" data-action="{{ path('app_get_tricks', {'offset': next}) }}">{{ 'Load more' |trans }}</button>
+            </div>
+        </div>
+    {% endif %}
+</main>
+    <!-- Delete Trick Modal -->
+    <div class="modal" id="deleteTrickModal" tabindex="-1" aria-labelledby="deleteTrickModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-body z-index-1">
+                    {{ 'Are you sure you want to delete this trick?' |trans }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'No' |trans }}</button>
+                    <form action="{{ path('app_delete_trick') }}" method="post">
+                        <input type="hidden" name="_token" value="{{ csrf_token('deleteTrick') }}">
+                        <input id="trickId" type="hidden" name="id">
+                        <button type="submit" class="btn btn-danger">{{ 'Yes' |trans }}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('build/js/delete_trick.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        $('#btnNext').click(function() {
+            $.ajax({
+                url: $(this).data('action'),
+                type: 'GET',
+                success: function(data) {
+                    data.action ? $('#btnNext').data('action', data.action) : $('#btnNext').hide();
+                    html = "";
+                    data.tricks.forEach(trick => {
+                        html += `<div class="col-lg-2 mb-5 mx-1 p-0 text-center shadow border">
+                            <img src="${trick.miniature ? ('uploads/images/tricks/' + trick.miniature) : ('core/img/default_mini.png')}" class="mini" width="100%" alt="">
+                            <div class="row p-2 d-flex flex-nowrap justify-content-between">
+                                <div class="col text-start text-truncate pe-0">
+                                    <a href="${trick.url}" class="">${ trick.name }</a>
+                                </div>`;
+                                {% if is_granted('ROLE_USER') and app.user.isVerified() == true %}
+                                html += `<div class="col-auto d-flex flex-nowrap">
+                                    <a class="me-3" href="${trick.urlEdit}"><i class="fa-sharp fa-solid fa-pencil"></i></a>
+                                    <button type="button" class="btn btn-outline border-0 p-0" data-bs-toggle="modal" data-id="${ trick.id }" data-bs-target="#deleteTrickModal"><i class="fas fa-trash-alt text-danger"></i></button>
+                                </div>`;
+                                {% endif %}
+                            html += `</div>
+                        </div>`;
+                    });
+                    $('#tricksDiv').append(html);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

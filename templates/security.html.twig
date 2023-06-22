@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+<div class="container py-5 vh-100">
+    <div class="row justify-content-center text-center align-items-center h-100">
+        <div class="col-lg-4">
+            <h1 class="h3 mb-3 font-weight-normal">{% block securityTitle %}{% endblock %}</h1>
+            <div class="border border-black rounded p-4">
+                {% block form %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,498 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block _action %}
+    <section class="container p-0">
+        <div id="trick-header" class="position-relative">
+            {% if trick.miniature %}
+                <img src="{{ asset('uploads/images/tricks/' ~ trick.miniature) }}" alt="miniature {{ trick.name }}">
+            {% else %}
+                <img src="{{ asset('core/img/default_mini.png') }}" alt="miniature par défaut">
+            {% endif %}
+            {% if trick and is_granted('ROLE_USER') and app.user.isVerified() and app.request.get('_route') != 'app_add_trick' %}
+                <div class="position-absolute top-0 end-0 m-3 p-1 border border-dark rounded">
+                    {% if app.request.get('_route') == 'app_show_trick' %}
+                        <a href="{{ path('app_edit_trick', {'slug': trick.slug}) }}" class="btn btn-outline border-0"><i class="fas fa-pencil-alt text-warning"></i></a>
+                        <button type="button" class="btn btn-outline border-0" data-bs-toggle="modal" data-bs-target="#deleteTrickModal"><i class="fas fa-trash-alt text-danger"></i></button>
+                    {% else %}
+                        <a href="{{ path('app_change_miniature', {'slug': trick.slug}) }}" class="btn btn-outline border-0 {% if trick.images | length == 0 %}disabled{% endif %}"><i class="fas fa-pen-to-square text-{% if trick.images | length == 0 %}secondary{% else %}warning{% endif %}"></i></a>
+                        {% if trick.miniature %}
+                            <button type="button" class="btn btn-outline border-0" data-bs-toggle="modal" data-bs-target="#deleteMiniatureModal"><i class="fas fa-trash-alt text-danger"></i></button>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </section>
+    {% endblock %}
+
+{% block body %}
+<div class="container mb-5 pb-3">
+    {% if form is defined %}
+        {% form_theme form 'bootstrap_5_layout.html.twig' %}
+        {{ form_start(form, {'attr': {'class': 'text-center py-3'}}) }}
+        <div class="row align-items-center justify-content-center">
+            <div class="col-auto mb-3">
+                <label for="trick_images">{{ 'Add pictures' |trans }}</label>
+            </div>
+            <div class="col-auto mb-3 me-md-5">
+                {{ form_widget(form.images, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            <div class="col-auto mb-3">
+                <button type="button" class="btn btn-success {% if videoError != false %}border border-3 border-danger{% endif %} btn" data-bs-toggle="modal" data-bs-target="#addVideoModal"><i class="fas fa-plus"></i> {{ 'Add videos' |trans }}</button>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal" id="addVideoModal" tabindex="-1" aria-labelledby="addVideoModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addVideoModalLabel">{{ 'Media' |trans }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body z-index-1">
+                        <div id='videos' data-prototype="{{ form_row(form.videos.vars.prototype, {'row_attr': {'class': 'row mb-3'}})|e('html_attr')}}">
+                            <div class="videos row py-3">
+                                {% for video in form.videos %}
+                                    <div class="col-md-6 mb-3">
+                                        {{ form_row(video) }}
+                                        <button type="button" data-bs-toggle="modal" data-bs-target="#deleteVideoModal" data-id="{{ video.vars.value.videoId }}" data-trick="{{ trick.id }}" data-loop="{{ loop.index0 }}" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash" aria-hidden="true"></i> Supprimer
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        {% if video.vars.value.provider == 'youtube' %}{% set path = "https://www.youtube.com/embed/" %}{% endif %}
+                                        {% if video.vars.value.provider == 'dailymotion' %}{% set path = "https://www.dailymotion.com/embed/video/" %}{% endif %}
+                                        {% if video.vars.value.provider == 'vimeo' %}{% set path = "https://player.vimeo.com/video/" %}{% endif %}
+                                        <iframe width='100%' height='100%' src="{{ path }}{{ video.vars.value.videoId }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+                                    <hr class="my-2">
+                                {% endfor %}
+                            </div>
+                            <span id="video-add" class="row">
+                                <button class="btn btn-success add-video" type="button"><i class="fas fa-plus" aria-hidden="true"></i> {{ 'Add video' |trans }}</button>
+                            </span>
+                            <button type="button" class="btn btn-secondary mt-3" data-bs-dismiss="modal">{{ 'Close' |trans }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <section id="trick-media" class="m-5 p-3 overflow-auto">
+        <div id="media-display" class="row flex-nowrap">
+            {% for image in trick.images %}
+                <div id="img[{{ image.id }}]" class="col-3 col-md-2">
+                    <div class="row preview-div align-items-center">
+                        <div class="col-12">
+                            <img class="img-fluid" src="{{ asset('uploads/images/tricks/' ~ image.name) }}" alt="{{ image.name }}">
+                        </div>
+                    </div>
+                    {% if app.request.get('_route') != 'app_show_trick' %}
+                    <div class="mx-3 mt-3 p-1 border border-dark rounded">
+                        <a href="{{ path('app_delete_trick_image', {'id': image.id}) }}" data-delete data-id="{{ image.id }}" data-token="{{ csrf_token('delete' ~ image.id) }}" class="mx-2"><i class="fas fa-trash-alt text-danger"></i></a>
+                    </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <span id="media-separator" hidden></span>
+            {% for video in trick.getVideos() %}
+                <div class="col-3 col-md-2">
+                    <div class="row preview-div align-items-center">
+                        <div class="col-12" id="media_trick_videos_{{ loop.index0 }}">
+                            <iframe src="{{ video.getEmbedUrl() }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    {% if app.request.get('_route') != 'app_show_trick' %}
+                    <div class="mx-3 mt-3 p-1 border border-dark rounded d-flex justify-content-center">
+                        <a href="#" type="button" class="mx-3" data-bs-toggle="modal" data-bs-target="#addVideoModal"><i class="fas fa-pencil-alt text-warning"></i></a>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#deleteVideoModal" data-id="{{ video.videoId }}" data-trick="{{ video.trick.getId() }}" data-loop="{{ loop.index0 }}" class="mx-3 btn btn-outline border-0 p-0"><i class="fas fa-trash-alt text-danger"></i></button>
+                    </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+    <section id="description" class="my-5">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text">{{ trick.description | raw }}</p>
+                {% if form is defined %}
+                <div class="row justify-content-center mb-3">
+                    {{ form_row(form.name, {
+                        'row_attr': {'class': 'col-12 col-md'},
+                        'label': 'Name' |trans,
+                    }) }}
+                    <div class="col-12 col-md-auto d-flex direction-row align-items-end">
+                        {{ form_row(form.category, {'row_attr': {'class': 'mb-0'}, 'label': 'Group' |trans }) }}
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-success btn-sm m-1" data-bs-toggle="modal" data-bs-target="#addGroupModal">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                {{ form_row(form.description) }}
+                {{ form_row(form.save, {
+                    'label' : action == 'add' ? 'Add' |trans : 'Edit' |trans,
+                    'row_attr': {'class': 'col-12 col-md-auto text-center mt-4'}
+                }) }}
+
+                {{ form_end(form) }}
+                {% else %}
+                <div class="row justify-content-center">
+                    <div class="col-auto"><span class="badge text-bg-primary">{{ 'Group:' |trans }} {{ trick.category.name }}</div>
+                    <div class="col-auto"><span class="badge text-bg-primary">{{ 'Author:' |trans }} {{ trick.user }}</div>
+                    <div class="col-auto"><span class="badge text-bg-primary">{{ 'Created at' |trans }} {{ trick.createdAt | date('d/m/Y') }} {{ 'at' |trans }} {{ trick.createdAt | date('H:i') }}</div>
+                    {% if trick.updatedAt and trick.updatedAt != trick.createdAt %}
+                        <div class="col-auto"><span class="badge text-bg-primary">{{ 'Updated at' |trans }} {{ trick.updatedAt | date('d/m/Y') }} {{ 'at' |trans }} {{ trick.updatedAt | date('H:i') }}</div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    {# Commentaires #}
+    {% if app.request.get('_route') == 'app_show_trick' %}
+    <section id="comment-form" class="my-3 mx-5 px-5">
+        <hr>
+        {% if is_granted('ROLE_USER') and app.user.isVerified() %}
+            {% form_theme commentForm 'bootstrap_5_layout.html.twig' %}
+            {{ form_start(commentForm) }}
+                <div class="row align-items-center">
+                    <div class="col">
+                        {{ form_row(commentForm.text) }}
+                    </div>
+                    <div class="col-auto">
+                        {{ form_row(commentForm.submit) }}
+                    </div>
+                </div>
+            {{ form_end(commentForm) }}
+        <hr>
+        {% endif %}
+        <div id="comments">
+            <p class="text-end">
+                {% if comments | length == 0 %}
+                    {{ 'No comments yet.' |trans }}
+                {% elseif comments | length == 1 %}
+                    {{ '1 comment' |trans }}
+                {% else %}
+                    {{ comments | length }} {{ 'comments' |trans }}
+                {% endif %}
+            </p>
+            {% set lastDate = null %}
+            {% for comment in comments %}
+                <div class="row mb-3 align-items-center" id='comment-{{ comment.id }}'>
+                    <div class="col-2 text-center">
+                        <img src="{% if comment.user.image %}{{ asset('uploads/images/users/' ~ comment.user.image) }}{% else %}{{ asset('core/img/default-user.png') }}{% endif %}" class="img-fluid rounded-circle user_image shadow w-50">
+                    </div>
+                    <div class="col border border-dark rounded p-2 pt-3 m-0 shadow-sm position-relative">
+                        <div class="row justify-content-between">
+                            <div class="col-auto">
+                                <em>{{ comment.user.getFullName() }}</em>
+                            </div>
+                            <div class="col-auto">
+                                <em>{{ comment.createdAt | date('d/m/Y') }} {{ 'at' |trans }} {{ comment.createdAt | date('H:i') }}</em>
+                            </div>
+                        </div>
+                        <p>{{ comment.text }}</p>
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <button 
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteCommentModal"
+                            data-id="{{ comment.id }}"
+                            data-token="{{ csrf_token('delete' ~ comment.id) }}"
+                            class="position-absolute top-0 start-100 translate-middle btn btn-outline btn-sm border-0 "
+                        >
+                            <span id="delete-comment-{{ comment.id }}" class="fa-stack" style="font-size: 1rem; vertical-align: top;">
+                                <i class="fa-solid fa-circle fa-stack-2x text-danger"></i>
+                                <i class="fa-solid fa-times fa-stack-1x text-white"></i>
+                            </span>
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                {% if next < comments | length %}
+                    <button type="button" id="btnNext" class="btn btn-outline-primary" data-action="{{ path('app_get_comments', {'offset': next, 'slug': trick.slug}) }}">{{ 'Load more' |trans }}</button>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+</div>
+
+<!-- Add Group Modal -->
+{% if groupForm is defined %}
+<div class="modal fade" id="addGroupModal" tabindex="-1" aria-labelledby="addGroupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addGroupModalLabel">{{ 'New group' |trans }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            {{ form_start(groupForm)}}
+                <div class="modal-body text-center">
+                    {{ form_row(groupForm.name) }}
+                    {{ form_row(groupForm.description) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    {{ form_row(groupForm.save, {
+                        'attr': {'class': 'btn btn-success', 'data-action': path('app_add_group') },
+                        'label': 'Add' |trans,
+                    }) }}
+                </div>
+            {{ form_end(groupForm)}}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if trick.id %}
+
+    <!-- Delete Miniature Modal -->
+    <div class="modal" id="deleteMiniatureModal" tabindex="-1" aria-labelledby="deleteMiniatureModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-body z-index-1">
+                    {{ 'Are you sure you want to delete this thumbnail?' |trans }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'No' |trans }}</button>
+                    <form action="{{ path('app_delete_miniature', {'id': trick.id}) }}" method="post">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ trick.id) }}">
+                        <button type="submit" class="btn btn-danger">{{ 'Yes' |trans }}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Trick Modal -->
+    <div class="modal" id="deleteTrickModal" tabindex="-1" aria-labelledby="deleteTrickModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-body z-index-1">
+                    {{ 'Are you sure you want to delete this trick?' |trans }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'No' |trans }}</button>
+                    <form action="{{ path('app_delete_trick', {'id': trick.id}) }}" method="post">
+                        <input type="hidden" name="_token" value="{{ csrf_token('deleteTrick') }}">
+                        <input type="hidden" name="id" value="{{ trick.id }}">
+                        <button type="submit" class="btn btn-danger">{{ 'Yes' |trans }}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Video Modal -->
+    <div class="modal" id="deleteVideoModal" tabindex="-1" aria-labelledby="deleteVideoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body z-index-1">
+                    {{ 'Are you sure you want to delete this video?' |trans }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'No' |trans }}</button>
+                    <button type="button" class="btn btn-danger" id="deleteVideoConfirm">{{ 'Yes' |trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Comment Modal -->
+    <div class="modal" id="deleteCommentModal" tabindex="-1" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body z-index-1">
+                    {{ 'Are you sure you want to delete this comment?' |trans }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'No' |trans }}</button>
+                    <button type="button" class="btn btn-danger" id="deleteCommentConfirm">{{ 'Yes' |trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancel Delete Comment Modal -->
+    <div class="modal" id="restoreCommentModal" tabindex="-1" aria-labelledby="restoreCommentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body z-index-1">
+                    {{ 'Are you sure you want to cancel the deletion of this comment?' |trans }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'No' |trans }}</button>
+                    <button type="button" class="btn btn-danger" id="restoreCommentConfirm">{{ 'Yes' |trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if app.request.get('_route') != 'app_show_trick' %}
+        <script src="{{ asset('build/js/videos.js') }}" defer></script>
+        <script src="{{ asset('build/js/images.js') }}" defer></script>
+        <script src="{{ asset('build/js/details_trick.js') }}" defer></script>
+    {% endif %}
+
+    <script>
+    $(document).ready(function() {
+        $('#btnNext').click(function() {
+            $.ajax({
+                url: $(this).data('action'),
+                type: 'GET',
+                success: function(data) {
+                    data.action ? $('#btnNext').data('action', data.action) : $('#btnNext').hide();
+                    html = "";
+                    data.comments.forEach(comment => {
+                        html += `<div class="row mb-3 align-items-center" id='comment-${comment.id}'>
+                            <div class="col-2 text-center">
+                                <img src="${comment.src}" class="img-fluid rounded-circle user_image shadow w-50">
+                            </div>
+                            <div class="col border border-dark rounded p-2 pt-3 m-0 shadow-sm position-relative">
+                                <div class="row justify-content-between">
+                                    <div class="col-auto">
+                                        <em>${comment.user}</em>
+                                    </div>
+                                    <div class="col-auto">
+                                        <em>${comment.createdAt}</em>
+                                    </div>
+                                </div>
+                                <p>${comment.text}</p>
+                                <button 
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteCommentModal"
+                                    data-id="${comment.id}"
+                                    data-token="{{ csrf_token('deleteTheComment') }}"
+                                    class="position-absolute top-0 start-100 translate-middle btn btn-outline btn-sm border-0 "
+                                >
+                                    <span id="delete-comment-${comment.id}" class="fa-stack" style="font-size: 1rem; vertical-align: top;">
+                                        <i class="fa-solid fa-circle fa-stack-2x text-danger"></i>
+                                        <i class="fa-solid fa-times fa-stack-1x text-white"></i>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>`;
+                    });
+                    $('#comments').append(html);
+                }
+            });
+        });
+    });
+    </script>
+    <script>
+    $(document).ready(function() {
+        $('.deleteBtn').click(function(e) {
+            e.preventDefault();
+        });
+        $('#deleteVideoModal').on('show.bs.modal', function (event) {
+            button = $(event.relatedTarget);
+            id = button.data('id');
+            trick = button.data('trick');
+            loop = button.data('loop');
+            inDb = button.data('inDb');
+            $('#deleteVideoConfirm')
+                .attr('data-id', id)
+                .attr('data-loop', loop)
+                .attr('data-trick', trick)
+                .attr('data-inDb', inDb)
+            ;
+        });
+        $('#deleteVideoConfirm').click(function(e) {
+            id = e.target.dataset.id;
+            trick = e.target.dataset.trick;
+            loop = e.target.dataset.loop;
+            $.ajax({
+                url: "{{ path('app_delete_trick_video') }}",
+                type: 'DELETE',
+                data: {
+                    id: id,
+                    trick: trick,
+                    _token: "{{ csrf_token('deleteVideo' ~ trick.id) }}"
+                },
+                success: function(data) {
+                    $('#media_trick_videos_' + loop).parent().parent().remove();
+                    $('#trick_videos_' + loop).parent().parent().prev().remove();
+                    $('#trick_videos_' + loop).parent().parent().next().remove();
+                    $('#trick_videos_' + loop).parent().parent().remove();
+                    $('#deleteVideoModal').modal('hide');
+                }
+            });
+        });
+        $('#cancelVideoAdd').click(function(e) {
+            id = e.target.dataset.id;
+            trick = e.target.dataset.trick;
+            loop = e.target.dataset.loop;
+            inDb = e.target.dataset.indb;
+            $('#media_video_' + loop).remove();
+            $('#video_' + loop).next().next().remove();
+            $('#video_' + loop).next().remove();
+            $('#video_' + loop).remove();
+            $('#deleteVideoModal').modal('hide');
+        });
+    });
+    </script>
+
+    <script>
+    $(document).ready(function() {
+        $('#deleteCommentModal').on('show.bs.modal', function (event) {
+            button = $(event.relatedTarget);
+            id = button.data('id');
+            $('#deleteCommentConfirm').attr('data-id', id);
+        });
+        $('#deleteCommentConfirm').click(function(e) {
+            id = e.target.dataset.id;
+            $.ajax({
+                url: "{{ path('app_delete_comment') }}",
+                type: 'DELETE',
+                data: {
+                    id: id,
+                    _token: "{{ csrf_token('deleteComment' ~ trick.id) }}"
+                },
+                success: function(data) {
+                    $('#deleteCommentModal').modal('hide');
+                    $('#comment-' + id).addClass('comment-deleted');
+                    $('#delete-comment-' + id + ' i:first-child').removeClass('text-danger').addClass('text-secondary');
+                    $('#delete-comment-' + id + ' i:last-child').removeClass('fa-times').addClass('fa-ban');
+                    $('#comment-' + id + ' button').attr('data-bs-target', '#restoreCommentModal');
+                }
+            });
+        });
+        $('#restoreCommentModal').on('show.bs.modal', function (event) {
+            button = $(event.relatedTarget);
+            id = button.data('id');
+            $('#restoreCommentConfirm').attr('data-id', id);
+        });
+        $('#restoreCommentConfirm').click(function(e) {
+            id = e.target.dataset.id;
+            $.ajax({
+                url: "{{ path('app_restore_comment') }}",
+                type: 'POST',
+                data: {
+                    id: id,
+                    _token: "{{ csrf_token('restoreComment' ~ trick.id) }}"
+                },
+                success: function(data) {
+                    $('#restoreCommentModal').modal('hide');
+                    $('#comment-' + id).removeClass('comment-deleted');
+                    $('#delete-comment-' + id + ' i:first-child').removeClass('text-secondary').addClass('text-danger');
+                    $('#delete-comment-' + id + ' i:last-child').removeClass('fa-ban').addClass('fa-times');
+                    $('#comment-' + id + ' button').attr('data-bs-target', '#deleteCommentModal');
+                }
+            });
+        });
+    });
+    </script>
+{% endblock %}

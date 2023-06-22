@@ -1,0 +1,128 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}{{ "Dashboard" |trans }}{% endblock %}
+{% block content_title %}{{ "Dashboard" |trans }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {# Chart JS #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" referrerpolicy="no-referrer">
+{% endblock %}
+
+{% block main %}
+    <div class="row justify-content-around align-items-center text-center">
+        <div class="col-12 mb-5">
+            <h2>{{ "Statistics" |trans }}</h2>
+            <select id="periodSelect" class="form-select">
+                <option selected value="day">{{ "Day" |trans }}</option>
+                <option value="month">{{ "Month" |trans }}</option>
+                <option value="year">{{ "Year" |trans }}</option>
+            </select>
+            <select id="dateLimitSelect" class="form-select">
+                <option value="-2 year">{{ "Last 2 years" |trans }}</option>
+                <option selected value="-1 year">{{ "Last year" |trans }}</option>
+                <option value="-6 month">{{ "Last 6 months" |trans }}</option>
+                <option value="-3 month">{{ "Last 3 months" |trans }}</option>
+                <option value="-1 month">{{ "Last month" |trans }}</option>
+                <option value="-1 week">{{ "Last week" |trans }}</option>
+                <option value="-3 day">{{ "Last 3 days" |trans }}</option>
+            </select>
+            <canvas id="UserChart" width="400" height="100"></canvas>
+        </div>
+        <div class="col-lg-6  mb-5">
+            <h2>{{ "Groups" |trans }}</h2>
+            <canvas id="GroupChart" width="400" height="400"></canvas>
+        </div>
+        <div class="col-lg-auto mb-5">
+            <ol class="list-group list-group-flush display-6">
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="fw-bold ms-2 me-auto">{{ "Users" |trans }}</div>
+                    <span class="bg-primary rounded-pill px-3 ms-3">{{ users | length }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="fw-bold ms-2 me-auto">{{ "Groups" |trans }}</div>
+                    <span class="bg-primary rounded-pill px-3 ms-3">{{ groups | length }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="fw-bold ms-2 me-auto">{{ "Tricks" |trans }}</div>
+                    <span class="bg-primary rounded-pill px-3 ms-3">{{ tricks | length }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="fw-bold ms-2 me-auto">{{ "Comments" |trans }}</div>
+                    <span class="bg-primary rounded-pill px-3 ms-3">{{ comments | length }}</span>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js" integrity="sha512-SuxO9djzjML6b9w9/I07IWnLnQhgyYVSpHZx0JV97kGBfTIsUYlWflyuW4ypnvhBrslz1yJ3R+S14fdCWmSmSA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        let GroupChartCtx = document.getElementById('GroupChart');
+        let GroupChart = new Chart(GroupChartCtx, {
+            type: 'pie',
+            data: {
+                labels: {{ groupsStats.labels|json_encode|raw }},
+                datasets: [
+                    {
+                        label: 'tricks',
+                        data: {{ groupsStats.counts|json_encode|raw }},
+                        backgroundColor: {{ groupsStats.colors|json_encode|raw }},
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        //ticks: {stepSize: 1}
+                    }
+                }
+            }
+        });
+        let UserChartCtx = document.getElementById('UserChart');
+        let UserChart = new Chart(UserChartCtx, {
+            type: 'line',
+            data: {
+                labels: {{ dates|raw }},
+                datasets: [
+                    {
+                        label: 'tricks',
+                        data: {{ tricksCount|raw }},
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    },
+                    {
+                        label: 'comments',
+                        data: {{ commentsCount|raw }},
+                        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                    },
+                    {
+                        label: 'users',
+                        data: {{ usersCount|raw }},
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    }
+                }
+            }
+        });
+        const periodSelect = document.getElementById('periodSelect');
+        periodSelect.value = '{{ requestedPeriod }}';
+        periodSelect.addEventListener('change', (e) => {
+            let url = new URL(window.location.href);
+            url.searchParams.set('period', e.target.value);
+            window.location.href = url;
+        });
+        const dateLimitSelect = document.getElementById('dateLimitSelect');
+        dateLimitSelect.value = '{{ requestedDateLimit }}';
+        dateLimitSelect.addEventListener('change', (e) => {
+            let url = new URL(window.location.href);
+            url.searchParams.set('dateLimit', e.target.value);
+            window.location.href = url;
+        });
+    </script>
+{% endblock %}

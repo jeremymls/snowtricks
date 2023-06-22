@@ -1,0 +1,8 @@
+{% extends 'security.html.twig' %}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+{% block securityTitle %}{{ 'Edit Password' |trans }}{% endblock %}
+
+{% block form %}
+{{ form(form) }}
+{% endblock %}

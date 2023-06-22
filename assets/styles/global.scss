@@ -1,0 +1,86 @@
+$primary: darken(#428bca, 20%);
+
+// the ~ allows you to reference things in node_modules
+@import "~bootstrap/scss/bootstrap";
+
+h1 {
+    z-index: 1;
+}
+.alert {
+    cursor: pointer;
+}
+body {
+    min-height: 100vh;
+    position: relative;
+    header {
+        background-size: cover;
+        background-position: top center;
+        background-repeat: no-repeat;
+    }
+    footer {
+        position: absolute;
+        bottom: 0;
+        background-color: #f5f5f5;
+    }
+}
+
+.mini {
+    object-fit: cover;
+    aspect-ratio: 2/1;
+    &.overview {
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+        border: 2px solid transparent;
+    }
+}
+
+.mini.hoverable:hover {
+    cursor: pointer;
+    border: 2px solid #428bca;
+}
+
+iframe {
+    aspect-ratio: 16/9;
+}
+
+#trick-header{
+    img {
+        width: 100%;
+        aspect-ratio: 2/1;
+        object-fit: cover;
+    }
+}
+
+iframe {
+    width: 100%;
+}
+
+.accordion-button:not(.collapsed) {
+    color: #fff !important;
+    font-weight: bold;
+    background-color: $primary !important;
+}
+
+#trick-media {
+    img, iframe {
+        box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.712);
+    }
+}
+
+.preview-div {
+    height: 300px;
+}
+
+.alert {
+    cursor: pointer;
+    z-index: 2000;
+}
+
+.user_image {
+    aspect-ratio: 1/1;
+    object-fit: cover;
+}
+
+.comment-deleted {
+    text-decoration: line-through;
+    color: #ccc;
+}

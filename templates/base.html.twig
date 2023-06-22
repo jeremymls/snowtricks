@@ -2,8 +2,9 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        <title>{% if block('title')%}{{ block('title') }} - {% endif %}Snow Tricks</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>🏂</text></svg>">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
@@ -12,8 +13,35 @@
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
+        {{ include('partials/_meta.html.twig') }}
     </head>
-    <body>
+    <body class="overflow-auto pb-5">
+        {{ include('partials/_navbar.html.twig') }}
+        <div class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 9911">
+            {% if app.user and app.user.isVerified() == false %}
+                <div class="alert alert-warning alert-dismissible fade show text-center m-4" role="alert">
+                    Votre compte n'est pas encore vérifié, veuillez cliquer sur le lien de vérification envoyé par mail.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show text-center m-4" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        {% if block('title') or block('_action') %}
+            <div class="pt-5 mb-3 rounded-3">
+                <div class="container-fluid py-5 position-relative">
+                    <h1 id='title-header' class="display-5 fw-bold text-center position-absolute top-50 start-50 translate-middle mt-5">{{ block('title') }}</h1>
+                    {% block _action %}{% endblock %}
+                </div>
+            </div>
+        {% endif %}
         {% block body %}{% endblock %}
+        {{ include('partials/_footer.html.twig') }}
     </body>
 </html>

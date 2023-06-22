@@ -1,0 +1,88 @@
+<nav class="navbar fixed-top navbar-expand-lg bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="{{ path('app_home') }}">
+            <img src="{{ asset('logo.png') }}" alt="Logo" width="30" height="24">
+        </a>
+        <button class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item {% if app.request.get('_route') == 'app_home' %}active{% endif %}">
+                    <a class="nav-link" href="{{ path('app_home') }}">
+                        {# <span class="fa-stack" style="font-size: 0.7rem; vertical-align: top;">
+                            <i class="fa-solid fa-circle fa-stack-2x text-primary"></i>
+                            <i class="fa-solid fa-home fa-stack-1x fa-inverse"></i>
+                        </span> #}
+                        {{ 'Home' |trans }}
+                    </a>
+                </li>
+                {% if is_granted('ROLE_USER') and app.user.isVerified() %}
+                <div class="vr"></div>
+                <li class="nav-item {% if app.request.get('_route') == 'app_add_trick' %}active{% endif %}">
+                    <a class="nav-link" href="{{ path('app_add_trick') }}">
+                        {# <span class="fa-stack" style="font-size: 0.7rem; vertical-align: top;">
+                            <i class="fa-solid fa-circle fa-stack-2x text-success"></i>
+                            <i class="fa-solid fa-plus fa-stack-1x fa-inverse"></i>
+                        </span> #}
+                        {{ 'Add trick' |trans }}
+                    </a>
+                </li>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                <div class="vr"></div>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('admin') }}">
+                        {# <span class="fa-stack" style="font-size: 0.7rem; vertical-align: top;">
+                            <i class="fa-solid fa-circle fa-stack-2x text-secondary"></i>
+                            <i class="fa-solid fa-cog fa-stack-1x fa-inverse"></i>
+                        </span> #}
+                        {{ 'Back-office' |trans }}
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0  me-3">
+                {% for locale in locales | filter (l => l != app.request.locale) %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('change_locale', {'locale': locale}) }}">
+                            <img src="{{ asset("core/img/locales/" ~ locale ~ ".png") }}" height="15px" alt="{{ locale }}">
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                {% if is_granted('ROLE_USER') %}
+                    <li class="nav-item dropdown text-end">
+                        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="rounded-circle bg-primary text-light" style="width: 32px; height: 32px; display: inline-block; vertical-align: middle; line-height: 32px; text-align: center; font-size: 1rem; font-weight: 700; text-transform: uppercase;">
+                                {% if app.user.getImage().getName() is defined %}
+                                    <img src="{{ asset('uploads/images/users/' ~ app.user.getImage().getName()) }}" alt="Avatar" width="32" height="32" class="rounded-circle">
+                                {% else %}
+                                    <span class="text-light">
+                                        {{ app.user.getInitials() }}
+                                    </span>
+                                {% endif %} 
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu text-small" style="">
+                            <li><a class="dropdown-item" href="{{ path('app_profile') }}">{{ 'My account' |trans }}</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item link-danger" href="{{ path('app_logout') }}"><strong>{{ 'Logout' |trans }}</strong></a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item {% if app.request.pathinfo == path('app_login') %}active{% endif %}"><a class="nav-link" href="{{ path('app_login')}}">{{ 'Login' |trans }}</a></li>
+                    <div class="vr"></div>
+                    <li class="nav-item {% if app.request.pathinfo == path('app_register') %}active{% endif %}"><a class="nav-link" href="{{ path('app_register')}}">{{ 'Registration' |trans }}</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

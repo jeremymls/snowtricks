@@ -1,0 +1,169 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+{% set user = app.user %}
+{% block title %}{{ 'My profile' |trans }}{% endblock %}
+
+
+{% block body %}
+<div class="container mb-5 pb-3">
+    <section>
+        {{ form_start(form) }}
+        <div class="d-flex align-items-start py-5">
+            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <button class="nav-link active" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="true">{{ 'Profile' |trans }}</button>
+                <button class="nav-link" id="v-pills-edit-tab" data-bs-toggle="pill" data-bs-target="#v-pills-edit" type="button" role="tab" aria-controls="v-pills-edit" aria-selected="false">{{ 'Edit' |trans }}</button>
+                <button class="nav-link" id="v-pills-tricks-tab" data-bs-toggle="pill" data-bs-target="#v-pills-tricks" type="button" role="tab" aria-controls="v-pills-tricks" aria-selected="false">{{ 'Tricks' |trans }}</button>
+            </div>
+            <div class="tab-content" id="v-pills-tabContent">
+                {# Profile #}
+                <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab" tabindex="0">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <ul>
+                                <li>{{ 'Username:' |trans }} {{ user.username }}</li>
+                                <li>{{ 'First name:' |trans }} {{ user.first }}</li>
+                                <li>{{ 'Name:' |trans }} {{ user.last }}</li>
+                                <li>{{ 'E-mail:' |trans }} {{ user.email }}</li>
+                                <li>{{ 'Created at' |trans }} {% if user.createdAt is not null %}{{ user.createdAt|date('d/m/Y') }} {{ 'at' |trans }} {{ user.createdAt|date('H:i') }}{% endif %}</li>
+                                {% if user.updatedAt is not null %}
+                                    <li>{{ 'Updated at' |trans }} {{ user.updatedAt|date('d/m/Y') }} {{ 'at' |trans }} {{ user.updatedAt|date('H:i') }}</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="col text-center">
+                            <img src="{% if user.image %}{{ asset('uploads/images/users/' ~ user.image) }}{% else %}{{ asset('core/img/default-user.png') }}{% endif %}" class="img-fluid rounded-circle w-50 user_image" alt="">
+                        </div>
+                    </div>
+                </div>
+                {# Edit #}
+                <div class="tab-pane fade" id="v-pills-edit" role="tabpanel" aria-labelledby="v-pills-edit-tab" tabindex="0">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form_row(form.username) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(form.email) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form_row(form.first) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(form.last) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col text-center">
+                            {{ form_row(form.image) }}
+                            <div class="position-relative">
+                                <img id="img-preview" src="{% if user.image %}{{ asset('uploads/images/users/' ~ user.image) }}{% else %}{{ asset('core/img/default-user.png') }}{% endif %}" class="img-fluid rounded-circle w-50 user_image" alt="">
+                                <div class="position-absolute top-0 end-0">
+                                    <button type="button" class="btn btn-outline-danger btn-sm pe-2" data-bs-toggle="modal" data-bs-target="#deleteImageModal">
+                                    {{ 'Delete' |trans }} <i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-auto">
+                            {{ form_row(form.submit) }}
+                        </div>
+                        <div class="col-auto">
+                            <a href="{{ path('app_change_password') }}" type="button" class="btn btn-outline-warning mb-3"><i class="fas fa-key"></i> {{ 'Change password' |trans }}</a>
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-outline-danger mb-3" data-bs-toggle="modal" data-bs-target="#deleteAccountModal"><i class="fas fa-trash-alt"></i> {{ 'Delete account' |trans }}</button>
+                        </div>
+                    </div>
+                </div>
+                {# Tricks #}
+                <div class="tab-pane fade" id="v-pills-tricks" role="tabpanel" aria-labelledby="v-pills-tricks-tab" tabindex="0">
+                    <div class="row justify-content-around text-center">
+                        {% for trick in user.getTricks() %}
+                        <div class="col-lg-5 mb-4 px-1 text-center">
+                            <div class="p-0 text-center mb-2 shadow border">
+                                <img src="{% if trick.miniature %}{{ asset('uploads/images/tricks/' ~ trick.miniature) }}{% else %}{{ asset('core/img/default_mini.png') }}{% endif %}" class="mini" width="100%" alt="">
+                                <div class="row p-2 d-flex flex-nowrap justify-content-between">
+                                    <div class="col text-start text-truncate">
+                                        <a href="{{ path('app_show_trick', {'slug': trick.slug}) }}" class="">{{ trick.name }}</a>
+                                    </div>
+                                    <div class="col-auto d-flex flex-nowrap">
+                                        <a class="me-3" href="{{ path('app_edit_trick', {'slug': trick.slug}) }}"><i class="fa-sharp fa-solid fa-pencil"></i></a>
+                                        <button type="button" class="btn btn-outline border-0 me-3 p-0" data-bs-toggle="modal" data-id="{{ trick.id }}" data-bs-target="#deleteTrickModal"><i class="fas fa-trash-alt text-danger"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>{{ 'Created at' |trans }} {{ trick.createdAt|date('d/m/Y') }} {{ 'at' |trans }} {{ trick.createdAt|date('H:i') }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </section>
+</div>
+
+{# Delete image modal #}
+<div class="modal fade" id="deleteImageModal" tabindex="-1" aria-labelledby="deleteImageModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="deleteImageModalLabel">{{ 'Delete image' |trans }}</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+                {{ 'Are you sure you want to delete your profile image?' |trans }}
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'Close' |trans }}</button>
+				<a type="button" class="btn btn-primary" href="{{ path('app_delete_profile_image') }}">{{ 'Delete' |trans }}</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+{# Delete account modal #}
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="deleteAccountModalLabel">{{ 'Delete image' |trans }}</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+                {{ 'Are you sure you want to delete your account?' |trans }}
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'Close' |trans }}</button>
+				<a type="button" class="btn btn-primary" href="{{ path('app_delete_account') }}">{{ 'Delete' |trans }}</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    $(document).ready(function() {
+        $("#user_image").change(function() {
+            let file = this.files[0];
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function(event) {
+                    $("#img-preview").attr("src", event.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    })
+</script>
+{% endblock %}
