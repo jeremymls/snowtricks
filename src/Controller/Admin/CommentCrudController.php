@@ -35,6 +35,14 @@ class CommentCrudController extends AbstractCrudController
         return $crud
             ->setDefaultSort(['createdAt' => 'DESC'])
             ->setPaginatorPageSize(100)
+            ->renderContentMaximized()
+            ->renderSidebarMinimized()
+            ->setDefaultSort(['createdAt' => 'DESC'])
+            ->showEntityActionsInlined()
+            ->setPageTitle(Crud::PAGE_INDEX, 'Commentaires')
+            ->setPageTitle(Crud::PAGE_NEW, 'Créer un commentaire')
+            ->setPageTitle(Crud::PAGE_EDIT, 'Modifier un commentaire')
+            ->setPageTitle(Crud::PAGE_DETAIL, 'Détails du commentaire')
         ;
     }
 
