@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Trick;
+use App\Repository\Model\Stats;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
@@ -17,6 +18,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TrickRepository extends ServiceEntityRepository
 {
+    use Stats;
+
     public const PAGINATOR_PER_PAGE = 15;
 
     public function __construct(ManagerRegistry $registry)
