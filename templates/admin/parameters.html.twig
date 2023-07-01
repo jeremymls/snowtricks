@@ -1,0 +1,37 @@
+{# templates/admin/my-custom-page.html.twig #}
+{% extends '@EasyAdmin/page/content.html.twig' %}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+{% block page_title %}{{ "Configuration" |trans }}{% endblock %}
+{% block content_title %}{{ "Configuration" |trans }}{% endblock %}
+
+{% block page_actions %}
+    <button class="btn btn-outline-secondary" id="reset-btn">Réinitialiser les paramètres</button>
+{% endblock %}
+
+{% block main %}
+{{ form_start(form) }}
+<div class="row mb-3 text-center">
+    <div class="col-auto">
+        <div class="row align-items-center mb-3">
+            <div class="col-auto">
+                {{ form_label(form.tricksPerPage) }}
+            </div>
+            <div class="col-auto ms-auto">
+                {{ form_widget(form.tricksPerPage) }}
+            </div>
+        </div>
+        <div class="w-100"></div>
+        <div class="row align-items-center mb-3">
+            <div class="col-auto">
+                {{ form_label(form.commentsPerPage) }}
+            </div>
+            <div class="col-auto ms-auto">
+                {{ form_widget(form.commentsPerPage) }}
+            </div>
+        </div>
+        {{ form_row(form.save) }}
+    </div>
+</div>
+{{ form_end(form) }}
+{% endblock %}

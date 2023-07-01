@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Comment;
 use App\Entity\Group;
+use App\Entity\Parameters;
 use App\Entity\Trick;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,14 +25,14 @@ class DashboardController extends AbstractDashboardController
         $this->em = $entityManager;
     }
     /**
-     * @Route("/admin", name="admin")
+     * @Route("/admin/{period}/{dateLimit}", name="admin", defaults={"period"="month", "dateLimit"="-1 year"})
      */
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $request = $this->get('request_stack')->getCurrentRequest();
-        $requestedPeriod = $request->query->get('period', 'month');
-        $requestedDateLimit = $request->query->get('dateLimit', '-1 year');
+        $requestedPeriod = $request->get('period');
+        $requestedDateLimit = $request->get('dateLimit');
         $dateLimitation = new \DateTime($requestedDateLimit);
         $dateLimit = new \DateTime($requestedDateLimit);
         $dates = [];
@@ -129,10 +130,17 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linkToRoute('Retour au site', 'fa fa-rotate-left', 'app_home');
         yield MenuItem::linkToDashboard('Back-office', 'fa fa-home');
+        yield MenuItem::section('');
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-users', User::class);
+        yield MenuItem::section('');
         yield MenuItem::linkToCrud('Figures', 'fas fa-snowboarding', Trick::class);
         yield MenuItem::linkToCrud('Group', 'fas fa-list', Group::class);
         yield MenuItem::linkToCrud('Commentaires', 'fas fa-comments', Comment::class);
+        yield MenuItem::section('');
+        yield MenuItem::subMenu('Réglages', 'fas fa-cog')->setSubItems([
+            MenuItem::linkToRoute('Configuration', 'fas fa-user-cog', 'admin_parameters'),
+            MenuItem::linkToCrud('Paramètres', 'fas fa-cogs', Parameters::class),
+        ]);
     }
 
     public function configureUserMenu(UserInterface $user): UserMenu

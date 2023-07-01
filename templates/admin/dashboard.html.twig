@@ -113,16 +113,14 @@
         const periodSelect = document.getElementById('periodSelect');
         periodSelect.value = '{{ requestedPeriod }}';
         periodSelect.addEventListener('change', (e) => {
-            let url = new URL(window.location.href);
-            url.searchParams.set('period', e.target.value);
-            window.location.href = url;
+            window.location.href = {{ path('admin', {'period': 'PERIOD', 'dateLimit': 'DATELIMIT'})|json_encode|raw }}.replace('PERIOD', e.target.value).replace('DATELIMIT', dateLimitSelect.value);
         });
         const dateLimitSelect = document.getElementById('dateLimitSelect');
         dateLimitSelect.value = '{{ requestedDateLimit }}';
         dateLimitSelect.addEventListener('change', (e) => {
-            let url = new URL(window.location.href);
-            url.searchParams.set('dateLimit', e.target.value);
-            window.location.href = url;
+            window.location.href = {{ path('admin', {'dateLimit': 'DATELIMIT', 'period': 'PERIOD'})|json_encode|raw }}.replace('PERIOD', periodSelect.value).replace('DATELIMIT', e.target.value);
         });
+        periodSelect.value = '{{ app.request.get('period') }}';
+        dateLimitSelect.value = '{{ app.request.get('dateLimit') }}';
     </script>
 {% endblock %}
