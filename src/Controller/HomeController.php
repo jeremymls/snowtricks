@@ -18,7 +18,7 @@ class HomeController extends AbstractController
 
         return $this->render('home.html.twig', [
             'tricks' => $tricks,
-            'next' => min(count($tricks), TrickRepository::PAGINATOR_PER_PAGE),
+            'next' => min(count($tricks), $trickRepository->getTrickPerPage()),
         ]);
     }
 }

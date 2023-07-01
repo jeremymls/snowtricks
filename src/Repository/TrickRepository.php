@@ -2,9 +2,12 @@
 
 namespace App\Repository;
 
+use App\Entity\Parameters;
 use App\Entity\Trick;
 use App\Repository\Model\Stats;
+use App\Service\ParameterService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,8 +22,6 @@ use Doctrine\Persistence\ManagerRegistry;
 class TrickRepository extends ServiceEntityRepository
 {
     use Stats;
-
-    public const PAGINATOR_PER_PAGE = 15;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -51,12 +52,19 @@ class TrickRepository extends ServiceEntityRepository
             ->andWhere('t.deletedAt IS NULL')
             ->orderBy('t.createdAt', 'DESC')
             ->setFirstResult($offset)
-            ->setMaxResults(self::PAGINATOR_PER_PAGE)
+            ->setMaxResults($this->getTrickPerPage())
             ->getQuery()
         ;
 
         return new Paginator($query);
     }
+
+    public function getTrickPerPage(): int
+    {
+        $parameter = $this->getEntityManager()->getRepository(Parameters::class)->findOneBy(['name' => 'tricksPerPage']);
+        return $parameter ? $parameter->getValue() : 15;
+    }
+
 //    /**
 //     * @return Trick[] Returns an array of Trick objects
 //     */
