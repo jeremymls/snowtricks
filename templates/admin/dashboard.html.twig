@@ -13,20 +13,26 @@
     <div class="row justify-content-around align-items-center text-center">
         <div class="col-12 mb-5">
             <h2>{{ "Statistics" |trans }}</h2>
-            <select id="periodSelect" class="form-select">
-                <option selected value="day">{{ "Day" |trans }}</option>
-                <option value="month">{{ "Month" |trans }}</option>
-                <option value="year">{{ "Year" |trans }}</option>
-            </select>
-            <select id="dateLimitSelect" class="form-select">
-                <option value="-2 year">{{ "Last 2 years" |trans }}</option>
-                <option selected value="-1 year">{{ "Last year" |trans }}</option>
-                <option value="-6 month">{{ "Last 6 months" |trans }}</option>
-                <option value="-3 month">{{ "Last 3 months" |trans }}</option>
-                <option value="-1 month">{{ "Last month" |trans }}</option>
-                <option value="-1 week">{{ "Last week" |trans }}</option>
-                <option value="-3 day">{{ "Last 3 days" |trans }}</option>
-            </select>
+            <div class="row justify-content-center align-items-center mb-3">
+                <div class="col-auto">
+                    <select id="periodSelect" class="form-select">
+                        <option selected value="day">{{ "Day" |trans }}</option>
+                        <option value="month">{{ "Month" |trans }}</option>
+                        <option value="year">{{ "Year" |trans }}</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <select id="dateLimitSelect" class="form-select">
+                        <option value="-2 year">{{ "Last 2 years" |trans }}</option>
+                        <option selected value="-1 year">{{ "Last year" |trans }}</option>
+                        <option value="-6 month">{{ "Last 6 months" |trans }}</option>
+                        <option value="-3 month">{{ "Last 3 months" |trans }}</option>
+                        <option value="-1 month">{{ "Last month" |trans }}</option>
+                        <option value="-1 week">{{ "Last week" |trans }}</option>
+                        <option value="-3 day">{{ "Last 3 days" |trans }}</option>
+                    </select>
+                </div>
+            </div>
             <canvas id="UserChart" width="400" height="100"></canvas>
         </div>
         <div class="col-lg-6  mb-5">
