@@ -79,7 +79,7 @@ class TrickController extends AbstractController
             'trick' => $trick,
             'title' => $trick->getName(),
             'comments' => $paginator,
-            'next' => min(count($paginator), CommentRepository::PAGINATOR_PER_PAGE),
+            'next' => min(count($paginator), $commentRepository->getCommentPerPage()),
             'commentForm' => $commentForm->createView()
         ]);
     }
@@ -370,10 +370,10 @@ class TrickController extends AbstractController
         }
 
         $url = $this->generateUrl('app_get_comments', [
-            'offset' => $offset + CommentRepository::PAGINATOR_PER_PAGE,
+            'offset' => $offset + $commentRepository->getCommentPerPage(),
             'slug' => $trick->getSlug()
         ]);
-        $next = min(count($paginator), $offset + CommentRepository::PAGINATOR_PER_PAGE);
+        $next = min(count($paginator), $offset + $commentRepository->getCommentPerPage());
         $action = $next < count($paginator) ? $url : null;
 
         return new JsonResponse([
@@ -406,9 +406,9 @@ class TrickController extends AbstractController
         }
 
         $url = $this->generateUrl('app_get_tricks', [
-            'offset' => $offset + TrickRepository::PAGINATOR_PER_PAGE
+            'offset' => $offset + $trickRepository->getTrickPerPage()
         ]);
-        $next = min(count($paginator), $offset + TrickRepository::PAGINATOR_PER_PAGE);
+        $next = min(count($paginator), $offset + $trickRepository->getTrickPerPage());
         $action = $next < count($paginator) ? $url : null;
 
         return new JsonResponse([

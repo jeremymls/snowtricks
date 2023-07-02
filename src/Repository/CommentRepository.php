@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Comment;
+use App\Entity\Parameters;
 use App\Entity\Trick;
 use App\Repository\Model\Stats;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -19,8 +20,6 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class CommentRepository extends ServiceEntityRepository
 {
     use Stats;
-
-    public const PAGINATOR_PER_PAGE = 4;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -53,11 +52,17 @@ class CommentRepository extends ServiceEntityRepository
             ->setParameter('trick', $trick)
             ->orderBy('c.createdAt', 'DESC')
             ->setFirstResult($offset)
-            ->setMaxResults(self::PAGINATOR_PER_PAGE)
+            ->setMaxResults($this->getCommentPerPage())
             ->getQuery()
         ;
 
         return new Paginator($query);
+    }
+
+    public function getCommentPerPage(): int
+    {
+        $parameter = $this->getEntityManager()->getRepository(Parameters::class)->findOneBy(['name' => 'commentsPerPage']);
+        return $parameter ? $parameter->getValue() : 4;
     }
 
 //    /**
