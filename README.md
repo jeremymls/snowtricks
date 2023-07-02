@@ -30,9 +30,10 @@ Le projet a été développé sur un serveur local avec les versions suivantes :
 git clone git@github.com:jeremymls/snowtricks.git
 ```
 
-- Copier le fichier **.env** et le renommer en **.env.local**
+- Dans le dossier cloné (`snowtricks`), copier le fichier **.env** et le renommer en **.env.local**
 
 ```bash
+cd snowtricks
 cp .env .env.local
 ```
 
