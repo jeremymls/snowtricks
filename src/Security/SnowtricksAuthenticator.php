@@ -53,8 +53,7 @@ class SnowtricksAuthenticator extends AbstractLoginFormAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         $user = $this->userRepository->findOneBy(['username' => $request->request->get('username')]);
-        if ($user->getDeletedAt() != null) {
-            //logout
+        if ($user && $user->getDeletedAt() != null) {
             $request->getSession()->remove(Security::LAST_USERNAME);
 
             $request->getSession()->getFlashBag()->add(
