@@ -142,7 +142,7 @@ class TrickController extends AbstractController
 
                 $this->addFlash('success', $this->translator->trans('Trick added'));
 
-                return $this->redirectToRoute('app_show_trick', [
+                return $this->redirectToRoute('app_home', [
                     'slug' => $trick->getSlug()
                 ]);
             }
@@ -214,7 +214,7 @@ class TrickController extends AbstractController
                 ]);
             }
 
-            return $this->redirectToRoute('app_show_trick', [
+            return $this->redirectToRoute('app_home', [
                 'slug' => $trick->getSlug()
             ]);
         }
@@ -290,7 +290,7 @@ class TrickController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             $this->em->persist($trick);
             $this->em->flush();
 
