@@ -118,7 +118,6 @@
     <section id="description" class="my-5">
         <div class="card">
             <div class="card-body">
-                <p class="card-text">{{ trick.description | raw }}</p>
                 {% if form is defined %}
                 <div class="row justify-content-center mb-3">
                     {{ form_row(form.name, {
@@ -141,6 +140,7 @@
 
                 {{ form_end(form) }}
                 {% else %}
+                <p class="card-text">{{ trick.description | raw }}</p>
                 <div class="row justify-content-center">
                     <div class="col-auto"><span class="badge text-bg-primary">{{ 'Group:' |trans }} {{ trick.category.name }}</div>
                     <div class="col-auto"><span class="badge text-bg-primary">{{ 'Author:' |trans }} {{ trick.user }}</div>

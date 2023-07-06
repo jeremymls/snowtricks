@@ -2,83 +2,22 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Comment;
-use App\Entity\Group;
-use App\Entity\Image;
-use App\Entity\Trick;
-use App\Entity\User;
+use App\Data\InitialData;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\String\Slugger\SluggerInterface;
 
 class DemoFixtures extends Fixture
 {
-    private $userPasswordHasher;
-    private $slugger;
+    private $data;
 
-    public function __construct(UserPasswordHasherInterface $userPasswordHasher, SluggerInterface $slugger)
+    public function __construct(InitialData $data)
     {
-        $this->userPasswordHasher = $userPasswordHasher;
-        $this->slugger = $slugger;
+        $this->data = $data;
     }
 
     public function load(ObjectManager $manager): void
     {
-        $faker = Factory::create('fr_FR');
-        $images = $manager->getRepository(Image::class)->findAll();
-        $categories = $manager->getRepository(Group::class)->findAll();
-
-        // users
-        for ($i = 0; $i < 10; $i++) {
-            $user = new User();
-            $user->setEmail($faker->email())
-                ->setIsVerified(true)
-                ->setUsername($faker->name())
-                ->setPassword(
-                    $this->userPasswordHasher->hashPassword(
-                        $user,
-                        'pass'
-                    )
-                )
-            ;
-            $manager->persist($user);
-        }
-        $manager->flush();
-
-        $users = $manager->getRepository(User::class)->findAll();
-        // Tricks
-        for ($i = 0; $i < 100; $i++) {
-            $newTrick = new Trick();
-            $newTrick
-                ->setUser($users[rand(0, 9)])
-                ->setName($faker->sentence(3, true))
-                ->setSlug($this->slugger->slug($newTrick->getName())->lower())
-                ->setDescription($faker->paragraphs(3, true))
-                ->setCategory($categories[rand(0, 6)])
-                ->setMiniature($images[rand(1, 20)]->getName())
-                ->setCreatedAt($faker->dateTimeBetween('-12 months', '-6 months'))
-            ;
-            $manager->persist($newTrick);
-        }
-        $manager->flush();
-
-        // Comments
-        $tricks = $manager->getRepository(Trick::class)->findAll();
-        for ($i = 0; $i < 2000; $i++) {
-            $trick = $tricks[rand(0, 99)];
-            $comment = new Comment();
-            $comment
-                ->setUser($users[rand(0, 9)])
-                ->setTrick($trick)
-                ->setText($faker->sentences(1, true))
-                ->setCreatedAt($faker->dateTimeBetween('-7 months', '-1 months'))
-            ;
-            $manager->persist($comment);
-        }
-
-        $manager->flush();
+        $this->data->demo();
     }
 }
 

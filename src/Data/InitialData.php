@@ -1,30 +1,50 @@
 <?php
+namespace App\Data;
 
-namespace App\DataFixtures;
-
+use App\Entity\Comment;
 use App\Entity\Group;
 use App\Entity\Image;
+use App\Entity\Parameters;
 use App\Entity\Trick;
 use App\Entity\User;
 use App\Entity\Video;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Faker\Factory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-class AppFixtures extends Fixture
+class InitialData
 {
     private $userPasswordHasher;
     private $slugger;
+    private $em;
 
-    public function __construct(UserPasswordHasherInterface $userPasswordHasher, SluggerInterface $slugger)
+    public function __construct(UserPasswordHasherInterface $userPasswordHasher, SluggerInterface $slugger, EntityManagerInterface $em)
     {
         $this->userPasswordHasher = $userPasswordHasher;
         $this->slugger = $slugger;
+        $this->em = $em;
     }
 
-    public function load(ObjectManager $manager): void
+    public function load()
     {
+        if ($this->em->getRepository(Parameters::class)->findOneBy(['name' => 'initialization'])) {
+            return false;
+        }
+
+        // Parameters
+        foreach ($this->getParameters() as $parameter) {
+            $newParameter = new Parameters();
+            $newParameter
+                ->setName($parameter['name'])
+                ->setValue($parameter['value'])
+                ->setDescription($parameter['description'])
+            ;
+
+            $this->em->persist($newParameter);
+        }
+        $this->em->flush();
+
         // Admin
         $admin = new User();
         $admin->setEmail('admin@snowtricks.fr')
@@ -40,35 +60,35 @@ class AppFixtures extends Fixture
         ;
         $adminAvatar = new Image();
         $adminAvatar->setName('069c24c962c912e1f446239591e30cae.webp');
-        $manager->persist($adminAvatar);
+        $this->em->persist($adminAvatar);
 
         $admin->setImage($adminAvatar);
-        $manager->persist($admin);
-        $manager->flush();
+        $this->em->persist($admin);
+        $this->em->flush();
 
         // Groups
         foreach ($this->getGroups() as $group) {
             $newGroup = new Group();
             $newGroup->setName($group);
 
-            $manager->persist($newGroup);
+            $this->em->persist($newGroup);
         }
-        $manager->flush();
+        $this->em->flush();
 
         // Tricks
         foreach ($this->getTricks() as $trick) {
             $newTrick = new Trick();
             $newTrick
-                ->setUser($admin)
+                ->setUser($this->em->getRepository(User::class)->findOneBy(['username' => 'admin']))
                 ->setName($trick['name'])
                 ->setSlug($this->slugger->slug($newTrick->getName())->lower())
                 ->setDescription($trick['description'])
-                ->setCategory($manager->getRepository(Group::class)->findOneBy(['name' => $trick['group']]))
+                ->setCategory($this->em->getRepository(Group::class)->findOneBy(['name' => $trick['group']]))
                 ->setMiniature($trick['miniature'])
             ;
-            $manager->persist($newTrick);
+            $this->em->persist($newTrick);
 
-            $manager->flush();
+            $this->em->flush();
 
 
             // Trick images
@@ -77,7 +97,7 @@ class AppFixtures extends Fixture
                 $newImage->setName($image['name']);
                 $newImage->setTrick($newTrick);
 
-                $manager->persist($newImage);
+                $this->em->persist($newImage);
             }
 
             // Trick videos
@@ -90,16 +110,75 @@ class AppFixtures extends Fixture
                         ->setTrick($newTrick)
                     ;
 
-                    $manager->persist($newVideo);
-                    $manager->flush();
+                    $this->em->persist($newVideo);
+                    $this->em->flush();
                 }
             }
 
-            $manager->persist($newTrick);
-            $manager->flush();
+            $this->em->persist($newTrick);
+            $this->em->flush();
         }
+        return true;
     }
 
+    public function demo()
+{
+        $this->load();
+        $faker = Factory::create('fr_FR');
+        $images = $this->em->getRepository(Image::class)->findAll();
+        $categories = $this->em->getRepository(Group::class)->findAll();
+
+        // users
+        for ($i = 0; $i < 10; $i++) {
+            $user = new User();
+            $user->setEmail($faker->email())
+                ->setIsVerified(true)
+                ->setUsername($faker->name())
+                ->setPassword(
+                    $this->userPasswordHasher->hashPassword(
+                        $user,
+                        'pass'
+                    )
+                )
+            ;
+            $this->em->persist($user);
+        }
+        $this->em->flush();
+
+        $users = $this->em->getRepository(User::class)->findAll();
+        // Tricks
+        for ($i = 0; $i < 100; $i++) {
+            $newTrick = new Trick();
+            $newTrick
+                ->setUser($users[rand(0, 9)])
+                ->setName($faker->sentence(3, true))
+                ->setSlug($this->slugger->slug($newTrick->getName())->lower())
+                ->setDescription($faker->paragraphs(3, true))
+                ->setCategory($categories[rand(0, 6)])
+                ->setMiniature($images[rand(1, 20)]->getName())
+                ->setCreatedAt($faker->dateTimeBetween('-12 months', '-6 months'))
+            ;
+            $this->em->persist($newTrick);
+        }
+        $this->em->flush();
+
+        // Comments
+        $tricks = $this->em->getRepository(Trick::class)->findAll();
+        for ($i = 0; $i < 2000; $i++) {
+            $trick = $tricks[rand(0, 99)];
+            $comment = new Comment();
+            $comment
+                ->setUser($users[rand(0, 9)])
+                ->setTrick($trick)
+                ->setText($faker->sentences(1, true))
+                ->setCreatedAt($faker->dateTimeBetween('-7 months', 'today'))
+            ;
+            $this->em->persist($comment);
+        }
+
+        $this->em->flush();
+
+    }
     public function getGroups(): array
     {
         return ['Grabs', 'Rotations', 'Flips', 'Rotations désaxées', 'Slides', 'One foot', 'Old school'];
@@ -261,6 +340,25 @@ class AppFixtures extends Fixture
             ],
         ];
     }
+
+    public function getParameters(): array
+    {
+        return [
+            [
+                'name' => 'tricksPerPage',
+                'value' => '15',
+                'description' => 'Nombre de tricks par page',
+            ],
+            [
+                'name' => 'commentsPerPage',
+                'value' => '10',
+                'description' => 'Nombre de commentaires par page',
+            ],
+            [
+                'name' => 'initialization',
+                'value' => true,
+                'description' => "Statut d'initialisation du site",
+            ],
+        ];
+    }
 }
-
-
