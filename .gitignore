@@ -29,3 +29,7 @@ yarn-error.log
 ###> app/uploads ###
 /public/uploads/
 ###< app/uploads ###
+
+###> php-cs-fixer ###
+tools/php-cs-fixer/vendor/
+###< php-cs-fixer ###
