@@ -20,7 +20,8 @@ class TrickType extends AbstractType
 {
     private $translator;
 
-    public function __construct(TranslatorInterface $translator) {
+    public function __construct(TranslatorInterface $translator)
+    {
         $this->translator = $translator;
     }
 

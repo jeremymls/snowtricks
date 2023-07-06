@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Entity\Model;
 
 trait SoftDeleteable

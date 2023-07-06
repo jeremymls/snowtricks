@@ -20,5 +20,3 @@ class DemoFixtures extends Fixture
         $this->data->demo();
     }
 }
-
-

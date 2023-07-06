@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Data;
 
 use App\Entity\Comment;
@@ -122,7 +123,7 @@ class InitialData
     }
 
     public function demo()
-{
+    {
         $this->load();
         $faker = Factory::create('fr_FR');
         $images = $this->em->getRepository(Image::class)->findAll();

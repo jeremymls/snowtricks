@@ -13,7 +13,7 @@ class MainController extends AbstractController
     /**
      * @Route("/change-locale/{locale}", name="change_locale")
      */
-    public function changeLocale($locale, Request $request, TranslatorInterface $translator) : Response
+    public function changeLocale($locale, Request $request, TranslatorInterface $translator): Response
     {
         // On stocke la langue demandée dans la session
         $request->getSession()->set('_locale', $locale);

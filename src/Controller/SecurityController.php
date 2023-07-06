@@ -55,7 +55,8 @@ class SecurityController extends AbstractController
      *  "en": "/my-profile"
      * }, name="app_profile")
      */
-    public function profile(Request $request, EntityManagerInterface $em, PictureService $pictureService, TranslatorInterface $translator): Response {
+    public function profile(Request $request, EntityManagerInterface $em, PictureService $pictureService, TranslatorInterface $translator): Response
+    {
         $user = $this->getUser();
         if (!$user) {
             $this->addFlash('warning', $translator->trans('You are not logged in. Please log in to access your profile.'));
