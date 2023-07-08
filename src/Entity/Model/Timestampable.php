@@ -1,5 +1,8 @@
 <?php
+
 namespace App\Entity\Model;
+
+use Doctrine\ORM\Mapping as ORM;
 
 trait Timestampable
 {
@@ -18,7 +21,7 @@ trait Timestampable
     /**
      * @ORM\PrePersist
      */
-    public function prePersist()
+    public function prePersist(): void
     {
         if (null === $this->createdAt) {
             $this->createdAt = new \DateTime();
@@ -28,7 +31,7 @@ trait Timestampable
     /**
      * @ORM\PreUpdate
      */
-    public function preUpdate()
+    public function preUpdate(): void
     {
         $this->updatedAt = new \DateTime();
     }

@@ -41,8 +41,7 @@ class RegistrationController extends AbstractController
         SnowtricksAuthenticator $authenticator,
         EntityManagerInterface $entityManager,
         TranslatorInterface $translator
-        ): Response
-    {
+    ): Response {
         if ($this->getUser()) {
             $this->addFlash(
                 'warning',
@@ -58,7 +57,7 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             $user->setPassword(
-            $userPasswordHasher->hashPassword(
+                $userPasswordHasher->hashPassword(
                     $user,
                     $form->get('plainPassword')->getData()
                 )
@@ -68,7 +67,9 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            $this->emailVerifier->sendEmailConfirmation(
+                'app_verify_email',
+                $user,
                 (new TemplatedEmail())
                     ->from(new Address('admin@jm-projets.fr', 'Snow Tricks'))
                     ->to($user->getEmail())
@@ -120,7 +121,6 @@ class RegistrationController extends AbstractController
             $translator->trans('Your email address has been verified. You can now add figures and comments.')
         );
 
-        // @TODO Change the redirect on success to profile page
         return $this->redirectToRoute('app_home');
     }
 }

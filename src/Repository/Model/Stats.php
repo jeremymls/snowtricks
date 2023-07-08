@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Repository\Model;
 
-trait Stats {
-    public function countByPeriod($period = 'day', $dateLimit= null) : array
+trait Stats
+{
+    public function countByPeriod(string $period = 'day', \DateTimeInterface $dateLimit= null): array
     {
         switch ($period) {
             case 'month':

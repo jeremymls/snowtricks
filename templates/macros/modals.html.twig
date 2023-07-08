@@ -1,0 +1,112 @@
+<!-- Delete Modal -->
+{% macro confirmDelete(id, text) %}
+    <div class="modal" id="{{ id }}" tabindex="-1" aria-labelledby="{{ id }}Label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body z-index-1">{{ text |trans }}</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'No' |trans }}</button>
+                    <button type="button" class="btn btn-danger" id="{{ id | replace({'Modal': 'Confirm'}) }}">{{ 'Yes' |trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+
+<!-- Delete Modal with form -->
+{% macro confirmDeleteForm(id, text, path) %}
+<div class="modal" id="{{ id }}" tabindex="-1" aria-labelledby="{{ id }}Label" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-body z-index-1">{{ text |trans }}</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'No' |trans }}</button>
+                    <form action="{{ path }}" method="post">
+                        <input id="trickId" type="hidden" name="id">
+                        <input id="csrf-token" type="hidden" name="_token">
+                        <button type="submit" class="btn btn-danger">{{ 'Yes' |trans }}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('#{{ id }}').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('id');
+                var _token = button.data('token');
+                var modal = $(this);
+                modal.find('.modal-content #trickId').val(id);
+                modal.find('.modal-content #csrf-token').val(_token);
+            });
+        });
+    </script>
+{% endmacro %}
+
+<!-- Add Group Modal -->
+{% macro addGroup(groupForm) %}
+    <div class="modal fade" id="addGroupModal" tabindex="-1" aria-labelledby="addGroupModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addGroupModalLabel">{{ 'New group' |trans }}</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                {{ form_start(groupForm)}}
+                    <div class="modal-body text-center">
+                        {{ form_row(groupForm.name) }}
+                        {{ form_row(groupForm.description) }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        {{ form_row(groupForm.save, {
+                            'attr': {'class': 'btn btn-success', 'data-action': path('app_add_group') },
+                            'label': 'Add' |trans,
+                        }) }}
+                    </div>
+                {{ form_end(groupForm)}}
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+<!-- Add Video Modal -->
+{% macro addVideo(form) %}
+    <div class="modal" id="addVideoModal" tabindex="-1" aria-labelledby="addVideoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addVideoModalLabel">{{ 'Media' |trans }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body z-index-1">
+                    <div id='videos' data-prototype="{{ form_row(form.videos.vars.prototype, {'row_attr': {'class': 'row mb-3'}})|e('html_attr')}}">
+                        <div class="videos row py-3">
+                            {% for video in form.videos %}
+                                <div class="col-md-6 mb-3">
+                                    {{ form_row(video) }}
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#deleteVideoModal" data-id="{{ video.vars.value.videoId }}" data-trick="{{ trick.id }}" data-loop="{{ loop.index0 }}" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash" aria-hidden="true"></i> Supprimer
+                                    </button>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    {% if video.vars.value.provider == 'youtube' %}{% set path = "https://www.youtube.com/embed/" %}{% endif %}
+                                    {% if video.vars.value.provider == 'dailymotion' %}{% set path = "https://www.dailymotion.com/embed/video/" %}{% endif %}
+                                    {% if video.vars.value.provider == 'vimeo' %}{% set path = "https://player.vimeo.com/video/" %}{% endif %}
+                                    <iframe width='100%' height='100%' src="{{ path }}{{ video.vars.value.videoId }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                                <hr class="my-2">
+                            {% endfor %}
+                        </div>
+                        <span id="video-add" class="row">
+                            <button class="btn btn-success add-video" type="button"><i class="fas fa-plus" aria-hidden="true"></i> {{ 'Add video' |trans }}</button>
+                        </span>
+                        <button type="button" class="btn btn-secondary mt-3" data-bs-dismiss="modal">{{ 'Close' |trans }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

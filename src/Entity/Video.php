@@ -42,7 +42,7 @@ class Video
     /**
      * @ORM\PrePersist
      */
-    public function prePersist()
+    public function prePersist(): void
     {
         if ($this->trick) {
             $this->trick->setUpdatedAt(new \DateTime());
@@ -53,7 +53,7 @@ class Video
     /**
      * @ORM\PreUpdate
      */
-    public function preUpdate()
+    public function preUpdate(): void
     {
         $this->checkVideoId();
     }
@@ -114,14 +114,14 @@ class Video
     public function checkVideoId(): self
     {
         if ($this->provider === 'youtube') {
-            parse_str( parse_url( $this->video_id, PHP_URL_QUERY ), $vars );
+            parse_str(parse_url($this->video_id, PHP_URL_QUERY), $vars);
             if (isset($vars['v'])) {
                 $this->setVideoId($vars['v']);
             } elseif (isset(explode('youtu.be/', $this->video_id)[1])) {
                 $this->setVideoId(explode('youtu.be/', $this->video_id)[1]);
             } elseif (isset(explode('embed/', $this->video_id)[1])) {
                 $this->setVideoId(explode('embed/', $this->video_id)[1]);
-            } 
+            }
         } elseif ($this->provider === 'dailymotion') {
             if (isset(explode('video/', $this->video_id)[1])) {
                 $this->setVideoId(explode('video/', $this->video_id)[1]);

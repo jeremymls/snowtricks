@@ -1,5 +1,8 @@
 <?php
+
 namespace App\Entity\Model;
+
+use Doctrine\ORM\Mapping as ORM;
 
 trait SoftDeleteable
 {

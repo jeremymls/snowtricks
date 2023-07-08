@@ -26,7 +26,7 @@ class VideoController extends AbstractController
      */
     public function add(Request $request): Response
     {
-        $video = new Video;
+        $video = new Video();
         $form = $this->createForm(VideoType::class, $video);
 
         $form->handleRequest($request);

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Data;
 
 use App\Entity\Comment;
@@ -26,7 +27,7 @@ class InitialData
         $this->em = $em;
     }
 
-    public function load()
+    public function load(): bool
     {
         if ($this->em->getRepository(Parameters::class)->findOneBy(['name' => 'initialization'])) {
             return false;
@@ -121,8 +122,8 @@ class InitialData
         return true;
     }
 
-    public function demo()
-{
+    public function demo(): void
+    {
         $this->load();
         $faker = Factory::create('fr_FR');
         $images = $this->em->getRepository(Image::class)->findAll();

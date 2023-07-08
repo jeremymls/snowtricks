@@ -31,7 +31,7 @@ class Image
     /**
      * @ORM\PrePersist
      */
-    public function prePersist()
+    public function prePersist(): void
     {
         if (isset($this->trick)) {
             $this->trick->setUpdatedAt(new \DateTime());
@@ -41,7 +41,7 @@ class Image
     /**
      * @ORM\PreRemove
      */
-    public function preRemove()
+    public function preRemove(): void
     {
         $this->trick->setUpdatedAt(new \DateTime());
     }
