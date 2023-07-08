@@ -32,4 +32,6 @@ yarn-error.log
 
 ###> php-cs-fixer ###
 tools/php-cs-fixer/vendor/
+.php-cs-fixer.cache
 ###< php-cs-fixer ###
+.php-cs-fixer.cache

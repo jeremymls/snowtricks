@@ -4,7 +4,7 @@ namespace App\Repository\Model;
 
 trait Stats
 {
-    public function countByPeriod(string $period = 'day', string $dateLimit= null): array
+    public function countByPeriod(string $period = 'day', \DateTimeInterface $dateLimit= null): array
     {
         switch ($period) {
             case 'month':
