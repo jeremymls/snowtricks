@@ -233,7 +233,7 @@ class TrickController extends AbstractController
     */
     public function delete(Request $request): Response
     {
-        if ($this->isCsrfTokenValid('deleteTrick', $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('deleteTrick'. $request->request->get('id') , $request->request->get('_token'))) {
             $trick = $this->em->getRepository(Trick::class)->find($request->request->get('id'));
             if ($trick) {
                 $trick->setDeletedAt(new \DateTime());
@@ -253,15 +253,24 @@ class TrickController extends AbstractController
     }
 
     /**
-    * @Route("/delete/miniature/{id}", name="app_delete_miniature", methods={"POST"})
+    * @Route("/delete/miniature/{slug}", name="app_delete_miniature", methods={"POST"})
     */
     public function deleteMiniature(Trick $trick, Request $request): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $trick->getId(), $request->request->get('_token'))) {
-            $trick->setMiniature(null);
-            $this->em->persist($trick);
-            $this->em->flush();
-            $this->addFlash('success', $this->translator->trans('Miniature deleted'));
+        if ($this->isCsrfTokenValid('deleteTrick' . $trick->getId(), $request->request->get('_token'))) {
+            $trick = $this->em->getRepository(Trick::class)->find($request->request->get('id'));
+            if ($trick) {
+                $trick->setMiniature(null);
+                $this->em->persist($trick);
+                $this->em->flush();
+                $this->addFlash('success', $this->translator->trans('Miniature deleted'));
+            } else {
+                $this->addFlash('danger', $this->translator->trans('Trick not found'));
+            }
+        } else {
+            $this->addFlash('danger', $this->translator->trans('Invalid token'));
+
+            return $this->redirect($request->headers->get('referer'));
         }
         return $this->redirectToRoute('app_edit_trick', [
             'slug' => $trick->getSlug()

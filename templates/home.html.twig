@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import "macros/modals.html.twig" as modals %}
 
 {% block title %}{% endblock %}
 
@@ -27,7 +28,7 @@
                 {% if is_granted('ROLE_USER') and app.user.isVerified() %}
                     <div class="col-auto d-flex flex-nowrap">
                         <a class="me-3" href="{{ path('app_edit_trick', {'slug': trick.slug}) }}"><i class="fa-sharp fa-solid fa-pencil"></i></a>
-                        <button type="button" class="btn btn-outline border-0 p-0" data-bs-toggle="modal" data-id="{{ trick.id }}" data-bs-target="#deleteTrickModal"><i class="fas fa-trash-alt text-danger"></i></button>
+                        <button type="button" class="btn btn-outline border-0 p-0" data-bs-toggle="modal" data-token="{{ csrf_token('deleteTrick' ~ trick.id) }}" data-id="{{ trick.id }}" data-bs-target="#deleteTrickModal"><i class="fas fa-trash-alt text-danger"></i></button>
                     </div>
                 {% endif %}
             </div>
@@ -49,26 +50,16 @@
         </div>
     </div>
 </main>
-    <!-- Delete Trick Modal -->
-    <div class="modal" id="deleteTrickModal" tabindex="-1" aria-labelledby="deleteTrickModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-body z-index-1">
-                    {{ 'Are you sure you want to delete this trick?' |trans }}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'No' |trans }}</button>
-                    <form action="{{ path('app_delete_trick') }}" method="post">
-                        <input type="hidden" name="_token" value="{{ csrf_token('deleteTrick') }}">
-                        <input id="trickId" type="hidden" name="id">
-                        <button type="submit" class="btn btn-danger">{{ 'Yes' |trans }}</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+
+<!-- Delete Trick Modal -->
+{{ modals.confirmDeleteForm(
+    'deleteTrickModal',
+    'Are you sure you want to delete this trick?',
+    path('app_delete_trick')
+) }}
 
 {% endblock %}
+
 {% block javascripts %}
 {{ parent() }}
 <script src="{{ asset('build/js/delete_trick.js') }}"></script>
