@@ -68,7 +68,7 @@ class TrickType extends AbstractType
         ;
     }
 
-    private function getToolbar()
+    private function getToolbar(): array
     {
         return [
             [ 'name' => 'tools', 'groups' => [ 'tools' ] ],

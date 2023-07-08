@@ -42,7 +42,7 @@ class Video
     /**
      * @ORM\PrePersist
      */
-    public function prePersist()
+    public function prePersist(): void
     {
         if ($this->trick) {
             $this->trick->setUpdatedAt(new \DateTime());
@@ -53,7 +53,7 @@ class Video
     /**
      * @ORM\PreUpdate
      */
-    public function preUpdate()
+    public function preUpdate(): void
     {
         $this->checkVideoId();
     }

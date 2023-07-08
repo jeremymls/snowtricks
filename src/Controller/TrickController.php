@@ -143,7 +143,7 @@ class TrickController extends AbstractController
                 $this->addFlash('success', $this->translator->trans('Trick added'));
 
                 return $this->redirectToRoute('app_home', [
-                    'slug' => $trick->getSlug()
+                    '_fragment' => 'main'
                 ]);
             }
         }
@@ -215,7 +215,7 @@ class TrickController extends AbstractController
             }
 
             return $this->redirectToRoute('app_home', [
-                'slug' => $trick->getSlug()
+                '_fragment' => 'main'
             ]);
         }
         return $this->render('trick/details.html.twig', [

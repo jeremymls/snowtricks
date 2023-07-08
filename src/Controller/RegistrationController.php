@@ -121,7 +121,6 @@ class RegistrationController extends AbstractController
             $translator->trans('Your email address has been verified. You can now add figures and comments.')
         );
 
-        // @TODO Change the redirect on success to profile page
         return $this->redirectToRoute('app_home');
     }
 }
