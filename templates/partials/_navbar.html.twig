@@ -1,16 +1,10 @@
-<nav class="navbar fixed-top navbar-expand-lg bg-light">
-    <div class="container">
+<nav class="navbar fixed-bottom sticky-lg-top navbar-expand-lg bg-light">
+    <div class="container position-relative">
         <a class="navbar-brand" href="{{ path('app_home') }}">
             <img src="{{ asset('logo.png') }}" alt="Logo" width="30" height="24">
         </a>
-        <button class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bookmark"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -57,32 +51,37 @@
                     </li>
                 {% endfor %}
             </ul>
-            <ul class="navbar-nav mb-2 mb-lg-0">
-                {% if is_granted('ROLE_USER') %}
-                    <li class="nav-item dropdown text-end">
-                        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="rounded-circle bg-primary text-light" style="width: 32px; height: 32px; display: inline-block; vertical-align: middle; line-height: 32px; text-align: center; font-size: 1rem; font-weight: 700; text-transform: uppercase;">
-                                {% if app.user.getImage().getName() is defined %}
-                                    <img src="{{ asset('uploads/images/users/' ~ app.user.getImage().getName()) }}" alt="Avatar" width="32" height="32" class="rounded-circle">
-                                {% else %}
-                                    <span class="text-light">
-                                        {{ app.user.getInitials() }}
-                                    </span>
-                                {% endif %} 
-                            </span>
-                        </a>
-                        <ul class="dropdown-menu text-small" style="">
-                            <li><a class="dropdown-item" href="{{ path('app_profile') }}">{{ 'My account' |trans }}</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item link-danger" href="{{ path('app_logout') }}"><strong>{{ 'Logout' |trans }}</strong></a></li>
-                        </ul>
-                    </li>
-                {% else %}
+        </div>
+        <ul class="navbar-nav mb-2 mb-lg-0">
+            {% if is_granted('ROLE_USER') %}
+                <li class="nav-item dropdown text-end">
+                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="rounded-circle bg-primary text-light profil-thumb">
+                            {% if app.user.getImage().getName() is defined %}
+                                <img src="{{ asset('uploads/images/users/' ~ app.user.getImage().getName()) }}" alt="Avatar" width="32" height="32" class="rounded-circle">
+                            {% else %}
+                                <span class="text-light">
+                                    {{ app.user.getInitials() }}
+                                </span>
+                            {% endif %} 
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu text-small" style="">
+                        <li><a class="dropdown-item" href="{{ path('app_profile') }}">{{ 'My account' |trans }}</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item link-danger" href="{{ path('app_logout') }}"><strong>{{ 'Logout' |trans }}</strong></a></li>
+                    </ul>
+                </li>
+            {% else %}
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarProfile" aria-controls="navbarProfile" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarProfile">
                     <li class="nav-item {% if app.request.pathinfo == path('app_login') %}active{% endif %}"><a class="nav-link" href="{{ path('app_login')}}">{{ 'Login' |trans }}</a></li>
                     <div class="vr"></div>
                     <li class="nav-item {% if app.request.pathinfo == path('app_register') %}active{% endif %}"><a class="nav-link" href="{{ path('app_register')}}">{{ 'Registration' |trans }}</a></li>
-                {% endif %}
-            </ul>
-        </div>
+                </div>
+            {% endif %}
+        </ul>
     </div>
 </nav>

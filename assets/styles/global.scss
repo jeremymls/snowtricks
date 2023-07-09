@@ -84,3 +84,61 @@ iframe {
     text-decoration: line-through;
     color: #ccc;
 }
+.profil-thumb {
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 32px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+// Responsive
+@media (max-width: 992px) {
+    .navbar {
+        font-size: larger;
+        .navbar-brand img {
+            width: auto;
+            height: 50px;
+        }
+        .navbar-toggler i {
+            font-size: 50px;
+            color: black;
+        }
+        .profil-thumb {
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            font-size: xx-large;
+            img {
+                width: 50px;
+                height: 50px;
+            }
+        }
+        .navbar-collapse {
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            margin-bottom: 82px;
+            background-color: #f5f5f5;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+            .vr {
+                display: none;
+            }
+        }
+        .dropdown-menu {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+        .dropdown-menu[data-bs-popper]{
+            top: auto !important;
+            font-size: larger;
+        }
+    }
+}
