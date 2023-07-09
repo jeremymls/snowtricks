@@ -72,9 +72,9 @@
     {% endif %}
 
     <section id="trick-media" class="m-5 p-3 overflow-auto">
-        <div id="media-display" class="row flex-nowrap">
+        {% set media %}
             {% for image in trick.images %}
-                <div id="img[{{ image.id }}]" class="col-3 col-md-2">
+                <div id="img[{{ image.id }}]" class="col-12 mb-5 col-lg-2">
                     <div class="row preview-div align-items-center">
                         <div class="col-12">
                             <img class="img-fluid" src="{{ asset('uploads/images/tricks/' ~ image.name) }}" alt="{{ image.name }}">
@@ -89,7 +89,7 @@
             {% endfor %}
             <span id="media-separator" hidden></span>
             {% for video in trick.getVideos() %}
-                <div class="col-3 col-md-2">
+                <div class="col-12 mb-3 col-lg-2">
                     <div class="row preview-div align-items-center">
                         <div class="col-12" id="media_trick_videos_{{ loop.index0 }}">
                             <iframe src="{{ video.getEmbedUrl() }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -103,7 +103,27 @@
                     {% endif %}
                 </div>
             {% endfor %}
+        {% endset %}
+        <div id="media-display" class="row flex-nowrap">
+            {{ media | raw }}
         </div>
+
+        {# Mobile media #}
+        <div class="row justify-content-center text-center d-lg-none" id="mobile-media-block">
+            <div class="col">
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#mobile-media" aria-expanded="false" aria-controls="mobile-media">
+                    {{ 'See media' |trans }}
+                </button>
+                <div class="collapse mt-3" id="mobile-media">
+                    <div class="card card-body">
+                        <div class="row">
+                            {{ media | raw }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </section>
 
     <section id="description" class="my-5">
@@ -153,12 +173,12 @@
         {% if is_granted('ROLE_USER') and app.user.isVerified() %}
             {% form_theme commentForm 'bootstrap_5_layout.html.twig' %}
             {{ form_start(commentForm, {'attr': {'action': path('app_add_comment', {'slug': trick.slug})}}) }}
-                <div class="row align-items-center px-3">
+                <div class="row align-items-center px-3 justify-content-center">
                     <div class="col">
-                        {{ form_row(commentForm.text, {'row_attr': {'class': 'mx-3'}}) }}
+                        {{ form_row(commentForm.text, {'row_attr': {'class': 'm-3'}}) }}
                     </div>
                     <div class="col-auto">
-                        {{ form_row(commentForm.submit, {'row_attr': {'class': 'mx-3'}}) }}
+                        {{ form_row(commentForm.submit, {'row_attr': {'class': 'm-3'}}) }}
                     </div>
                 </div>
             {{ form_end(commentForm) }}

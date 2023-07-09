@@ -33,7 +33,7 @@
             {% endfor %}
         </div>
         {% if block('title') or block('_action') %}
-            <div class="pt-5 mb-3 rounded-3">
+            <div id="header-div" class="pt-5 mb-3 rounded-3">
                 <div class="container-fluid py-5 position-relative">
                     <h1 id='title-header' class="display-5 fw-bold text-center position-absolute top-50 start-50 translate-middle mt-5">{{ block('title') }}</h1>
                     {% block _action %}{% endblock %}

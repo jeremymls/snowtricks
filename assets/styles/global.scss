@@ -16,6 +16,7 @@ body {
         background-size: cover;
         background-position: top center;
         background-repeat: no-repeat;
+        height: calc(100vh - 56px);
     }
     footer {
         position: absolute;
@@ -97,9 +98,50 @@ iframe {
 }
 
 // Responsive
+$navbar-height: 100px;
 @media (max-width: 992px) {
+    :root {
+        // --bs-body-font-size: 2.5rem;
+        font-size: 2.5rem !important;
+    }
+    #comment-form {
+        margin: 0 !important;
+        padding: 0;
+    }
+    .navbar-toggler:focus {
+        box-shadow: none;
+    }
+    #media-display {
+        display: none;
+    }
+    #cke_editable.cke_editable_themed.cke_contents_ltr.cke_show_borders {
+        font-size: 2.5rem !important;
+        line-height: 1.5;
+    }
+    body {
+        #header-div , #header-div>div {
+            padding: 0 !important;
+        }
+        header {
+            height: calc(100vh - 66px) !important;
+            .fa-3x {
+                font-size: 2rem;
+            }
+        }
+        footer {
+            padding-bottom: $navbar-height;
+        }
+        // .form-control, .btn-lg {
+        //     font-size: 2.5rem !important;
+        // }
+    }
+    .container {
+        max-width: none;
+        margin: auto;
+    }
     .navbar {
         font-size: larger;
+        padding: 0 2rem;
         .navbar-brand img {
             width: auto;
             height: 50px;
@@ -123,22 +165,27 @@ iframe {
             width: 100%;
             bottom: 0;
             left: 0;
-            margin-bottom: 82px;
+            margin-bottom: $navbar-height;
             background-color: #f5f5f5;
             text-align: center;
             border-radius: 10px 10px 0 0;
             .vr {
                 display: none;
             }
+            .nav-link img {
+                height: 50px;
+            }
         }
-        .dropdown-menu {
-            position: absolute;
-            bottom: 0;
-            left: 0;
+        .dropdown {
+            position: unset;
         }
         .dropdown-menu[data-bs-popper]{
+            position: absolute;
             top: auto !important;
-            font-size: larger;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            margin-bottom: $navbar-height;
         }
     }
 }

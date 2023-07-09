@@ -78,20 +78,20 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addVideoModalLabel">{{ 'Media' |trans }}</h5>
+                    <h5 class="modal-title" id="addVideoModalLabel">{{ 'Add video' |trans }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body z-index-1">
                     <div id='videos' data-prototype="{{ form_row(form.videos.vars.prototype, {'row_attr': {'class': 'row mb-3'}})|e('html_attr')}}">
                         <div class="videos row py-3">
                             {% for video in form.videos %}
-                                <div class="col-md-6 mb-3">
+                                <div class="col-12 col-lg-6 mb-3">
                                     {{ form_row(video) }}
                                     <button type="button" data-bs-toggle="modal" data-bs-target="#deleteVideoModal" data-id="{{ video.vars.value.videoId }}" data-trick="{{ video.vars.value.trick.id }}" data-loop="{{ loop.index0 }}" class="btn btn-sm btn-danger">
                                         <i class="fas fa-trash" aria-hidden="true"></i> Supprimer
                                     </button>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-12 col-lg-6 mb-3">
                                     {% if video.vars.value.provider == 'youtube' %}{% set path = "https://www.youtube.com/embed/" %}{% endif %}
                                     {% if video.vars.value.provider == 'dailymotion' %}{% set path = "https://www.dailymotion.com/embed/video/" %}{% endif %}
                                     {% if video.vars.value.provider == 'vimeo' %}{% set path = "https://player.vimeo.com/video/" %}{% endif %}

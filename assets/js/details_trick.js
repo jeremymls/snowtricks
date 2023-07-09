@@ -168,7 +168,7 @@ function addButton(collection) {
     let content = document.createElement('html');
     content.innerHTML = prototype;
     let newForm = content.querySelector('div');
-    newForm.className = 'col-md-6 mb-3';
+    newForm.className = 'col-12 col-lg-6 mb-3';
     newForm.id = 'video_' + index;
 
     let labels = newForm.querySelectorAll('fieldset fieldset label');
@@ -200,7 +200,7 @@ function addButton(collection) {
     iframeHTML = "<iframe width='100%' height='100%' src='https://www.youtube.com/embed/' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>";
 
     let videoPreview = document.createElement('div');
-    videoPreview.className = 'col-md-6 mb-3';
+    videoPreview.className = 'col-12 col-lg-6 mb-3';
     videoPreview.innerHTML = iframeHTML;
 
     let videoDisplay = document.createElement('div');
