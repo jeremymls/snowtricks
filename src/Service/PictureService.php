@@ -37,19 +37,17 @@ class PictureService
         return $filename;
     }
 
-    public function delete(string $file, ?string $folder = ''): mixed
+    public function delete(string $file, ?string $folder = ''): bool
     {
         if ($file !== 'default.webp') {
-            $success = false;
             $path = $this->params->get('images_directory') . $folder;
 
             $original = $path . '/' . $file;
 
             if (file_exists($original)) {
                 $success = unlink($original);
-                $success = true;
             }
-            return $success;
+            return true;
         }
         return false;
     }

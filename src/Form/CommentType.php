@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Comment;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -28,6 +29,7 @@ class CommentType extends AbstractType
                     'class' => 'form-control'
                 ]
             ])
+            ->add('trick', HiddenType::class)
             ->add('submit', SubmitType::class, [
                 'label' => $this->translator->trans('Leave a comment'),
                 'attr' => [

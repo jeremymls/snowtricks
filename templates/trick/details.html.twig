@@ -152,7 +152,7 @@
         <hr>
         {% if is_granted('ROLE_USER') and app.user.isVerified() %}
             {% form_theme commentForm 'bootstrap_5_layout.html.twig' %}
-            {{ form_start(commentForm) }}
+            {{ form_start(commentForm, {'attr': {'action': path('app_add_comment', {'slug': trick.slug})}}) }}
                 <div class="row align-items-center px-3">
                     <div class="col">
                         {{ form_row(commentForm.text, {'row_attr': {'class': 'mx-3'}}) }}
@@ -164,8 +164,8 @@
             {{ form_end(commentForm) }}
         <hr>
         {% endif %}
-        <div id="comments">
-            <p class="text-end">
+        <div id="comments" class="pt-5">
+            <p class="text-end mt-3">
                 {% if comments | length == 0 %}
                     {{ 'No comments yet.' |trans }}
                 {% elseif comments | length == 1 %}
@@ -267,103 +267,102 @@
     {% endif %}
 
     <script>
-    $(document).ready(function() {
-        $('#deleteVideoModal').on('show.bs.modal', function (event) {
-            button = $(event.relatedTarget);
-            id = button.data('id');
-            trick = button.data('trick');
-            loop = button.data('loop');
-            inDb = button.data('inDb');
-            $('#deleteVideoConfirm')
-                .attr('data-id', id)
-                .attr('data-loop', loop)
-                .attr('data-trick', trick)
-                .attr('data-inDb', inDb)
-            ;
-        });
-        $('#deleteVideoConfirm').click(function(e) {
-            id = e.target.dataset.id;
-            trick = e.target.dataset.trick;
-            loop = e.target.dataset.loop;
-            $.ajax({
-                url: "{{ path('app_delete_trick_video') }}",
-                type: 'DELETE',
-                data: {
-                    id: id,
-                    trick: trick,
-                    _token: "{{ csrf_token('deleteVideo' ~ trick.id) }}"
-                },
-                success: function(data) {
-                    $('#media_trick_videos_' + loop).parent().parent().remove();
-                    $('#trick_videos_' + loop).parent().parent().prev().remove();
-                    $('#trick_videos_' + loop).parent().parent().next().remove();
-                    $('#trick_videos_' + loop).parent().parent().remove();
-                    $('#deleteVideoModal').modal('hide');
-                }
+        $(document).ready(function() {
+            /** Add and Delete video events **/
+            $('#deleteVideoModal').on('show.bs.modal', function (event) {
+                button = $(event.relatedTarget);
+                id = button.data('id');
+                trick = button.data('trick');
+                loop = button.data('loop');
+                inDb = button.data('inDb');
+                $('#deleteVideoConfirm')
+                    .attr('data-id', id)
+                    .attr('data-loop', loop)
+                    .attr('data-trick', trick)
+                    .attr('data-inDb', inDb)
+                ;
             });
-        });
-        $('#cancelVideoAdd').click(function(e) {
-            id = e.target.dataset.id;
-            trick = e.target.dataset.trick;
-            loop = e.target.dataset.loop;
-            inDb = e.target.dataset.indb;
-            $('#media_video_' + loop).remove();
-            $('#video_' + loop).next().next().remove();
-            $('#video_' + loop).next().remove();
-            $('#video_' + loop).remove();
-            $('#deleteVideoModal').modal('hide');
-        });
-    });
-    </script>
+            $('#deleteVideoConfirm').click(function(e) {
+                id = e.target.dataset.id;
+                trick = e.target.dataset.trick;
+                loop = e.target.dataset.loop;
+                $.ajax({
+                    url: "{{ path('app_delete_trick_video') }}",
+                    type: 'DELETE',
+                    data: {
+                        id: id,
+                        trick: trick,
+                        _token: "{{ csrf_token('deleteVideo' ~ trick.id) }}"
+                    },
+                    success: function(data) {
+                        $('#media_trick_videos_' + loop).parent().parent().remove();
+                        $('#trick_videos_' + loop).parent().parent().prev().remove();
+                        $('#trick_videos_' + loop).parent().parent().next().remove();
+                        $('#trick_videos_' + loop).parent().parent().remove();
+                        $('#deleteVideoModal').modal('hide');
+                    }
+                });
+            });
+            $('#cancelVideoAdd').click(function(e) {
+                id = e.target.dataset.id;
+                trick = e.target.dataset.trick;
+                loop = e.target.dataset.loop;
+                inDb = e.target.dataset.indb;
+                $('#media_video_' + loop).remove();
+                $('#video_' + loop).next().next().remove();
+                $('#video_' + loop).next().remove();
+                $('#video_' + loop).remove();
+                $('#deleteVideoModal').modal('hide');
+            });
 
-    <script>
-    $(document).ready(function() {
-        $('#deleteCommentModal').on('show.bs.modal', function (event) {
+            /** Delete and Restore comment events **/
+            $('#deleteCommentModal').on('show.bs.modal', function (event) {
             button = $(event.relatedTarget);
             id = button.data('id');
             $('#deleteCommentConfirm').attr('data-id', id);
-        });
-        $('#deleteCommentConfirm').click(function(e) {
-            id = e.target.dataset.id;
-            $.ajax({
-                url: "{{ path('app_delete_comment') }}",
-                type: 'DELETE',
-                data: {
-                    id: id,
-                    _token: "{{ csrf_token('deleteComment' ~ trick.id) }}"
-                },
-                success: function(data) {
-                    $('#deleteCommentModal').modal('hide');
-                    $('#comment-' + id).addClass('comment-deleted');
-                    $('#delete-comment-' + id + ' i:first-child').removeClass('text-danger').addClass('text-secondary');
-                    $('#delete-comment-' + id + ' i:last-child').removeClass('fa-times').addClass('fa-ban');
-                    $('#comment-' + id + ' button').attr('data-bs-target', '#restoreCommentModal');
-                }
+            });
+            $('#deleteCommentConfirm').click(function(e) {
+                id = e.target.dataset.id;
+                $.ajax({
+                    url: "{{ path('app_delete_comment') }}",
+                    type: 'DELETE',
+                    data: {
+                        id: id,
+                        _token: "{{ csrf_token('deleteComment' ~ trick.id) }}"
+                    },
+                    success: function(data) {
+                        $('#deleteCommentModal').modal('hide');
+                        $('#comment-' + id).addClass('comment-deleted');
+                        $('#delete-comment-' + id + ' i:first-child').removeClass('text-danger').addClass('text-secondary');
+                        $('#delete-comment-' + id + ' i:last-child').removeClass('fa-times').addClass('fa-ban');
+                        $('#comment-' + id + ' button').attr('data-bs-target', '#restoreCommentModal');
+                    }
+                });
+            });
+            $('#restoreCommentModal').on('show.bs.modal', function (event) {
+                button = $(event.relatedTarget);
+                id = button.data('id');
+                $('#restoreCommentConfirm').attr('data-id', id);
+            });
+            $('#restoreCommentConfirm').click(function(e) {
+                id = e.target.dataset.id;
+                $.ajax({
+                    url: "{{ path('app_restore_comment') }}",
+                    type: 'POST',
+                    data: {
+                        id: id,
+                        _token: "{{ csrf_token('restoreComment' ~ trick.id) }}"
+                    },
+                    success: function(data) {
+                        $('#restoreCommentModal').modal('hide');
+                        $('#comment-' + id).removeClass('comment-deleted');
+                        $('#delete-comment-' + id + ' i:first-child').removeClass('text-secondary').addClass('text-danger');
+                        $('#delete-comment-' + id + ' i:last-child').removeClass('fa-ban').addClass('fa-times');
+                        $('#comment-' + id + ' button').attr('data-bs-target', '#deleteCommentModal');
+                    }
+                });
             });
         });
-        $('#restoreCommentModal').on('show.bs.modal', function (event) {
-            button = $(event.relatedTarget);
-            id = button.data('id');
-            $('#restoreCommentConfirm').attr('data-id', id);
-        });
-        $('#restoreCommentConfirm').click(function(e) {
-            id = e.target.dataset.id;
-            $.ajax({
-                url: "{{ path('app_restore_comment') }}",
-                type: 'POST',
-                data: {
-                    id: id,
-                    _token: "{{ csrf_token('restoreComment' ~ trick.id) }}"
-                },
-                success: function(data) {
-                    $('#restoreCommentModal').modal('hide');
-                    $('#comment-' + id).removeClass('comment-deleted');
-                    $('#delete-comment-' + id + ' i:first-child').removeClass('text-secondary').addClass('text-danger');
-                    $('#delete-comment-' + id + ' i:last-child').removeClass('fa-ban').addClass('fa-times');
-                    $('#comment-' + id + ' button').attr('data-bs-target', '#deleteCommentModal');
-                }
-            });
-        });
-    });
     </script>
+
 {% endblock %}

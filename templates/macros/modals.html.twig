@@ -17,7 +17,7 @@
 <!-- Delete Modal with form -->
 {% macro confirmDeleteForm(id, text, path) %}
 <div class="modal" id="{{ id }}" tabindex="-1" aria-labelledby="{{ id }}Label" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body z-index-1">{{ text |trans }}</div>
                 <div class="modal-footer">
@@ -87,7 +87,7 @@
                             {% for video in form.videos %}
                                 <div class="col-md-6 mb-3">
                                     {{ form_row(video) }}
-                                    <button type="button" data-bs-toggle="modal" data-bs-target="#deleteVideoModal" data-id="{{ video.vars.value.videoId }}" data-trick="{{ trick.id }}" data-loop="{{ loop.index0 }}" class="btn btn-sm btn-danger">
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#deleteVideoModal" data-id="{{ video.vars.value.videoId }}" data-trick="{{ video.vars.value.trick.id }}" data-loop="{{ loop.index0 }}" class="btn btn-sm btn-danger">
                                         <i class="fas fa-trash" aria-hidden="true"></i> Supprimer
                                     </button>
                                 </div>
