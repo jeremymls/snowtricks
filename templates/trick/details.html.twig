@@ -61,7 +61,7 @@
             <div class="col-auto mb-3">
                 <label for="trick_images">{{ 'Add pictures' |trans }}</label>
             </div>
-            <div class="col-auto mb-3 me-md-5">
+            <div class="col-auto mb-3 me-lg-5">
                 {{ form_widget(form.images, {'attr': {'class': 'form-control'}}) }}
             </div>
             <div class="col-auto mb-3">
@@ -132,7 +132,7 @@
                 {% if form is defined %}
                 <div class="row justify-content-center mb-3">
                     {{ form_row(form.name, {
-                        'row_attr': {'class': 'col-12 col-md'},
+                        'row_attr': {'class': 'col-12 col-lg mb-3 mb-lg-0'},
                         'label': 'Name' |trans,
                     }) }}
                     <div class="col-12 col-md-auto d-flex direction-row align-items-end">
@@ -143,7 +143,7 @@
                         </button>
                     </div>
                 </div>
-                {{ form_row(form.description) }}
+                {{ form_row(form.description, { 'row_attr': {'class': 'my-3'} }) }}
                 {{ form_row(form.save, {
                     'label' : action == 'add' ? 'Add' |trans : 'Edit' |trans,
                     'row_attr': {'class': 'col-12 col-md-auto text-center mt-4'}

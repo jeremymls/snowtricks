@@ -75,7 +75,7 @@
 <!-- Add Video Modal -->
 {% macro addVideo(form) %}
     <div class="modal" id="addVideoModal" tabindex="-1" aria-labelledby="addVideoModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
+        <div class="modal-dialog modal-xl modal-fullscreen-lg-down">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addVideoModalLabel">{{ 'Add video' |trans }}</h5>
@@ -103,8 +103,10 @@
                         <span id="video-add" class="row">
                             <button class="btn btn-success add-video" type="button"><i class="fas fa-plus" aria-hidden="true"></i> {{ 'Add video' |trans }}</button>
                         </span>
-                        <button type="button" class="btn btn-secondary mt-3" data-bs-dismiss="modal">{{ 'Close' |trans }}</button>
                     </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary mt-3" data-bs-dismiss="modal">{{ 'Close' |trans }}</button>
                 </div>
             </div>
         </div>
