@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Group;
 use App\Entity\Video;
-use App\Form\GroupType;
 use App\Form\VideoType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
