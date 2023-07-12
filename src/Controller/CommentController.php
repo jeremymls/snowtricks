@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -24,28 +23,24 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class CommentController extends AbstractController
 {
     private $em;
-    private $slugger;
     private $translator;
 
     public function __construct(
         EntityManagerInterface $em,
-        SluggerInterface $slugger,
         TranslatorInterface $translator
     ) {
         $this->em = $em;
-        $this->slugger = $slugger;
         $this->translator = $translator;
     }
 
     /**
-     * @Route("/add", name="app_add_comment", methods={"POST"})
+     * @Route("/add/{slug}", name="app_add_comment", methods={"POST"})
      */
-    public function addComment(Request $request): Response
+    public function addComment(Request $request, Trick $trick): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         $res = $request->request->get('comment');
-        $trick = $this->em->getRepository(Trick::class)->findOneBy(['slug' => $res['trick']]);
         $res['trick'] = $trick;
         $request->request->set('comment', $res);
 
