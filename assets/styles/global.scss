@@ -43,7 +43,7 @@ iframe {
     aspect-ratio: 16/9;
 }
 
-#title-header {
+#title-header, #btn-action {
     text-shadow: skyblue 3px 3px 6px;
     background: rgba(255, 255, 255, 0.8);
     padding: 0 0.5rem;
@@ -77,7 +77,7 @@ iframe {
 }
 
 .preview-div {
-    height: 300px;
+    min-height: 150px;
 }
 
 .alert {
@@ -109,6 +109,7 @@ iframe {
 // Responsive
 $navbar-height: 100px;
 @media (max-width: 992px) {
+    * {margin: 0;} // reset margin
     :root {
         // --bs-body-font-size: 2.5rem;
         font-size: 2.5rem !important;
@@ -131,7 +132,6 @@ $navbar-height: 100px;
         line-height: 1.5;
     }
     body {
-        margin: 0 0.7rem;
         #header-div , #header-div>div {
             padding: 0 !important;
         }

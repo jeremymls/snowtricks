@@ -17,10 +17,12 @@
     <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
 </header>
 <main id="main" class="container py-5">
-    <div class="row justify-content-around pb-5" id="tricksDiv">
+    <div class="row justify-content-around pb-5 px-4 px-lg-0" id="tricksDiv">
         {% for trick in tricks %}
         <div class="col-lg-2 my-3 my-lg-5 mx-1 p-0 text-center shadow border">
-            <img src="{% if trick.miniature %}{{ asset('uploads/images/tricks/' ~ trick.miniature) }}{% else %}{{ asset('core/img/default_mini.png') }}{% endif %}" class="mini" width="100%" alt="">
+            <a href="{{ path('app_show_trick', {'slug': trick.slug}) }}">
+                <img src="{% if trick.miniature %}{{ asset('uploads/images/tricks/' ~ trick.miniature) }}{% else %}{{ asset('core/img/default_mini.png') }}{% endif %}" class="mini" width="100%" alt="">
+            </a>
             <div class="row p-2 d-flex flex-nowrap justify-content-between">
                 <div class="col text-start text-truncate pe-0">
                     <a href="{{ path('app_show_trick', {'slug': trick.slug}) }}" class="">{{ trick.name }}</a>
