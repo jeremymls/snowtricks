@@ -136,7 +136,9 @@ function setIframes(form, provider = null, video_id = null) {
     if (form.nextElementSibling != null) {
         form.nextElementSibling.querySelector('iframe').src = url + video_id;
     }
-    document.querySelector('#media_' + form.querySelector('fieldset>div').id + ' iframe').src = url + video_id;
+    let id = form.querySelector('fieldset>div').id.split('_');
+    id = id[2];
+    document.querySelector('#media_video_' + id + ' iframe').src = url + video_id;
 }
 
 function transformURL(provider) {
